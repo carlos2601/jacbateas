@@ -1,1 +1,11 @@
-[]
+{
+  "ultima_actualizacion": "2026-03-01T16:28:39.094Z",
+  "valor_cuota": 5000,
+  "pagos": [
+    {
+      "cedula": "7729023",
+      "nombre": "JULIAN FELIPE FLOREZ CUENCA",
+      "certificado": "marzo_2026_20000_01/03/2026_11:28:39_00001"
+    }
+  ]
+}
