@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-03-01T17:11:32.041Z",
+  "ultima_actualizacion": "2026-03-01T17:11:45.927Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -181,7 +181,8 @@
     {
       "cedula": "1121832626",
       "nombre": "JOHN FLAIMIR SALGADO RODRIGUEZ",
-      "certificado": "marzo_2026_20000_01/03/2026_12:11:32_00031"
+      "certificado": "marzo_2026_20000_01/03/2026_12:11:32_00031",
+      "fecha_pago_año_2026": "enero_2026_5000_01/03/2026_12:11:44_00031"
     }
   ]
 }
