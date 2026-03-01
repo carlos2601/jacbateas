@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-03-01T16:44:25.186Z",
+  "ultima_actualizacion": "2026-03-01T16:45:07.114Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -86,6 +86,11 @@
       "nombre": "LUZ MILA POPAYAN CASTRO",
       "certificado": "marzo_2026_20000_01/03/2026_11:44:07_00009",
       "fecha_pago_año_2026": "febrero_2026_5000_01/03/2026_11:44:25_00010"
+    },
+    {
+      "cedula": "1120818409",
+      "nombre": "MIGUEL SEBASTIAN RINCON POPAYAN",
+      "fecha_pago_año_2026": "febrero_2026_5000_01/03/2026_11:45:07_00011"
     }
   ]
 }
