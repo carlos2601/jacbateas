@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
@@ -190,6 +191,7 @@
             color: white;
             border: none;
         }
+
         .btn-primary:hover {
             background: #2a6a3a;
         }
@@ -199,6 +201,7 @@
             color: white;
             border: none;
         }
+
         .btn-success:hover {
             background: #2a8e5a;
         }
@@ -208,6 +211,7 @@
             color: #c10e0e;
             border: 1px solid #ff2100;
         }
+
         .btn-warning:hover {
             background: #ffe8d0;
         }
@@ -249,7 +253,10 @@
             background: transparent;
             font-size: 0.85rem;
         }
-        .search-box input:focus { outline: none; }
+
+        .search-box input:focus {
+            outline: none;
+        }
 
         .report-group {
             display: flex;
@@ -271,6 +278,7 @@
             gap: 4px;
             margin-left: auto;
         }
+
         .next-receipt-badge span {
             background: #1a4a2a;
             color: white;
@@ -301,14 +309,37 @@
             justify-content: center;
         }
 
-        .stat-card:nth-child(1) { border-top-color: #4a90e2; }
-        .stat-card:nth-child(2) { border-top-color: #50c878; }
-        .stat-card:nth-child(3) { border-top-color: #9370db; }
-        .stat-card:nth-child(4) { border-top-color: #ffaa00; }
-        .stat-card:nth-child(5) { border-top-color: #ff6b6b; }
-        .stat-card:nth-child(6) { border-top-color: #b68b40; }
-        .stat-card:nth-child(7) { border-top-color: #2a7a4a; }
-        .stat-card:nth-child(8) { border-top-color: #ff4444; }
+        .stat-card:nth-child(1) {
+            border-top-color: #4a90e2;
+        }
+
+        .stat-card:nth-child(2) {
+            border-top-color: #50c878;
+        }
+
+        .stat-card:nth-child(3) {
+            border-top-color: #9370db;
+        }
+
+        .stat-card:nth-child(4) {
+            border-top-color: #ffaa00;
+        }
+
+        .stat-card:nth-child(5) {
+            border-top-color: #ff6b6b;
+        }
+
+        .stat-card:nth-child(6) {
+            border-top-color: #b68b40;
+        }
+
+        .stat-card:nth-child(7) {
+            border-top-color: #2a7a4a;
+        }
+
+        .stat-card:nth-child(8) {
+            border-top-color: #ff4444;
+        }
 
         .stat-label {
             font-size: 0.7rem;
@@ -351,7 +382,7 @@
             align-items: center;
             padding: 4px 5px;
             background: #f4fff4;
-            border-bottom: 2px solid #c8e4c8;        
+            border-bottom: 2px solid #c8e4c8;
             background-color: #caddce;
         }
 
@@ -371,7 +402,12 @@
             font-weight: 600;
             align-items: center;
         }
-        .legend span { display: flex; align-items: center; gap: 4px; }
+
+        .legend span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
 
         .table-responsive {
             overflow-x: auto;
@@ -405,7 +441,10 @@
             background-color: #e7e6e6;
             font-weight: 500;
         }
-        tr:hover td { background: #c7cac7; }
+
+        tr:hover td {
+            background: #c7cac7;
+        }
 
         .month-checkbox {
             width: 26px;
@@ -423,6 +462,7 @@
             border: 2px solid #d41515;
             cursor: pointer;
         }
+
         .month-checkbox.debt:hover {
             background: #ffe4e0;
             transform: scale(1.05);
@@ -433,6 +473,7 @@
             background: #e4ffe4;
             border: 2px solid #5ab05a;
         }
+
         .month-checkbox.paid::after {
             content: "✓";
             color: #2a7a2a;
@@ -444,6 +485,7 @@
             background: #e4ffe4;
             border: 2px solid #ffd966;
         }
+
         .month-checkbox.condoned::after {
             content: "✓";
             color: #2a7a2a;
@@ -461,6 +503,7 @@
             background: #1a4a2a;
             border: 2px solid #1a4a2a;
         }
+
         .month-checkbox.selected::after {
             content: "✓";
             color: white;
@@ -490,7 +533,10 @@
             transition: all 0.1s;
             border: 1px solid #b8d8b8;
         }
-        .btn-detail:hover { background: #d4e8d4; }
+
+        .btn-detail:hover {
+            background: #d4e8d4;
+        }
 
         /* ===== PAGINACIÓN CENTRADA ===== */
         .pagination {
@@ -527,9 +573,11 @@
             color: #1a4a2a;
             padding: 0 4px;
         }
+
         .page-btn:hover {
             background: #e0f0e0;
         }
+
         .page-btn.active {
             background: #1a4a2a;
             color: white;
@@ -587,6 +635,7 @@
             background: white;
             z-index: 10;
         }
+
         .modal-header h3 {
             font-size: 1rem;
             font-weight: 700;
@@ -603,7 +652,10 @@
             color: #6a8b6a;
             padding: 2px 6px;
         }
-        .close-btn:hover { color: #1a4a2a; }
+
+        .close-btn:hover {
+            color: #1a4a2a;
+        }
 
         .receipt-modal {
             display: none;
@@ -645,6 +697,7 @@
             border-radius: 14px;
             border: 2px solid #d0e4d0;
         }
+
         .payment-type-selector label {
             display: block;
             margin-bottom: 6px;
@@ -652,6 +705,7 @@
             color: #1a4a2a;
             font-size: 0.8rem;
         }
+
         .payment-option {
             display: flex;
             align-items: center;
@@ -664,15 +718,18 @@
             cursor: pointer;
             font-size: 0.8rem;
         }
+
         .payment-option.selected {
             background: #e4ffe4;
             border: 2px solid #2a7a4a;
         }
+
         .payment-option input[type="radio"] {
             width: 16px;
             height: 16px;
             cursor: pointer;
         }
+
         .payment-option .valor {
             font-weight: 700;
             color: #1a4a2a;
@@ -683,6 +740,7 @@
         .receipt-field {
             margin-bottom: 16px;
         }
+
         .receipt-field label {
             display: block;
             font-size: 0.65rem;
@@ -691,6 +749,7 @@
             margin-bottom: 4px;
             text-transform: uppercase;
         }
+
         .receipt-field input {
             width: 100%;
             padding: 10px 14px;
@@ -698,6 +757,7 @@
             border-radius: 10px;
             font-size: 0.85rem;
         }
+
         .receipt-field input:focus {
             border-color: #2a7a4a;
             outline: none;
@@ -713,9 +773,23 @@
             margin: 1px;
         }
 
-        .hidden { display: none !important; }
-        .loading { animation: spin 0.8s linear infinite; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .hidden {
+            display: none !important;
+        }
+
+        .loading {
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
 
         .alert {
             position: fixed;
@@ -727,12 +801,30 @@
             font-weight: 600;
             display: none;
             z-index: 10002;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
         }
-        .alert.show { display: block; }
-        .alert-success { background: #e4ffe4; color: #1a4a2a; border-left: 6px solid #2a8e5a; }
-        .alert-error { background: #ffe4e4; color: #8a2a2a; border-left: 6px solid #c04040; }
-        .alert-info { background: #e4f0ff; color: #2a4a6a; border-left: 6px solid #4a8ac0; }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #e4ffe4;
+            color: #1a4a2a;
+            border-left: 6px solid #2a8e5a;
+        }
+
+        .alert-error {
+            background: #ffe4e4;
+            color: #8a2a2a;
+            border-left: 6px solid #c04040;
+        }
+
+        .alert-info {
+            background: #e4f0ff;
+            color: #2a4a6a;
+            border-left: 6px solid #4a8ac0;
+        }
 
         /* ===== BADGE DE INACTIVIDAD ===== */
         .session-timer {
@@ -748,17 +840,25 @@
             border: 1px solid #c0c0c0;
             margin-right: 10px;
         }
-        
+
         .timer-warning {
             background: #ffd966;
             color: #1a4a2a;
             animation: pulse 1s infinite;
         }
-        
+
         @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.7; }
-            100% { opacity: 1; }
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+
+            100% {
+                opacity: 1;
+            }
         }
 
         /* ===== INDICADOR DE SINCRONIZACIÓN ===== */
@@ -774,19 +874,19 @@
             border: 1px solid #c0c0c0;
             margin-right: 10px;
         }
-        
+
         .sync-status.syncing {
             background: #fff3cd;
             border-color: #ffd966;
             animation: pulse 1s infinite;
         }
-        
+
         .sync-status.offline {
             background: #ffe4e4;
             border-color: #ff9999;
             color: #c04040;
         }
-        
+
         .sync-status.online {
             background: #e4ffe4;
             border-color: #5ab05a;
@@ -799,6 +899,7 @@
                 grid-template-columns: repeat(4, 1fr);
             }
         }
+
         @media (max-width: 800px) {
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -825,7 +926,7 @@
         .btn-cert-leyenda:hover {
             background: #1a4a2a;
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         }
 
         .btn-cert-leyenda:active {
@@ -901,16 +1002,40 @@
             padding: 0 5px;
         }
 
-        .stat-card:nth-child(1) .stat-back { border-top: 3px solid #4a90e2; }
-        .stat-card:nth-child(2) .stat-back { border-top: 3px solid #50c878; }
-        .stat-card:nth-child(3) .stat-back { border-top: 3px solid #9370db; }
-        .stat-card:nth-child(4) .stat-back { border-top: 3px solid #ffaa00; }
-        .stat-card:nth-child(5) .stat-back { border-top: 3px solid #ff6b6b; }
-        .stat-card:nth-child(6) .stat-back { border-top: 3px solid #b68b40; }
-        .stat-card:nth-child(7) .stat-back { border-top: 3px solid #2a7a4a; }
-        .stat-card:nth-child(8) .stat-back { border-top: 3px solid #ff4444; }
+        .stat-card:nth-child(1) .stat-back {
+            border-top: 3px solid #4a90e2;
+        }
+
+        .stat-card:nth-child(2) .stat-back {
+            border-top: 3px solid #50c878;
+        }
+
+        .stat-card:nth-child(3) .stat-back {
+            border-top: 3px solid #9370db;
+        }
+
+        .stat-card:nth-child(4) .stat-back {
+            border-top: 3px solid #ffaa00;
+        }
+
+        .stat-card:nth-child(5) .stat-back {
+            border-top: 3px solid #ff6b6b;
+        }
+
+        .stat-card:nth-child(6) .stat-back {
+            border-top: 3px solid #b68b40;
+        }
+
+        .stat-card:nth-child(7) .stat-back {
+            border-top: 3px solid #2a7a4a;
+        }
+
+        .stat-card:nth-child(8) .stat-back {
+            border-top: 3px solid #ff4444;
+        }
     </style>
 </head>
+
 <body>
     <!-- MODAL DE API PARA INGRESAR TOKEN -->
     <div id="apiModal" class="api-modal">
@@ -933,7 +1058,7 @@
                 </h1>
             </div>
             <div style="display: flex; gap: 10px; align-items: center;">
-               
+
                 <!-- Temporizador de inactividad -->
                 <div id="sessionTimer" class="session-timer">
                     <span>⏱️</span>
@@ -943,7 +1068,8 @@
                     <span>📅</span>
                     <select id="yearSelect"></select>
                 </div>
-                <button id="logoutBtn" class="btn" style="background: #c04040; color: white; border: none; padding: 6px 12px; border-radius: 100px; font-weight: 600; display: flex; align-items: center; gap: 4px;">
+                <button id="logoutBtn" class="btn"
+                    style="background: #c04040; color: white; border: none; padding: 6px 12px; border-radius: 100px; font-weight: 600; display: flex; align-items: center; gap: 4px;">
                     <span>🚪</span> Salir
                 </button>
             </div>
@@ -959,7 +1085,9 @@
                 <div style="padding: 20px 0;">
                     <p style="margin-bottom: 20px; font-size: 1rem;">¿Estás seguro que deseas cerrar la sesión?</p>
                     <div style="display: flex; gap: 12px; justify-content: center;">
-                        <button id="confirmLogoutBtn" class="btn" style="background: #c04040; color: white; border: none; padding: 8px 20px;">Sí, salir</button>
+                        <button id="confirmLogoutBtn" class="btn"
+                            style="background: #c04040; color: white; border: none; padding: 8px 20px;">Sí,
+                            salir</button>
                         <button id="cancelLogoutBtn" class="btn">Cancelar</button>
                     </div>
                 </div>
@@ -973,7 +1101,8 @@
                     <h3 style="text-align: center; flex: 1;">⏰ Sesión expirada</h3>
                 </div>
                 <div style="padding: 20px 0;">
-                    <p style="margin-bottom: 20px; font-size: 1rem;">Tu sesión ha expirado por inactividad de 5 minutos.</p>
+                    <p style="margin-bottom: 20px; font-size: 1rem;">Tu sesión ha expirado por inactividad de 5 minutos.
+                    </p>
                     <div style="display: flex; gap: 12px; justify-content: center;">
                         <button id="redirectToLoginBtn" class="btn btn-primary">Ir al inicio de sesión</button>
                     </div>
@@ -994,7 +1123,8 @@
                 📋 Mostrar tabla
             </button>
             <!-- BOTÓN DE TARJETAS MOVIDO AQUÍ -->
-            <button id="toggleAllCardsBtn" class="btn" style="background: #1a4a2a; color: white;" title="Mostrar/ocultar todas las tarjetas">
+            <button id="toggleAllCardsBtn" class="btn" style="background: #1a4a2a; color: white;"
+                title="Mostrar/ocultar todas las tarjetas">
                 <span>👁️</span> Tarjetas
             </button>
             <div class="report-group">
@@ -1106,25 +1236,33 @@
         <div id="tableContainer" style="display: none;">
             <div class="table-section">
                 <div class="table-header">
-                        <div class="table-title">
-                            📋 Registro de pagos · <span style="background: #d0e8d0; padding: 4px 14px; border-radius: 100px;" id="añoActualDisplay"></span>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 15px;">
-                            <!-- NUEVO BOTÓN DE CERTIFICADO AQUÍ -->
-                            <button id="pagarCertificadoBtn" class="btn-cert-leyenda" title="Pagar certificado del usuario filtrado">
-                                <span style="font-size: 1.2rem;">📜</span> Pagar Certificado
-                            </button>
-                             
-                            
-                            <div class="legend">
-                                <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="color: #dd2626; font-size: 24px; position: relative; top: -3px;">●</span>Debe</span>
-                                <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="color: #2aac2a; font-size: 24px; position: relative; top: -3px;">●</span>Pagado</span>
-                                <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="color: #ffd966; font-size: 24px; position: relative; top: -3px;">●</span>Condonado</span>
-                                <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="color: #ffffff; font-size: 24px; position: relative; top: -3px;">●</span>Futuro</span>
-                                <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="color: #ffd966; font-size: 12px; position: relative; top: -3px;">📜</span>Certificado</span>
-                            </div>
+                    <div class="table-title">
+                        📋 Registro de pagos · <span
+                            style="background: #d0e8d0; padding: 4px 14px; border-radius: 100px;"
+                            id="añoActualDisplay"></span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <!-- NUEVO BOTÓN DE CERTIFICADO AQUÍ -->
+                        <button id="pagarCertificadoBtn" class="btn-cert-leyenda"
+                            title="Pagar certificado del usuario filtrado">
+                            <span style="font-size: 1.2rem;">📜</span> Pagar Certificado
+                        </button>
+
+
+                        <div class="legend">
+                            <span style="display: inline-flex; align-items: center; gap: 4px;"><span
+                                    style="color: #dd2626; font-size: 24px; position: relative; top: -3px;">●</span>Debe</span>
+                            <span style="display: inline-flex; align-items: center; gap: 4px;"><span
+                                    style="color: #2aac2a; font-size: 24px; position: relative; top: -3px;">●</span>Pagado</span>
+                            <span style="display: inline-flex; align-items: center; gap: 4px;"><span
+                                    style="color: #ffd966; font-size: 24px; position: relative; top: -3px;">●</span>Condonado</span>
+                            <span style="display: inline-flex; align-items: center; gap: 4px;"><span
+                                    style="color: #ffffff; font-size: 24px; position: relative; top: -3px;">●</span>Futuro</span>
+                            <span style="display: inline-flex; align-items: center; gap: 4px;"><span
+                                    style="color: #ffd966; font-size: 12px; position: relative; top: -3px;">📜</span>Certificado</span>
                         </div>
                     </div>
+                </div>
                 <div class="table-responsive">
                     <table id="paymentsTable">
                         <thead id="tableHeader">
@@ -1153,7 +1291,7 @@
                         </tbody>
                     </table>
                 </div>
-                
+
                 <!-- PAGINACIÓN CENTRADA -->
                 <div class="pagination" id="paginationContainer">
                     <div style="display: flex; gap: 2px; align-items: center;">
@@ -1171,9 +1309,9 @@
                     </div>
                 </div>
             </div>
-            
+
             <div style="display: flex; justify-content: center; gap: 12px; margin-top: 16px;">
-                
+
                 <button id="savePaymentsBtn" class="btn btn-success">💾 Guardar Todo</button>
             </div>
         </div>
@@ -1183,10 +1321,11 @@
             <div class="receipt-content">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                     <h3 style="font-size: 1rem; font-weight: 700; color: #1a4a2a;">🧾 Registrar pago</h3>
-                    <button id="closeReceiptBtn" style="background: none; border: none; font-size: 1.3rem; cursor: pointer; color: #6a8b6a;">&times;</button>
+                    <button id="closeReceiptBtn"
+                        style="background: none; border: none; font-size: 1.3rem; cursor: pointer; color: #6a8b6a;">&times;</button>
                 </div>
                 <div id="receiptInfo" class="receipt-info"></div>
-                
+
                 <!-- Selector de tipo de pago -->
                 <div class="payment-type-selector">
                     <label>TIPO DE PAGO</label>
@@ -1247,7 +1386,7 @@
             <span style="margin-left: 16px;">📅 <span id="fechaActualDisplay"></span></span>
         </div>
     </div>
-    
+
     <script>
         // ============================================================
         // VERIFICACIÓN DE AUTENTICACIÓN - DEBE IR AL INICIO DEL SCRIPT
@@ -1258,22 +1397,22 @@
             const token = urlParams.get('token');
             const user = urlParams.get('user');
             const mode = urlParams.get('mode');
-            
+
             // Verificar si hay sesión en sessionStorage
             const sessionToken = sessionStorage.getItem('session_token');
             const usuarioActual = sessionStorage.getItem('usuario_actual');
-            
+
             // Si no hay token en URL ni en sessionStorage, redirigir al login
             if (!token && !sessionToken) {
                 window.location.href = 'index.html';
                 return;
             }
-            
+
             // Si hay token en URL pero no en sessionStorage, guardarlo
             if (token && !sessionToken) {
                 sessionStorage.setItem('session_token', token);
             }
-            
+
             // Si hay usuario en URL pero no en sessionStorage, guardarlo
             if (user && !usuarioActual) {
                 try {
@@ -1287,7 +1426,7 @@
                     console.error('Error al guardar usuario:', e);
                 }
             }
-            
+
             // Verificación final: si no hay usuario en sessionStorage, redirigir
             if (!sessionStorage.getItem('usuario_actual')) {
                 window.location.href = 'index.html';
@@ -1297,16 +1436,29 @@
         // ============================================================
         // JAC BATEAS - VERSIÓN CON CACHÉ LOCAL Y GITHUB
         // ============================================================
+        // Configuración de repositorios
         const CONFIG = {
-            REPO_OWNER: 'carlos2601',
-            REPO_NAME: 'juntadeaccioncomunalbarriobateaspuertogaitanmetalilianalondo-ogallego1010101010101000111010001010010',
-            AFILIADOS_PATH: 'afiliados.json',
-            CUOTA_PATH: 'cuota.json',
-            BRANCH: 'main',
+            // Repositorio de origen (solo lectura) - DATOS DE AFILIADOS
+            SOURCE: {
+                REPO_OWNER: 'carlos2601',
+                REPO_NAME: 'juntadeaccioncomunalbarriobateaspuertogaitanmetalilianalondo-ogallego1010101010101000111010001010010',
+                AFILIADOS_PATH: 'afiliados.json',
+                BRANCH: 'main'
+            },
+
+            // Repositorio de destino (escritura) - DATOS DE TESORERÍA
+            DESTINATION: {
+                REPO_OWNER: 'carlos2601',
+                REPO_NAME: 'jacbateas',
+                CUOTA_PATH: 'data/cuota.json',  // Guardar en carpeta data
+                BRANCH: 'main'
+            },
+
+            // Configuración general
             VALOR_CUOTA: 5000,
             VALOR_CERTIFICADO: 20000,
             PAGE_SIZE: 6
-            // API_TOKEN ELIMINADO - ahora se pide en el modal
+            // API_TOKEN se pide en el modal
         };
 
         let appState = {
@@ -1449,18 +1601,18 @@
         // ============================================================
         // FUNCIONES DE CACHÉ LOCAL
         // ============================================================
-        
+
 
         async function sincronizarConGitHub() {
             if (appState.sincronizando) return;
-            
+
             appState.sincronizando = true;
             actualizarIndicadorSync();
-            
+
             try {
                 console.log('🔄 Sincronizando con GitHub...');
                 const pagosGitHub = await cargarPagos();
-                
+
                 const pagosCombinados = [...pagosGitHub];
                 appState.pagos.forEach(pagoLocal => {
                     const index = pagosCombinados.findIndex(p => p.cedula === pagoLocal.cedula);
@@ -1470,25 +1622,25 @@
                         pagosCombinados.push(pagoLocal);
                     }
                 });
-                
+
                 appState.pagos = pagosCombinados;
                 appState.ultimaSincronizacion = new Date().toISOString();
                 appState.modoOffline = false;
-                
-                
-                
+
+
+
                 console.log('✅ Sincronización completada');
-                
+
                 guardarPagosEnGitHub().catch(e => {
                     console.log('⚠️ No se pudo guardar en GitHub, pero los datos están en caché');
                 });
-                
+
                 calcularEstadisticas();
                 actualizarSiguienteRecibo();
                 renderizarTabla();
-                
+
                 mostrarAlerta('✅ Datos sincronizados con GitHub', 'success');
-                
+
             } catch (e) {
                 console.error('Error en sincronización:', e);
                 appState.modoOffline = true;
@@ -1513,57 +1665,57 @@
         }
 
         // ============================================================
-// CARGAR TOKEN GUARDADO AL INICIAR
-// ============================================================
-async function cargarTokenGuardado() {
-    const tokenGuardado = localStorage.getItem('github_token');
-    if (tokenGuardado) {
-        // Mostrar mensaje de validación
-        dom.apiError.style.display = 'block';
-        dom.apiError.style.color = '#4a6b4a';
-        dom.apiError.textContent = '🔑 Validando token guardado...';
-        dom.validateTokenBtn.disabled = true;
-        
-        const esValido = await validarToken(tokenGuardado);
-        if (esValido) {
-            // Token válido, cargar datos
-            await cargarDatosConToken(tokenGuardado);
-        } else {
-            // Token inválido, limpiar y mostrar modal
-            localStorage.removeItem('github_token');
-            dom.apiTokenInput.value = '';
-            dom.apiError.style.display = 'none';
-            dom.validateTokenBtn.disabled = false;
-            dom.validateTokenBtn.innerHTML = 'Validar y continuar';
+        // CARGAR TOKEN GUARDADO AL INICIAR
+        // ============================================================
+        async function cargarTokenGuardado() {
+            const tokenGuardado = localStorage.getItem('github_token');
+            if (tokenGuardado) {
+                // Mostrar mensaje de validación
+                dom.apiError.style.display = 'block';
+                dom.apiError.style.color = '#4a6b4a';
+                dom.apiError.textContent = '🔑 Validando token guardado...';
+                dom.validateTokenBtn.disabled = true;
+
+                const esValido = await validarToken(tokenGuardado);
+                if (esValido) {
+                    // Token válido, cargar datos
+                    await cargarDatosConToken(tokenGuardado);
+                } else {
+                    // Token inválido, limpiar y mostrar modal
+                    localStorage.removeItem('github_token');
+                    dom.apiTokenInput.value = '';
+                    dom.apiError.style.display = 'none';
+                    dom.validateTokenBtn.disabled = false;
+                    dom.validateTokenBtn.innerHTML = 'Validar y continuar';
+                }
+            } else {
+                // No hay token guardado, mostrar modal normalmente
+                dom.apiModal.style.display = 'flex';
+            }
         }
-    } else {
-        // No hay token guardado, mostrar modal normalmente
-        dom.apiModal.style.display = 'flex';
-    }
-}
 
         // ============================================================
-// FUNCIÓN PARA VALIDAR TOKEN
-// ============================================================
-async function validarToken(token) {
-    try {
-        const url = `https://api.github.com/repos/${CONFIG.REPO_OWNER}/${CONFIG.REPO_NAME}/contents/${CONFIG.CUOTA_PATH}`;
-        const res = await fetch(url, {
-            headers: { 'Authorization': `token ${token}` }
-        });
-        
-        if (res.status === 200 || res.status === 404) {
-            // Si es válido, guardar en localStorage
-            localStorage.setItem('github_token', token);
-            return true;
+        // FUNCIÓN PARA VALIDAR TOKEN
+        // ============================================================
+        async function validarToken(token) {
+            try {
+                const url = `https://api.github.com/repos/${CONFIG.REPO_OWNER}/${CONFIG.REPO_NAME}/contents/${CONFIG.CUOTA_PATH}`;
+                const res = await fetch(url, {
+                    headers: { 'Authorization': `token ${token}` }
+                });
+
+                if (res.status === 200 || res.status === 404) {
+                    // Si es válido, guardar en localStorage
+                    localStorage.setItem('github_token', token);
+                    return true;
+                }
+
+                return false;
+            } catch (e) {
+                console.error('Error validando token:', e);
+                return false;
+            }
         }
-        
-        return false;
-    } catch (e) {
-        console.error('Error validando token:', e);
-        return false;
-    }
-}
 
 
         // ============================================================
@@ -1571,36 +1723,36 @@ async function validarToken(token) {
         // ============================================================
         async function cargarDatosConToken(token) {
             appState.token = token;
-            
+
             try {
                 mostrarAlerta('📥 Cargando afiliados...', 'info');
-                appState.afiliados = await cargarAfiliados();            
+                appState.afiliados = await cargarAfiliados();
 
                 mostrarAlerta('📥 Cargando pagos desde GitHub...', 'info');
                 appState.pagos = await cargarPagos();
-                
+
                 calcularEstadisticas();
                 actualizarSiguienteRecibo();
-                
+
                 // Ocultar modal y mostrar app
                 dom.apiModal.style.display = 'none';
                 dom.mainApp.style.display = 'block';
-                
+
                 appState.tablaVisible = true;
                 dom.tableContainer.style.display = 'block';
                 dom.toggleTableBtn.innerHTML = '🕵️ Ocultar tabla';
-                
+
                 appState.modoBusqueda = false;
                 appState.filtroActual = '';
                 dom.searchInput.value = '';
-                
+
                 appState.currentPage = 1;
                 renderizarTabla();
-                
+
                 mostrarAlerta(`✅ ${appState.afiliados.length} afiliados cargados`, 'success');
-                
+
                 initActivityDetection();
-                
+
             } catch (e) {
                 mostrarAlerta('Error al cargar datos: ' + e.message, 'error');
             }
@@ -1623,44 +1775,44 @@ async function validarToken(token) {
             return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
         }
 
-       function extraerPagosDeString(str, año) {
-    if (!str) return [];
-    return str.split(';').filter(p => p.trim()).map(p => {
-        const partes = p.trim().split('_');
-        // Nuevo formato: mes_año_valor_fecha_hora_recibo
-        // partes[0]=mes, [1]=año, [2]=valor, [3]=fecha, [4]=hora, [5]=recibo
-        return {
-            mes: partes[0],
-            año: parseInt(partes[1]),
-            valor: parseInt(partes[2]),
-            fecha: partes[3],
-            hora: partes[4] || '00:00:00', // Si no hay hora (datos antiguos), asumir 00:00:00
-            recibo: partes[5] || partes[4] || 'N/A' // Compatibilidad hacia atrás
-        };
-    }).filter(p => p.año === año);
-}
+        function extraerPagosDeString(str, año) {
+            if (!str) return [];
+            return str.split(';').filter(p => p.trim()).map(p => {
+                const partes = p.trim().split('_');
+                // Nuevo formato: mes_año_valor_fecha_hora_recibo
+                // partes[0]=mes, [1]=año, [2]=valor, [3]=fecha, [4]=hora, [5]=recibo
+                return {
+                    mes: partes[0],
+                    año: parseInt(partes[1]),
+                    valor: parseInt(partes[2]),
+                    fecha: partes[3],
+                    hora: partes[4] || '00:00:00', // Si no hay hora (datos antiguos), asumir 00:00:00
+                    recibo: partes[5] || partes[4] || 'N/A' // Compatibilidad hacia atrás
+                };
+            }).filter(p => p.año === año);
+        }
 
         function extraerCertificadosDeString(str) {
-    if (!str) return [];
-    return str.split(';').filter(c => c.trim()).map(c => {
-        const partes = c.trim().split('_');
-        return {
-            mes: partes[0],
-            año: parseInt(partes[1]),
-            valor: parseInt(partes[2]),
-            fecha: partes[3],
-            hora: partes[4] || '00:00:00',
-            recibo: partes[5] || 'N/A'
-        };
-    });
-}
+            if (!str) return [];
+            return str.split(';').filter(c => c.trim()).map(c => {
+                const partes = c.trim().split('_');
+                return {
+                    mes: partes[0],
+                    año: parseInt(partes[1]),
+                    valor: parseInt(partes[2]),
+                    fecha: partes[3],
+                    hora: partes[4] || '00:00:00',
+                    recibo: partes[5] || 'N/A'
+                };
+            });
+        }
 
         function obtenerTodosLosPagos() {
             const pagos = [];
             appState.pagos.forEach(reg => {
                 const afiliado = appState.afiliados.find(a => a.cedula === reg.cedula);
                 const nombre = afiliado ? afiliado.nombre : reg.nombre;
-                
+
                 for (let año = 2024; año <= appState.fechaActual.getFullYear(); año++) {
                     const campo = `fecha_pago_año_${año}`;
                     const pagosAño = extraerPagosDeString(reg[campo], año);
@@ -1674,7 +1826,7 @@ async function validarToken(token) {
                         });
                     });
                 }
-                
+
                 if (reg.certificado) {
                     const certificados = extraerCertificadosDeString(reg.certificado);
                     certificados.forEach(c => {
@@ -1701,7 +1853,7 @@ async function validarToken(token) {
             const pagosOrdenados = [...todosPagos].sort((a, b) => b.fechaObj - a.fechaObj);
             const cedulasUnicas = [];
             const afiliadosUnicos = [];
-            
+
             for (const pago of pagosOrdenados) {
                 if (!cedulasUnicas.includes(pago.cedula)) {
                     cedulasUnicas.push(pago.cedula);
@@ -1718,7 +1870,7 @@ async function validarToken(token) {
         }
 
         function mesEstaPagado(cedula, año, mes) {
-            const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+            const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
             const registro = appState.pagos.find(p => p.cedula === cedula);
             if (!registro) return false;
             const pagosStr = registro[`fecha_pago_año_${año}`] || '';
@@ -1728,23 +1880,23 @@ async function validarToken(token) {
         function obtenerEstadoMes(cedula, año, mes, fechaAfiliacion) {
             const afiliacion = parseFecha(fechaAfiliacion);
             const hoy = appState.fechaActual;
-            
+
             if (año < afiliacion.getFullYear() || (año === afiliacion.getFullYear() && mes < afiliacion.getMonth())) {
                 return 'no-visible';
             }
-            
+
             if (mesEstaPagado(cedula, año, mes)) {
                 return 'paid';
             }
-            
+
             if (año > hoy.getFullYear() || (año === hoy.getFullYear() && mes > hoy.getMonth())) {
                 return 'future';
             }
-            
+
             if (esMesCondonado(año, mes)) {
                 return 'condoned';
             }
-            
+
             return 'debt';
         }
 
@@ -1752,11 +1904,11 @@ async function validarToken(token) {
             const afiliacion = parseFecha(fechaAfiliacion);
             const hoy = appState.fechaActual;
             const mesesDeuda = [];
-            
+
             for (let año = afiliacion.getFullYear(); año <= hoy.getFullYear(); año++) {
                 const mesInicio = (año === afiliacion.getFullYear()) ? afiliacion.getMonth() : 0;
                 const mesFin = (año === hoy.getFullYear()) ? hoy.getMonth() : 11;
-                
+
                 for (let mes = mesInicio; mes <= mesFin; mes++) {
                     if (!mesEstaPagado(cedula, año, mes) && !esMesCondonado(año, mes)) {
                         mesesDeuda.push({ año, mes });
@@ -1773,11 +1925,11 @@ async function validarToken(token) {
             let mesesCondonados = 0;
             let mesesDeuda = 0;
             let valorPagado = 0;
-            
+
             for (let año = afiliacion.getFullYear(); año <= hoy.getFullYear(); año++) {
                 const mesInicio = (año === afiliacion.getFullYear()) ? afiliacion.getMonth() : 0;
                 const mesFin = (año === hoy.getFullYear()) ? hoy.getMonth() : 11;
-                
+
                 for (let mes = mesInicio; mes <= mesFin; mes++) {
                     if (mesEstaPagado(cedula, año, mes)) {
                         mesesPagados++;
@@ -1789,7 +1941,7 @@ async function validarToken(token) {
                     }
                 }
             }
-            
+
             return {
                 mesesPagados,
                 mesesCondonados,
@@ -1802,7 +1954,7 @@ async function validarToken(token) {
         function actualizarSiguienteRecibo() {
             const todosPagos = obtenerTodosLosPagos();
             let maxRecibo = 0;
-            
+
             todosPagos.forEach(p => {
                 if (p.recibo && p.recibo !== 'N/A') {
                     const num = parseInt(p.recibo);
@@ -1811,7 +1963,7 @@ async function validarToken(token) {
                     }
                 }
             });
-            
+
             // Formato de 5 dígitos
             const siguiente = (maxRecibo + 1).toString().padStart(5, '0');
             dom.nextReceiptNumber.textContent = siguiente;
@@ -1823,28 +1975,28 @@ async function validarToken(token) {
         // ============================================================
         function calcularEstadisticas() {
             const totalAfiliados = appState.afiliados.length;
-            
+
             let usuariosAlDia = 0;
             appState.afiliados.forEach(af => {
                 if (calcularMesesDeuda(af.cedula, af.fecha).length === 0) usuariosAlDia++;
             });
-            
+
             const todosPagos = obtenerTodosLosPagos();
             const pagosCuota = todosPagos.filter(p => p.tipo === 'cuota');
             const pagosCertificado = todosPagos.filter(p => p.tipo === 'certificado');
-            
+
             const mesesPagados = pagosCuota.length;
             const totalCertificados = pagosCertificado.length;
-            
+
             const totalRecaudadoCuotas = pagosCuota.reduce((sum, p) => sum + p.valor, 0);
             const totalRecaudadoCertificados = pagosCertificado.reduce((sum, p) => sum + p.valor, 0);
             const totalRecaudadoGeneral = totalRecaudadoCuotas + totalRecaudadoCertificados;
-            
+
             let deudaTotal = 0;
             appState.afiliados.forEach(af => {
                 deudaTotal += calcularMesesDeuda(af.cedula, af.fecha).length * CONFIG.VALOR_CUOTA;
             });
-            
+
             dom.totalAfiliados.textContent = totalAfiliados;
             dom.usuariosAlDia.textContent = usuariosAlDia;
             dom.mesesPagados.textContent = mesesPagados;
@@ -1870,91 +2022,91 @@ async function validarToken(token) {
         }
 
         function renderPagination(totalPages, currentPage) {
-    if (!dom.pageNumbers) return;
-    
-    let html = '';
-    const maxVisible = 5;
-    let start = Math.max(1, currentPage - 2);
-    let end = Math.min(totalPages, start + maxVisible - 1);
-    
-    if (end - start + 1 < maxVisible) {
-        start = Math.max(1, end - maxVisible + 1);
-    }
+            if (!dom.pageNumbers) return;
 
-    if (start > 1) {
-        html += `<button class="page-btn" data-page="1">1</button>`;
-        if (start > 2) html += `<span style="padding: 0 6px; color: #6a8b6a;">…</span>`;
-    }
+            let html = '';
+            const maxVisible = 5;
+            let start = Math.max(1, currentPage - 2);
+            let end = Math.min(totalPages, start + maxVisible - 1);
 
-    for (let i = start; i <= end; i++) {
-        html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
-    }
-
-    if (end < totalPages) {
-        if (end < totalPages - 1) html += `<span style="padding: 0 6px; color: #6a8b6a;">…</span>`;
-        html += `<button class="page-btn" data-page="${totalPages}">${totalPages}</button>`;
-    }
-
-    dom.pageNumbers.innerHTML = html;
-    if (dom.pageInput) dom.pageInput.value = currentPage;
-    if (dom.prevPageBtn) dom.prevPageBtn.disabled = currentPage === 1;
-    if (dom.nextPageBtn) dom.nextPageBtn.disabled = currentPage === totalPages;
-    
-    // Quitar event listeners anteriores para evitar duplicados
-    document.querySelectorAll('.page-btn[data-page]').forEach(btn => {
-        btn.replaceWith(btn.cloneNode(true));
-    });
-    
-    // Agregar event listeners nuevos
-    document.querySelectorAll('.page-btn[data-page]').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const page = parseInt(e.target.dataset.page);
-            if (page !== appState.currentPage) {
-                appState.currentPage = page;
-                renderizarTabla();
+            if (end - start + 1 < maxVisible) {
+                start = Math.max(1, end - maxVisible + 1);
             }
-        });
-    });
-}
+
+            if (start > 1) {
+                html += `<button class="page-btn" data-page="1">1</button>`;
+                if (start > 2) html += `<span style="padding: 0 6px; color: #6a8b6a;">…</span>`;
+            }
+
+            for (let i = start; i <= end; i++) {
+                html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+            }
+
+            if (end < totalPages) {
+                if (end < totalPages - 1) html += `<span style="padding: 0 6px; color: #6a8b6a;">…</span>`;
+                html += `<button class="page-btn" data-page="${totalPages}">${totalPages}</button>`;
+            }
+
+            dom.pageNumbers.innerHTML = html;
+            if (dom.pageInput) dom.pageInput.value = currentPage;
+            if (dom.prevPageBtn) dom.prevPageBtn.disabled = currentPage === 1;
+            if (dom.nextPageBtn) dom.nextPageBtn.disabled = currentPage === totalPages;
+
+            // Quitar event listeners anteriores para evitar duplicados
+            document.querySelectorAll('.page-btn[data-page]').forEach(btn => {
+                btn.replaceWith(btn.cloneNode(true));
+            });
+
+            // Agregar event listeners nuevos
+            document.querySelectorAll('.page-btn[data-page]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const page = parseInt(e.target.dataset.page);
+                    if (page !== appState.currentPage) {
+                        appState.currentPage = page;
+                        renderizarTabla();
+                    }
+                });
+            });
+        }
 
         // ============================================================
         // FILTRO - BUSCA POR CÉDULA Y RECIBO
         // ============================================================
         function obtenerAfiliadosParaMostrar() {
             const filtro = appState.filtroActual.trim();
-            
+
             if (filtro !== '') {
                 appState.modoBusqueda = true;
-                
+
                 let afiliadoPorCedula = appState.afiliados.find(af => af.cedula === filtro);
                 if (afiliadoPorCedula) {
                     appState.ultimoTipoBusqueda = 'cédula';
                     return [afiliadoPorCedula];
                 }
-                
+
                 const todosPagos = obtenerTodosLosPagos();
-                const pagosConRecibo = todosPagos.filter(p => 
+                const pagosConRecibo = todosPagos.filter(p =>
                     p.recibo && p.recibo.toLowerCase().includes(filtro.toLowerCase())
                 );
-                
+
                 if (pagosConRecibo.length > 0) {
                     appState.ultimoTipoBusqueda = 'recibo';
                     const cedulasUnicas = [...new Set(pagosConRecibo.map(p => p.cedula))];
-                    const afiliadosEncontrados = appState.afiliados.filter(af => 
+                    const afiliadosEncontrados = appState.afiliados.filter(af =>
                         cedulasUnicas.includes(af.cedula)
                     );
-                    
+
                     afiliadosEncontrados.sort((a, b) => {
                         const pagosA = pagosConRecibo.filter(p => p.cedula === a.cedula).length;
                         const pagosB = pagosConRecibo.filter(p => p.cedula === b.cedula).length;
                         return pagosB - pagosA;
                     });
-                    
+
                     return afiliadosEncontrados;
                 }
-                
+
                 appState.ultimoTipoBusqueda = 'sin resultados';
                 return [];
             } else {
@@ -1969,44 +2121,44 @@ async function validarToken(token) {
         // ============================================================
         function renderizarTabla() {
             if (!appState.afiliados.length || !appState.tablaVisible) return;
-            
+
             const añoSeleccionado = appState.selectedYear;
-            const mesesNombres = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-            const mesesCompletos = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-            
+            const mesesNombres = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+            const mesesCompletos = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
             let afiliadosAMostrar = obtenerAfiliadosParaMostrar();
-            
+
             const paginated = getPaginatedData(afiliadosAMostrar, appState.currentPage);
             let afiliadosPagina = paginated.data;
             appState.totalPages = paginated.totalPages;
             const totalAfiliadosEnPagina = afiliadosPagina.length;
-            
+
             if (appState.currentPage > appState.totalPages && appState.totalPages > 0) {
                 appState.currentPage = 1;
                 return renderizarTabla();
             }
-            
+
             dom.añoActualDisplay.textContent = añoSeleccionado;
-            
+
             if (dom.paginationContainer) {
                 dom.paginationContainer.style.display = appState.modoBusqueda ? 'none' : 'flex';
             }
-            
+
             if (appState.modoBusqueda) {
                 renderPagination(1, 1);
             } else {
                 renderPagination(appState.totalPages, appState.currentPage);
             }
-            
+
             let html = '';
-            
+
             afiliadosPagina.forEach(afiliado => {
                 const mesesDeuda = calcularMesesDeuda(afiliado.cedula, afiliado.fecha);
                 const deudaTotal = mesesDeuda.length * CONFIG.VALOR_CUOTA;
-                
+
                 const registro = appState.pagos.find(p => p.cedula === afiliado.cedula);
                 const tieneCertificado = registro && registro.certificado ? '📜' : '';
-                
+
                 html += `<tr>`;
                 html += `<td style="font-weight: 600; color: #1a4a2a;">${afiliado.cedula}</td>`;
                 html += `<td style="text-align: left;">${afiliado.nombre}</td>`;
@@ -2014,10 +2166,10 @@ async function validarToken(token) {
                 html += `<td><span style="font-weight: 900; color: ${deudaTotal > 0 ? '#dd0f0f' : '#5ab05a'};">$${deudaTotal.toLocaleString()}</span></td>`;
                 html += `<td style="font-size: 1.2rem;">${tieneCertificado}</td>`;
                 html += `<td><button class="btn-detail" onclick="window.verDetalle('${afiliado.cedula}')">Ver</button></td>`;
-                
+
                 for (let mes = 0; mes < 12; mes++) {
                     const estado = obtenerEstadoMes(afiliado.cedula, añoSeleccionado, mes, afiliado.fecha);
-                    
+
                     if (estado === 'no-visible') {
                         html += `<td><div style="width: 26px; height: 26px;"></div></td>`;
                     } else {
@@ -2029,11 +2181,11 @@ async function validarToken(token) {
                             'data-mesnombre': mesesNombres[mes],
                             'data-mescompleto': mesesCompletos[mes]
                         };
-                        
+
                         const attrsString = Object.entries(dataAttrs)
                             .map(([key, value]) => `${key}="${value}"`)
                             .join(' ');
-                        
+
                         if (estado === 'debt') {
                             html += `<td><div class="month-checkbox debt" ${attrsString} onclick="window.handleMonthClick(this)"></div></td>`;
                         } else if (estado === 'condoned') {
@@ -2049,7 +2201,7 @@ async function validarToken(token) {
                 }
                 html += `</tr>`;
             });
-            
+
             const filasFaltantes = CONFIG.PAGE_SIZE - totalAfiliadosEnPagina;
             for (let i = 0; i < filasFaltantes; i++) {
                 html += `<tr style="opacity: 0.7; background-color: #f5f5f5;">
@@ -2064,7 +2216,7 @@ async function validarToken(token) {
                 }
                 html += `</tr>`;
             }
-            
+
             if (afiliadosPagina.length === 0 && appState.modoBusqueda) {
                 html = `<tr><td colspan="18" style="padding: 40px; text-align: center; color: #6a8b6a;">
                     ❌ No se encontraron resultados para "${appState.filtroActual}"<br>
@@ -2073,7 +2225,7 @@ async function validarToken(token) {
                     </span>
                 </td></tr>`;
             }
-            
+
             dom.tableBody.innerHTML = html;
 
             const pagarCertificadoBtn = document.getElementById('pagarCertificadoBtn');
@@ -2091,16 +2243,16 @@ async function validarToken(token) {
         // ============================================================
         // MANEJADOR DE CLIC EN MES
         // ============================================================
-        window.handleMonthClick = function(element) {
+        window.handleMonthClick = function (element) {
             resetInactivityTimer();
-            
+
             if (!element.classList.contains('debt')) return;
             if (element.classList.contains('selected')) return;
             if (!element.dataset.cedula || !element.dataset.nombre || !element.dataset.año || !element.dataset.mes) {
                 mostrarAlerta('Error: Datos incompletos', 'error');
                 return;
             }
-            
+
             appState.pendingPayment = {
                 cedula: element.dataset.cedula,
                 nombre: element.dataset.nombre,
@@ -2110,8 +2262,8 @@ async function validarToken(token) {
                 element: element,
                 tipo: 'cuota'
             };
-            
-            const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
             dom.receiptInfo.innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                     <span style="font-weight: 700; color: #1a4a2a;">${appState.pendingPayment.nombre}</span>
@@ -2122,14 +2274,14 @@ async function validarToken(token) {
                     <span style="font-weight: 700; color: #1a7a3a;">$${CONFIG.VALOR_CUOTA.toLocaleString()}</span>
                 </div>
             `;
-            
+
             dom.tipoCuota.checked = true;
             dom.optionCuota.classList.add('selected');
             dom.optionCertificado.classList.remove('selected');
-            
+
             dom.optionCuota.style.display = 'flex';
             dom.optionCertificado.style.display = 'flex';
-            
+
             dom.receiptNumber.value = dom.nextReceiptNumber.textContent;
             dom.receiptModal.style.display = 'flex';
             setTimeout(() => dom.receiptNumber.focus(), 100);
@@ -2143,9 +2295,9 @@ async function validarToken(token) {
             dom.tipoCuota.checked = true;
             dom.optionCuota.classList.add('selected');
             dom.optionCertificado.classList.remove('selected');
-            
+
             if (appState.pendingPayment && appState.pendingPayment.mes !== undefined) {
-                const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+                const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
                 dom.receiptInfo.innerHTML = `
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                         <span style="font-weight: 700; color: #1a4a2a;">${appState.pendingPayment.nombre}</span>
@@ -2164,7 +2316,7 @@ async function validarToken(token) {
             dom.tipoCertificado.checked = true;
             dom.optionCertificado.classList.add('selected');
             dom.optionCuota.classList.remove('selected');
-            
+
             if (appState.pendingPayment) {
                 dom.receiptInfo.innerHTML = `
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
@@ -2183,149 +2335,149 @@ async function validarToken(token) {
         // GUARDAR RECIBO Y PAGO INMEDIATO (CON VALIDACIÓN DE TIEMPO)
         // ============================================================
         async function guardarPagoConRecibo() {
-    resetInactivityTimer();
-    
-    if (!appState.pendingPayment) return mostrarAlerta('❌ No hay pago pendiente', 'error');
-    
-    const recibo = dom.receiptNumber.value.trim();
-    if (!recibo) return mostrarAlerta('❌ Número de recibo obligatorio', 'error');
-    
-    // Validar formato de 5 dígitos
-    if (!/^\d{5}$/.test(recibo)) {
-        return mostrarAlerta('❌ El recibo debe tener 5 dígitos (ej: 00001)', 'error');
-    }
-    
-    // Obtener todos los pagos para validaciones
-    const todosPagos = obtenerTodosLosPagos();
-    const ahora = new Date();
-    const fecha = formatearFecha(ahora);
-    const hora = formatearHora(ahora);
-    
-    // Buscar si el recibo ya existe para ALGUIEN
-    const pagosConEsteRecibo = todosPagos.filter(p => p.recibo === recibo);
-    
-    if (pagosConEsteRecibo.length > 0) {
-        // Verificar si es otro usuario
-        const esOtroUsuario = pagosConEsteRecibo.some(p => p.cedula !== appState.pendingPayment.cedula);
-        
-        if (esOtroUsuario) {
-            return mostrarAlerta(`❌ Recibo ${recibo} ya fue usado por otro afiliado`, 'error');
-        }
-        
-        // Encontrar la fecha MÁS ANTIGUA de este recibo para este usuario
-        let fechaMasAntigua = null;
-        
-        pagosConEsteRecibo.forEach(p => {
-            if (p.cedula === appState.pendingPayment.cedula) {
-                const [dia, mes, año] = p.fecha.split('/').map(Number);
-                let fechaPago;
-                
-                if (p.hora) {
-                    const [horaP, minP, segP] = p.hora.split(':').map(Number);
-                    fechaPago = new Date(año, mes - 1, dia, horaP, minP, segP);
-                } else {
-                    // Por compatibilidad con datos antiguos (sin hora)
-                    fechaPago = new Date(año, mes - 1, dia, 0, 0, 0);
-                }
-                
-                if (!fechaMasAntigua || fechaPago < fechaMasAntigua) {
-                    fechaMasAntigua = fechaPago;
-                }
-            }
-        });
-        
-        if (fechaMasAntigua) {
-            // Calcular diferencia en minutos desde el pago más antiguo
-            const diferenciaMinutos = (ahora - fechaMasAntigua) / (1000 * 60);
-            
-            // Verificar límite de 30 minutos
-            if (diferenciaMinutos > 30) {
-                const horas = Math.floor(diferenciaMinutos / 60);
-                const minutos = Math.floor(diferenciaMinutos % 60);
-                
-                let tiempoMensaje = '';
-                if (horas > 0) {
-                    tiempoMensaje = `${horas}h ${minutos}min`;
-                } else {
-                    tiempoMensaje = `${minutos}min`;
-                }
-                
-                return mostrarAlerta(
-                    `❌ Recibo ${recibo} expiró (hace ${tiempoMensaje}).\n` +
-                    `Máximo 30 minutos para usar el mismo recibo.`, 
-                    'error'
-                );
-            }
-            
-            // Mostrar tiempo restante
-            const tiempoRestante = Math.round(30 - diferenciaMinutos);
-            if (!confirm(`⚠️ El recibo ${recibo} se usó por primera vez hace ${Math.round(diferenciaMinutos)} minutos.\n` +
-                         `⏰ Tienes ${tiempoRestante} minutos restantes.\n\n` +
-                         `¿Deseas continuar con este mismo recibo?`)) {
-                return;
-            }
-        }
-    }
-    
-    if (!appState.token) return mostrarAlerta('❌ Token no disponible', 'error');
+            resetInactivityTimer();
 
-    const tipoPago = dom.tipoCuota.checked ? 'cuota' : 'certificado';
+            if (!appState.pendingPayment) return mostrarAlerta('❌ No hay pago pendiente', 'error');
 
-    const saveBtn = dom.saveReceiptBtn;
-    const originalText = saveBtn.innerHTML;
-    
-    try {
-        saveBtn.innerHTML = '<span class="loading">⌛</span> Guardando';
-        saveBtn.disabled = true;
-        
-        let registro = appState.pagos.find(p => p.cedula === appState.pendingPayment.cedula);
-        if (!registro) {
-            registro = { 
-                cedula: appState.pendingPayment.cedula, 
-                nombre: appState.pendingPayment.nombre
-            };
-            appState.pagos.push(registro);
-        }
-        
-        if (tipoPago === 'cuota') {
-            const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-            const campo = `fecha_pago_año_${appState.pendingPayment.año}`;
-            // AHORA LAS CUOTAS TAMBIÉN INCLUYEN HORA
-            const pagoStr = `${meses[appState.pendingPayment.mes]}_${appState.pendingPayment.año}_${CONFIG.VALOR_CUOTA}_${fecha}_${hora}_${recibo}`;
-            
-            registro[campo] = registro[campo] ? `${registro[campo]}; ${pagoStr}` : pagoStr;
-            
-            if (appState.pendingPayment.element) {
-                appState.pendingPayment.element.classList.remove('debt', 'selected');
-                appState.pendingPayment.element.classList.add('paid');
+            const recibo = dom.receiptNumber.value.trim();
+            if (!recibo) return mostrarAlerta('❌ Número de recibo obligatorio', 'error');
+
+            // Validar formato de 5 dígitos
+            if (!/^\d{5}$/.test(recibo)) {
+                return mostrarAlerta('❌ El recibo debe tener 5 dígitos (ej: 00001)', 'error');
             }
-        } else {
-            const mesActual = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'][appState.fechaActual.getMonth()];
-            const añoActual = appState.fechaActual.getFullYear();
-            const certificadoStr = `${mesActual}_${añoActual}_${CONFIG.VALOR_CERTIFICADO}_${fecha}_${hora}_${recibo}`;
-            
-            registro.certificado = registro.certificado ? `${registro.certificado}; ${certificadoStr}` : certificadoStr;
+
+            // Obtener todos los pagos para validaciones
+            const todosPagos = obtenerTodosLosPagos();
+            const ahora = new Date();
+            const fecha = formatearFecha(ahora);
+            const hora = formatearHora(ahora);
+
+            // Buscar si el recibo ya existe para ALGUIEN
+            const pagosConEsteRecibo = todosPagos.filter(p => p.recibo === recibo);
+
+            if (pagosConEsteRecibo.length > 0) {
+                // Verificar si es otro usuario
+                const esOtroUsuario = pagosConEsteRecibo.some(p => p.cedula !== appState.pendingPayment.cedula);
+
+                if (esOtroUsuario) {
+                    return mostrarAlerta(`❌ Recibo ${recibo} ya fue usado por otro afiliado`, 'error');
+                }
+
+                // Encontrar la fecha MÁS ANTIGUA de este recibo para este usuario
+                let fechaMasAntigua = null;
+
+                pagosConEsteRecibo.forEach(p => {
+                    if (p.cedula === appState.pendingPayment.cedula) {
+                        const [dia, mes, año] = p.fecha.split('/').map(Number);
+                        let fechaPago;
+
+                        if (p.hora) {
+                            const [horaP, minP, segP] = p.hora.split(':').map(Number);
+                            fechaPago = new Date(año, mes - 1, dia, horaP, minP, segP);
+                        } else {
+                            // Por compatibilidad con datos antiguos (sin hora)
+                            fechaPago = new Date(año, mes - 1, dia, 0, 0, 0);
+                        }
+
+                        if (!fechaMasAntigua || fechaPago < fechaMasAntigua) {
+                            fechaMasAntigua = fechaPago;
+                        }
+                    }
+                });
+
+                if (fechaMasAntigua) {
+                    // Calcular diferencia en minutos desde el pago más antiguo
+                    const diferenciaMinutos = (ahora - fechaMasAntigua) / (1000 * 60);
+
+                    // Verificar límite de 30 minutos
+                    if (diferenciaMinutos > 30) {
+                        const horas = Math.floor(diferenciaMinutos / 60);
+                        const minutos = Math.floor(diferenciaMinutos % 60);
+
+                        let tiempoMensaje = '';
+                        if (horas > 0) {
+                            tiempoMensaje = `${horas}h ${minutos}min`;
+                        } else {
+                            tiempoMensaje = `${minutos}min`;
+                        }
+
+                        return mostrarAlerta(
+                            `❌ Recibo ${recibo} expiró (hace ${tiempoMensaje}).\n` +
+                            `Máximo 30 minutos para usar el mismo recibo.`,
+                            'error'
+                        );
+                    }
+
+                    // Mostrar tiempo restante
+                    const tiempoRestante = Math.round(30 - diferenciaMinutos);
+                    if (!confirm(`⚠️ El recibo ${recibo} se usó por primera vez hace ${Math.round(diferenciaMinutos)} minutos.\n` +
+                        `⏰ Tienes ${tiempoRestante} minutos restantes.\n\n` +
+                        `¿Deseas continuar con este mismo recibo?`)) {
+                        return;
+                    }
+                }
+            }
+
+            if (!appState.token) return mostrarAlerta('❌ Token no disponible', 'error');
+
+            const tipoPago = dom.tipoCuota.checked ? 'cuota' : 'certificado';
+
+            const saveBtn = dom.saveReceiptBtn;
+            const originalText = saveBtn.innerHTML;
+
+            try {
+                saveBtn.innerHTML = '<span class="loading">⌛</span> Guardando';
+                saveBtn.disabled = true;
+
+                let registro = appState.pagos.find(p => p.cedula === appState.pendingPayment.cedula);
+                if (!registro) {
+                    registro = {
+                        cedula: appState.pendingPayment.cedula,
+                        nombre: appState.pendingPayment.nombre
+                    };
+                    appState.pagos.push(registro);
+                }
+
+                if (tipoPago === 'cuota') {
+                    const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+                    const campo = `fecha_pago_año_${appState.pendingPayment.año}`;
+                    // AHORA LAS CUOTAS TAMBIÉN INCLUYEN HORA
+                    const pagoStr = `${meses[appState.pendingPayment.mes]}_${appState.pendingPayment.año}_${CONFIG.VALOR_CUOTA}_${fecha}_${hora}_${recibo}`;
+
+                    registro[campo] = registro[campo] ? `${registro[campo]}; ${pagoStr}` : pagoStr;
+
+                    if (appState.pendingPayment.element) {
+                        appState.pendingPayment.element.classList.remove('debt', 'selected');
+                        appState.pendingPayment.element.classList.add('paid');
+                    }
+                } else {
+                    const mesActual = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'][appState.fechaActual.getMonth()];
+                    const añoActual = appState.fechaActual.getFullYear();
+                    const certificadoStr = `${mesActual}_${añoActual}_${CONFIG.VALOR_CERTIFICADO}_${fecha}_${hora}_${recibo}`;
+
+                    registro.certificado = registro.certificado ? `${registro.certificado}; ${certificadoStr}` : certificadoStr;
+                }
+
+                // Guardar directamente en GitHub
+                await guardarPagosEnGitHub();
+
+                calcularEstadisticas();
+                actualizarSiguienteRecibo();
+                renderizarTabla();
+
+                mostrarAlerta(`✅ ${tipoPago === 'cuota' ? 'Cuota' : 'Certificado'} guardado - Recibo: ${recibo}`, 'success');
+
+                dom.receiptModal.style.display = 'none';
+                appState.pendingPayment = null;
+
+            } catch (e) {
+                mostrarAlerta('Error al guardar: ' + e.message, 'error');
+            } finally {
+                saveBtn.innerHTML = originalText;
+                saveBtn.disabled = false;
+            }
         }
-        
-        // Guardar directamente en GitHub
-        await guardarPagosEnGitHub();
-        
-        calcularEstadisticas();
-        actualizarSiguienteRecibo();
-        renderizarTabla();
-        
-        mostrarAlerta(`✅ ${tipoPago === 'cuota' ? 'Cuota' : 'Certificado'} guardado - Recibo: ${recibo}`, 'success');
-        
-        dom.receiptModal.style.display = 'none';
-        appState.pendingPayment = null;
-        
-    } catch (e) {
-        mostrarAlerta('Error al guardar: ' + e.message, 'error');
-    } finally {
-        saveBtn.innerHTML = originalText;
-        saveBtn.disabled = false;
-    }
-}
 
         // ============================================================
         // GUARDAR EN GITHUB
@@ -2339,22 +2491,22 @@ async function validarToken(token) {
                 };
 
                 const url = `https://api.github.com/repos/${CONFIG.REPO_OWNER}/${CONFIG.REPO_NAME}/contents/${CONFIG.CUOTA_PATH}`;
-                
+
                 let sha = null;
                 try {
-                    const shaRes = await fetch(url, { 
-                        headers: { 'Authorization': `token ${appState.token}` } 
+                    const shaRes = await fetch(url, {
+                        headers: { 'Authorization': `token ${appState.token}` }
                     });
                     if (shaRes.ok) {
                         const shaData = await shaRes.json();
                         sha = shaData.sha;
                     }
-                } catch (e) {}
-                
+                } catch (e) { }
+
                 const res = await fetch(url, {
                     method: 'PUT',
-                    headers: { 
-                        'Authorization': `token ${appState.token}`, 
+                    headers: {
+                        'Authorization': `token ${appState.token}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
@@ -2369,7 +2521,7 @@ async function validarToken(token) {
                     const errorData = await res.json();
                     throw new Error(errorData.message || 'Error al guardar');
                 }
-                
+
                 return true;
             } catch (e) {
                 throw new Error(e.message);
@@ -2379,16 +2531,16 @@ async function validarToken(token) {
         // ============================================================
         // MODAL DE DETALLE
         // ============================================================
-        window.verDetalle = function(cedula) {
+        window.verDetalle = function (cedula) {
             resetInactivityTimer();
-            
+
             const afiliado = appState.afiliados.find(a => a.cedula === cedula);
             if (!afiliado) return;
-            
+
             dom.modalNombre.textContent = `📋 ${afiliado.nombre}`;
             const registro = appState.pagos.find(p => p.cedula === cedula) || {};
             const info = calcularInfoDetalle(cedula, afiliado.fecha);
-            
+
             let html = `<div style="background: #f0f8f0; padding: 16px; border-radius: 14px; margin-bottom: 16px; border-left: 0px solid #2a7a4a;">
                 <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; text-align: center;">
                     <div>
@@ -2419,40 +2571,40 @@ async function validarToken(token) {
                     <span style="background: #e0f0e0; padding: 4px 14px; border-radius: 100px;">${afiliado.fecha}</span>
                 </div>
             </div>`;
-            
-            const mesesNombres = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
+            const mesesNombres = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
             const afiliacion = parseFecha(afiliado.fecha);
             const hoy = appState.fechaActual;
             const mesesCondonadosLista = [];
-            
+
             for (let año = afiliacion.getFullYear(); año <= hoy.getFullYear(); año++) {
                 const mesInicio = (año === afiliacion.getFullYear()) ? afiliacion.getMonth() : 0;
                 const mesFin = (año === hoy.getFullYear()) ? hoy.getMonth() : 11;
-                
+
                 for (let mes = mesInicio; mes <= mesFin; mes++) {
                     if (esMesCondonado(año, mes) && !mesEstaPagado(cedula, año, mes)) {
                         mesesCondonadosLista.push({ año, mes });
                     }
                 }
             }
-            
+
             if (mesesCondonadosLista.length > 0) {
                 html += `<h4 style="margin: 20px 0 12px; font-weight: 700; color: #ffd966;">✨ Meses condonados (valor $0)</h4>`;
                 html += `<div style="background: #fff9e6; border: 1px solid #ffd966; border-radius: 14px; padding: 16px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 2px;">`;
-                mesesCondonadosLista.forEach(({año, mes}) => {
+                mesesCondonadosLista.forEach(({ año, mes }) => {
                     html += `<span style="background: #ffd966; color: #1a4a2a; padding: 6px 14px; border-radius: 100px; font-weight: 600; font-size: 0.75rem;">${mesesNombres[mes]} ${año}</span>`;
                 });
                 html += `</div>`;
             }
-            
+
             html += `<h4 style="margin-bottom: 14px; font-weight: 700; color: #1a4a2a;">💰 Historial de pagos</h4>`;
-            
+
             let hayPagos = false;
-            
+
             const años = [];
             for (let año = parseFecha(afiliado.fecha).getFullYear(); año <= appState.fechaActual.getFullYear(); año++) años.push(año);
-            
-            años.sort((a,b) => b - a).forEach(año => {
+
+            años.sort((a, b) => b - a).forEach(año => {
                 const pagos = extraerPagosDeString(registro[`fecha_pago_año_${año}`], año);
                 if (pagos.length) {
                     hayPagos = true;
@@ -2477,7 +2629,7 @@ async function validarToken(token) {
                     html += `</div>`;
                 }
             });
-            
+
             if (registro.certificado) {
                 const certificados = extraerCertificadosDeString(registro.certificado);
                 if (certificados.length) {
@@ -2499,18 +2651,18 @@ async function validarToken(token) {
                     html += `</div>`;
                 }
             }
-            
+
             if (!hayPagos) {
                 html += `<div style="padding: 8px; text-align: center; background: #f0f8f0; border-radius: 14px; color: #4a6b4a;">
                     No hay pagos registrados
                 </div>`;
             }
-            
+
             const mesesDeuda = calcularMesesDeuda(cedula, afiliado.fecha);
             if (mesesDeuda.length) {
                 html += `<h4 style="color: #c04040; margin: 20px 0 12px; font-weight: 700;">⚠️ Deuda pendiente</h4>`;
                 html += `<div style="background: #fff0f0; padding: 16px; border-radius: 14px; border: 1px solid #e0b0b0;">`;
-                mesesDeuda.forEach(({año, mes}) => {
+                mesesDeuda.forEach(({ año, mes }) => {
                     html += `<div style="display: flex; justify-content: space-between; align-items: center; padding: 2px 0; border-bottom: 1px solid #ffd0d0;">
                         <span style="text-transform: capitalize; font-weight: 600; color: #a04040;">${mesesNombres[mes]} ${año}</span>
                         <span style="font-weight: 700; color: #c04040;">$${CONFIG.VALOR_CUOTA.toLocaleString()}</span>
@@ -2526,7 +2678,7 @@ async function validarToken(token) {
                     <span style="color: #1a7a3a; font-weight: 700;">✓ Al día - No tiene deudas</span>
                 </div>`;
             }
-            
+
             dom.modalContent.innerHTML = html;
             dom.modal.style.display = 'flex';
         };
@@ -2536,30 +2688,30 @@ async function validarToken(token) {
         // ============================================================
         function generarReporteCompacto(titulo, filtroFn) {
             resetInactivityTimer();
-            
+
             const pagos = filtroFn ? obtenerTodosLosPagos().filter(filtroFn) : obtenerTodosLosPagos();
-            
+
             const usuarios = {};
-            
+
             pagos.forEach(p => {
                 if (!usuarios[p.cedula]) {
-                    usuarios[p.cedula] = { 
-                        cedula: p.cedula, 
-                        nombre: p.nombre, 
-                        items: [], 
-                        total: 0 
+                    usuarios[p.cedula] = {
+                        cedula: p.cedula,
+                        nombre: p.nombre,
+                        items: [],
+                        total: 0
                     };
                 }
                 const tipoIcon = p.tipo === 'cuota' ? '💰' : '📜';
-                usuarios[p.cedula].items.push({ 
+                usuarios[p.cedula].items.push({
                     tipo: p.tipo,
                     icon: tipoIcon,
                     mes: p.mes ? p.mes.charAt(0).toUpperCase() + p.mes.slice(1, 3) : 'Cert',
-                    año: p.año, 
+                    año: p.año,
                     fecha: p.fecha,
                     hora: p.hora || '',
                     valor: p.valor,
-                    recibo: p.recibo 
+                    recibo: p.recibo
                 });
                 usuarios[p.cedula].total += p.valor;
             });
@@ -2580,16 +2732,16 @@ async function validarToken(token) {
                     </tr>
                 </thead>
                 <tbody>`;
-            
+
             if (Object.keys(usuarios).length === 0) {
                 html += `<tr><td colspan="4" style="padding: 40px; text-align: center; color: #6a8b6a;">No hay registros</td></tr>`;
             } else {
-                Object.values(usuarios).sort((a,b) => a.nombre.localeCompare(b.nombre)).forEach(u => {
+                Object.values(usuarios).sort((a, b) => a.nombre.localeCompare(b.nombre)).forEach(u => {
                     html += `<tr style="border-bottom: 1px solid #d8ecd8;">`;
                     html += `<td style="padding: 8px; font-weight: 600; text-align: center; word-break: break-word;">${u.cedula}</td>`;
                     html += `<td style="padding: 8px; text-align: left; word-break: break-word;">${u.nombre}</td>`;
                     html += `<td style="padding: 8px; text-align: left; word-break: break-word;">`;
-                    u.items.sort((a,b) => b.año - a.año || a.mes.localeCompare(b.mes)).forEach(item => {
+                    u.items.sort((a, b) => b.año - a.año || a.mes.localeCompare(b.mes)).forEach(item => {
                         let detalle = '';
                         if (item.tipo === 'cuota') {
                             detalle = `${item.icon} ${item.mes} ${item.año}`;
@@ -2609,7 +2761,7 @@ async function validarToken(token) {
                 </tr>`;
             }
             html += `</tbody></table>`;
-            
+
             dom.reportTitle.textContent = titulo;
             dom.reportContent.innerHTML = html;
             dom.reportModal.style.display = 'flex';
@@ -2617,10 +2769,10 @@ async function validarToken(token) {
 
         function generarReporteCertificados() {
             resetInactivityTimer();
-            
+
             const todosPagos = obtenerTodosLosPagos();
             const certificados = todosPagos.filter(p => p.tipo === 'certificado');
-            
+
             let html = `<table style="width: 100%; border-collapse: collapse; font-size: 0.7rem;">
                 <thead>
                     <tr style="background: #b68b40; color: white;">
@@ -2633,11 +2785,11 @@ async function validarToken(token) {
                     </tr>
                 </thead>
                 <tbody>`;
-            
+
             if (certificados.length === 0) {
                 html += `<tr><td colspan="6" style="padding: 40px; text-align: center;">No hay certificados emitidos</td></tr>`;
             } else {
-                certificados.sort((a,b) => b.fechaObj - a.fechaObj).forEach(c => {
+                certificados.sort((a, b) => b.fechaObj - a.fechaObj).forEach(c => {
                     html += `<tr style="border-bottom: 1px solid #ffd966;">
                         <td style="padding: 8px; text-align: center; font-weight: 600;">${c.recibo}</td>
                         <td style="padding: 8px; text-align: center;">${c.cedula}</td>
@@ -2647,7 +2799,7 @@ async function validarToken(token) {
                         <td style="padding: 8px; text-align: right; font-weight: 700; color: #b68b40;">$${c.valor.toLocaleString()}</td>
                     </tr>`;
                 });
-                
+
                 const total = certificados.reduce((s, c) => s + c.valor, 0);
                 html += `<tr style="background: #fff3cd; font-weight: 700;">
                     <td colspan="5" style="padding: 10px; text-align: right;">Total certificados:</td>
@@ -2655,7 +2807,7 @@ async function validarToken(token) {
                 </tr>`;
             }
             html += `</tbody></table>`;
-            
+
             dom.reportTitle.textContent = '📜 Certificados emitidos';
             dom.reportContent.innerHTML = html;
             dom.reportModal.style.display = 'flex';
@@ -2701,13 +2853,13 @@ async function validarToken(token) {
                 dom.apiError.textContent = '❌ Debes ingresar un token';
                 return;
             }
-            
+
             dom.validateTokenBtn.disabled = true;
             dom.validateTokenBtn.innerHTML = '<span class="loading">⌛</span> Validando...';
             dom.apiError.style.display = 'none';
-            
+
             const esValido = await validarToken(token);
-            
+
             if (esValido) {
                 await cargarDatosConToken(token);
             } else {
@@ -2874,12 +3026,12 @@ async function validarToken(token) {
             dom.paymentsTodayBtn.addEventListener('click', () => {
                 resetInactivityTimer();
                 const hoy = appState.fechaActual;
-                const d = hoy.getDate().toString().padStart(2,'0');
+                const d = hoy.getDate().toString().padStart(2, '0');
                 const m = hoy.getMonth();
                 const a = hoy.getFullYear();
                 generarReporteCompacto('Pagos de hoy', p => {
                     const [dd, mm, aa] = p.fecha.split('/');
-                    return dd === d && parseInt(mm)-1 === m && parseInt(aa) === a;
+                    return dd === d && parseInt(mm) - 1 === m && parseInt(aa) === a;
                 });
             });
 
@@ -2887,9 +3039,9 @@ async function validarToken(token) {
                 resetInactivityTimer();
                 const m = appState.fechaActual.getMonth();
                 const a = appState.fechaActual.getFullYear();
-                generarReporteCompacto(`Pagos de ${['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'][m]} ${a}`, p => {
+                generarReporteCompacto(`Pagos de ${['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'][m]} ${a}`, p => {
                     const [dd, mm, aa] = p.fecha.split('/');
-                    return parseInt(mm)-1 === m && parseInt(aa) === a;
+                    return parseInt(mm) - 1 === m && parseInt(aa) === a;
                 });
             });
 
@@ -2903,7 +3055,7 @@ async function validarToken(token) {
                 resetInactivityTimer();
                 generarReporteCompacto('Todos los pagos');
             });
-            
+
             dom.certificatesReportBtn.addEventListener('click', () => {
                 resetInactivityTimer();
                 generarReporteCertificados();
@@ -2962,7 +3114,7 @@ async function validarToken(token) {
                 resetInactivityTimer();
                 dom.modal.style.display = 'none';
             });
-            
+
             dom.closeReportModalBtn.addEventListener('click', () => {
                 resetInactivityTimer();
                 dom.reportModal.style.display = 'none';
@@ -2984,29 +3136,29 @@ async function validarToken(token) {
 
             const pagarCertificadoBtn = document.getElementById('pagarCertificadoBtn');
             if (pagarCertificadoBtn) {
-                pagarCertificadoBtn.addEventListener('click', function() {
+                pagarCertificadoBtn.addEventListener('click', function () {
                     resetInactivityTimer();
-                    
+
                     const filtro = appState.filtroActual.trim();
-                    
+
                     if (!filtro) {
                         mostrarAlerta('❌ Debes buscar una cédula primero', 'error');
                         return;
                     }
-                    
+
                     const afiliado = appState.afiliados.find(af => af.cedula === filtro);
-                    
+
                     if (!afiliado) {
                         mostrarAlerta('❌ Cédula no encontrada', 'error');
                         return;
                     }
-                    
+
                     appState.pendingPayment = {
                         cedula: afiliado.cedula,
                         nombre: afiliado.nombre,
                         tipo: 'certificado'
                     };
-                    
+
                     dom.receiptInfo.innerHTML = `
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                             <span style="font-weight: 700; color: #1a4a2a;">${afiliado.nombre}</span>
@@ -3017,18 +3169,18 @@ async function validarToken(token) {
                             <span style="font-weight: 700; color: #b68b40;">$${CONFIG.VALOR_CERTIFICADO.toLocaleString()}</span>
                         </div>
                     `;
-                    
+
                     dom.optionCuota.style.display = 'none';
                     dom.optionCertificado.style.display = 'flex';
                     dom.tipoCertificado.checked = true;
                     dom.optionCertificado.classList.add('selected');
-                    
+
                     const paymentSelector = document.querySelector('.payment-type-selector');
                     if (paymentSelector) {
                         paymentSelector.style.padding = '8px';
                         paymentSelector.style.background = '#f8fff8';
                     }
-                    
+
                     dom.receiptNumber.value = dom.nextReceiptNumber.textContent;
                     dom.receiptModal.style.display = 'flex';
                     setTimeout(() => dom.receiptNumber.focus(), 100);
@@ -3042,14 +3194,14 @@ async function validarToken(token) {
                     resetInactivityTimer();
                     const tarjetas = document.querySelectorAll('.stat-card');
                     let todasVolteadas = true;
-                    
+
                     // Verificar si todas están volteadas
                     tarjetas.forEach(t => {
                         if (!t.classList.contains('flipped')) {
                             todasVolteadas = false;
                         }
                     });
-                    
+
                     // Voltear o desvoltear según el estado
                     tarjetas.forEach(t => {
                         if (todasVolteadas) {
@@ -3058,34 +3210,35 @@ async function validarToken(token) {
                             t.classList.add('flipped');
                         }
                     });
-                    
+
                     toggleAllCardsBtn.innerHTML = todasVolteadas ? '<span>👁️</span> Tarjetas' : '<span>🔒</span> Ocultar';
                 });
             }
         }
 
         // ============================================================
-// INICIALIZACIÓN
-// ============================================================
-async function inicializar() {
-    const añoActual = appState.fechaActual.getFullYear();
-    for (let i = 2024; i <= añoActual; i++) {
-        const opt = document.createElement('option');
-        opt.value = i;
-        opt.textContent = i;
-        dom.yearSelect.appendChild(opt);
-    }
-    dom.yearSelect.value = añoActual;
-    
-    dom.fechaActualDisplay.textContent = formatearFecha(appState.fechaActual);
-    
-    inicializarEventos();
-    
-    // Intentar cargar token guardado
-    await cargarTokenGuardado();
-}
+        // INICIALIZACIÓN
+        // ============================================================
+        async function inicializar() {
+            const añoActual = appState.fechaActual.getFullYear();
+            for (let i = 2024; i <= añoActual; i++) {
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.textContent = i;
+                dom.yearSelect.appendChild(opt);
+            }
+            dom.yearSelect.value = añoActual;
+
+            dom.fechaActualDisplay.textContent = formatearFecha(appState.fechaActual);
+
+            inicializarEventos();
+
+            // Intentar cargar token guardado
+            await cargarTokenGuardado();
+        }
 
         inicializar();
     </script>
 </body>
+
 </html>
