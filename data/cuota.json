@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-03-01T17:07:27.364Z",
+  "ultima_actualizacion": "2026-03-01T17:07:35.372Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -159,7 +159,7 @@
       "cedula": "86043702",
       "nombre": "WILSON ALEXANDER MORA VEGA",
       "certificado": "marzo_2026_20000_01/03/2026_12:07:13_00027",
-      "fecha_pago_año_2026": "enero_2026_5000_01/03/2026_12:07:26_00027"
+      "fecha_pago_año_2026": "enero_2026_5000_01/03/2026_12:07:26_00027; febrero_2026_5000_01/03/2026_12:07:33_00027"
     }
   ]
 }
