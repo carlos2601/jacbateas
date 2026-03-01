@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>JAC Bateas · Informes de Tesorería</title>
+    <style>
+        /* ===== RESET Y VARIABLES - MISMO DISEÑO QUE TESORERIA ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #4c724c 0%, #4c724c 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5px;
+        }
+
+        .app {
+            max-width: 1440px;
+            width: 100%;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 15px 35px rgba(30, 74, 44, 0.08);
+            padding: 5px;
+            border: 1px solid rgba(200, 220, 200, 0.3);
+        }
+
+        /* ===== HEADER CON COLOR ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2px;
+            padding-bottom: 1px;
+            border-bottom: 2px solid #d0e6d0;
+        }
+
+        .logo-area h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1a4a2a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-area h1 span {
+            background: #e6f0e6;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #1a4a2a;
+            letter-spacing: 0.3px;
+            border: 1px solid #b8d8b8;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #e6f0e6;
+            padding: 4px 15px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #1a4a2a;
+        }
+
+        .print-btn {
+            background: #4a6b4a;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .print-btn:hover {
+            background: #2a6a3a;
+        }
+
+        /* ===== MODAL DE API - IGUAL QUE TESORERIA ===== */
+        .api-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 74, 42, 0.4);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 20000;
+            padding: 20px;
+        }
+
+        .api-modal-content {
+            background: white;
+            border-radius: 24px;
+            max-width: 400px;
+            width: 100%;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 40, 0, 0.3);
+            border: 2px solid #1a4a2a;
+        }
+
+        .api-modal-content h2 {
+            color: #1a4a2a;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .api-modal-content p {
+            color: #4a6b4a;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .api-modal-content input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #d0e4d0;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            outline: none;
+        }
+
+        .api-modal-content input:focus {
+            border-color: #1a4a2a;
+        }
+
+        .api-modal-content button {
+            background: #1a4a2a;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .api-modal-content button:hover {
+            background: #2a6a3a;
+        }
+
+        .api-modal-content .error-message {
+            color: #c04040;
+            margin-top: 10px;
+            font-size: 0.8rem;
+            display: none;
+        }
+
+        /* ===== BOTONES - MISMO ESTILO ===== */
+        .btn {
+            border: none;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.15s;
+            background: white;
+            color: #1e293b;
+            border: 1px solid #d0e0d0;
+        }
+
+        .btn:hover {
+            background: #f0f8f0;
+            border-color: #a0c0a0;
+        }
+
+        .btn-primary {
+            background: #1a4a2a;
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #2a6a3a;
+        }
+
+        .btn-success {
+            background: #1e7a4a;
+            color: white;
+            border: none;
+        }
+
+        .btn-success:hover {
+            background: #2a8e5a;
+        }
+
+        .btn-tesoreria {
+            background: #1a4a2a;
+            color: white;
+            border: none;
+        }
+
+        /* ===== BARRA DE ACCIONES ===== */
+        .action-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 2px;
+            align-items: center;
+            background: #1a4a2a;
+            padding: 12px 16px;
+            border-radius: 20px;
+            border: 1px solid #d8ecd8;
+        }
+
+        .search-box {
+            flex: 0 0 250px;
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 1.5px solid #d8ecd8;
+            border-radius: 10px;
+            padding: 0 10px;
+            transition: all 0.15s;
+        }
+
+        .search-box:focus-within {
+            border-color: #2a7a4a;
+            box-shadow: 0 0 0 3px rgba(42, 122, 74, 0.1);
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 8px 6px;
+            border: none;
+            background: transparent;
+            font-size: 0.85rem;
+        }
+
+        .search-box input:focus {
+            outline: none;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-left: auto;
+        }
+
+        /* ===== TARJETAS DE ESTADÍSTICAS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+            margin: 16px 0;
+            width: 100%;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 10px 2px;
+            border-radius: 10px;
+            border: 1px solid #39b339;
+            box-shadow: 0 2px 4px rgba(0, 40, 0, 0.05);
+            border-top: 3px solid #8fc98f;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .stat-card:nth-child(1) {
+            border-top-color: #ff6b6b;
+        }
+
+        .stat-card:nth-child(2) {
+            border-top-color: #4a90e2;
+        }
+
+        .stat-card:nth-child(3) {
+            border-top-color: #ffaa00;
+        }
+
+        .stat-card:nth-child(4) {
+            border-top-color: #9370db;
+        }
+
+        .stat-card:nth-child(5) {
+            border-top-color: #50c878;
+        }
+
+        .stat-card:nth-child(6) {
+            border-top-color: #ffaa00;
+        }
+
+        .stat-card:nth-child(7) {
+            border-top-color: #b68b40;
+        }
+
+        .stat-label {
+            font-size: 0.6rem;
+            color: #4a6b4a;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 4px;
+            white-space: nowrap;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1a3a2a;
+            line-height: 1.2;
+        }
+
+        .stat-desc {
+            font-size: 0.5rem;
+            color: #6a8b6a;
+            margin-top: 2px;
+            white-space: nowrap;
+        }
+
+        /* ===== TABLA CON EXPANSIÓN ===== */
+        .table-section {
+            background: #2b831c;
+            border-radius: 20px;
+            border: 3px solid #2b831c;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 16px;
+            background: #caddce;
+            border-bottom: 2px solid #c8e4c8;
+        }
+
+        .table-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a4a2a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.75rem;
+        }
+
+        th {
+            background: #1a4a2a;
+            color: white;
+            font-weight: 600;
+            padding: 10px 4px;
+            text-align: center;
+            font-size: 0.8rem;
+            letter-spacing: 0.3px;
+        }
+
+        td {
+            padding: 6px 4px;
+            border-bottom: 1px solid #e8f4e8;
+            vertical-align: middle;
+            text-align: center;
+            background: #e7e6e6;
+            font-weight: 500;
+        }
+
+        tr:hover td {
+            background: #c7cac7;
+        }
+
+        /* Estilo para filas de grupo (fechas) */
+        .group-row {
+            background: #1a4a2a !important;
+            color: white !important;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .group-row td {
+            background: #75b98c !important;
+            color: rgb(0, 0, 0) !important;
+            font-weight: 900;
+            border-bottom: 2px solid #cd9f13;
+            padding: 10px 4px;
+            font-size: 1rem;
+        }
+
+        .group-row:hover td {
+            background: #2a6a3a !important;
+        }
+
+        .expand-icon {
+            font-size: 1.2rem;
+            margin-right: 8px;
+            display: inline-block;
+        }
+
+        /* Filas de detalles (ocultas por defecto) */
+        .detail-row {
+            display: none;
+        }
+
+        .detail-row.show {
+            display: table-row;
+        }
+
+        .detail-row td {
+            background: #ffffff;
+            padding: 4px 4px;
+        }
+
+        .badge-cuota {
+            background: #e0f0e0;
+            color: #1a5a2a;
+            padding: 2px 8px;
+            border-radius: 100px;
+            font-size: 0.65rem;
+            font-weight: 700;
+        }
+
+        .badge-certificado {
+            background: #fff3cd;
+            color: #8a6a2a;
+            padding: 2px 8px;
+            border-radius: 100px;
+            font-size: 0.65rem;
+            font-weight: 700;
+        }
+
+        /* ===== PAGINACIÓN ===== */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px 16px;
+            gap: 16px;
+            border-top: 2px solid #d8ecd8;
+            background: #caddce;
+            flex-wrap: wrap;
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .page-btn {
+            min-width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            border: 1px solid #c8e0c8;
+            background: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: #1a4a2a;
+            padding: 0 4px;
+        }
+
+        .page-btn:hover {
+            background: #e0f0e0;
+        }
+
+        .page-btn.active {
+            background: #1a4a2a;
+            color: white;
+            border-color: #1a4a2a;
+        }
+
+        .page-input {
+            width: 50px;
+            padding: 4px;
+            border: 2px solid #c8e0c8;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 600;
+            color: #1a4a2a;
+            font-size: 0.7rem;
+        }
+
+        /* ===== MODALES ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 74, 42, 0.4);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 40, 0, 0.3);
+            border: 1px solid #d0e4d0;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #c8e4c8;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 10;
+        }
+
+        .modal-header h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a4a2a;
+            text-align: center;
+            flex: 1;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: #6a8b6a;
+            padding: 2px 6px;
+        }
+
+        .close-btn:hover {
+            color: #1a4a2a;
+        }
+
+        .alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: none;
+            z-index: 10002;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #e4ffe4;
+            color: #1a4a2a;
+            border-left: 6px solid #2a8e5a;
+        }
+
+        .alert-error {
+            background: #ffe4e4;
+            color: #8a2a2a;
+            border-left: 6px solid #c04040;
+        }
+
+        .alert-info {
+            background: #e4f0ff;
+            color: #2a4a6a;
+            border-left: 6px solid #4a8ac0;
+        }
+
+        .loading {
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .session-timer {
+            background: #f0f0f0;
+            color: #1a4a2a;
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid #c0c0c0;
+            margin-right: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 800px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .action-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                flex: auto;
+                max-width: 100%;
+            }
+
+            .filter-group {
+                justify-content: center;
+            }
+        }
+
+        /* ===== ALINEACIÓN DE COLUMNAS ===== */
+        th {
+            text-align: center;
+        }
+
+        td:nth-child(5),
+        td:nth-child(6),
+        td:nth-child(8),
+        td:nth-child(9) {
+            text-align: right !important;
+            padding-right: 15px !important;
+        }
+
+        td:nth-child(1),
+        td:nth-child(2),
+        td:nth-child(3),
+        td:nth-child(4),
+        td:nth-child(7) {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- MODAL DE API -->
+    <div id="apiModal" class="api-modal">
+        <div class="api-modal-content">
+            <h2>🔐 Configuración API</h2>
+            <p>Ingresa el token de GitHub para acceder al sistema</p>
+            <input type="password" id="apiTokenInput" placeholder="Token GitHub" autofocus>
+            <button id="validateTokenBtn">Validar y continuar</button>
+            <div id="apiError" class="error-message">❌ Token inválido. Intenta nuevamente.</div>
+        </div>
+    </div>
+
+    <!-- APLICACIÓN PRINCIPAL -->
+    <div class="app" id="mainApp" style="display: none;">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="logo-area">
+                <h1>📊 Sistema de Informes - Junta de Accion Comunal Bateas sector 3</h1>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <div class="user-info" id="userInfoDisplay">
+                    <span>👤</span>
+                    <span id="userNameDisplay">Usuario</span>
+                </div>
+                <div id="sessionTimer" class="session-timer">
+                    <span>⏱️</span>
+                    <span id="timerDisplay">5:00</span>
+                </div>
+                <button id="logoutBtn" class="btn" style="background: #c04040; color: white;">🚪 Salir</button>
+            </div>
+        </div>
+
+        <!-- MODALES -->
+        <div id="logoutConfirmModal" class="modal">
+            <div class="modal-content" style="max-width: 400px; text-align: center;">
+                <h3>🔒 Cerrar sesión</h3>
+                <p>¿Estás seguro que deseas cerrar la sesión?</p>
+                <div style="display: flex; gap: 12px; justify-content: center;">
+                    <button id="confirmLogoutBtn" class="btn" style="background: #c04040; color: white;">Sí</button>
+                    <button id="cancelLogoutBtn" class="btn">No</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="sessionExpiredModal" class="modal">
+            <div class="modal-content" style="max-width: 400px; text-align: center;">
+                <h3>⏰ Sesión expirada</h3>
+                <p>Tu sesión ha expirado por inactividad de 5 minutos.</p>
+                <button id="redirectToLoginBtn" class="btn btn-primary">Ir al inicio</button>
+            </div>
+        </div>
+
+        <!-- ALERTAS -->
+        <div id="alertMessage" class="alert"></div>
+
+        <!-- ACCIONES -->
+        <div class="action-bar">
+            <div class="search-box">
+                <span style="color: #6a8b6a;">🔍</span>
+                <input type="text" id="searchInput" placeholder="Buscar por nombre, cédula o recibo...">
+            </div>
+            <div class="filter-group">
+                <select id="selectDia" class="btn" style="min-width: 90px;">
+                    <option value="">Día</option>
+                </select>
+
+                <select id="selectMes" class="btn" style="min-width: 110px;">
+                    <option value="">Mes</option>
+                    <option value="0">Enero</option>
+                    <option value="1">Febrero</option>
+                    <option value="2">Marzo</option>
+                    <option value="3">Abril</option>
+                    <option value="4">Mayo</option>
+                    <option value="5">Junio</option>
+                    <option value="6">Julio</option>
+                    <option value="7">Agosto</option>
+                    <option value="8">Septiembre</option>
+                    <option value="9">Octubre</option>
+                    <option value="10">Noviembre</option>
+                    <option value="11">Diciembre</option>
+                </select>
+
+                <select id="selectAnio" class="btn" style="min-width: 90px;">
+                    <option value="">Año</option>
+                </select>
+
+                <button id="filterApplyBtn" class="btn btn-primary">🔍 Aplicar</button>
+                <button id="filterAllBtn" class="btn">📋 Todos</button>
+                <button id="filterCuotasBtn" class="btn" style="background: #e0f0e0;">💰 Cuotas</button>
+                <button id="filterCertificadosBtn" class="btn" style="background: #fff3cd;">📜 Certificados</button>
+            </div>
+        </div>
+
+        <!-- TARJETAS DE ESTADÍSTICAS -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">🧾 Último recibo</div>
+                <div class="stat-value" id="reciboMasAlto">00000</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">👥 Pagaron</div>
+                <div class="stat-value" id="totalPagadores">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">📆 Meses pagados</div>
+                <div class="stat-value" id="mesesPagados">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">📜 Certificados</div>
+                <div class="stat-value" id="totalCertificados">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">💰 Recaudado cuotas</div>
+                <div class="stat-value" id="recaudadoCuotas">$0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">🧾 Recaudado certificados</div>
+                <div class="stat-value" id="recaudadoCertificados">$0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">💰 Total recaudado</div>
+                <div class="stat-value" id="totalRecaudado">$0</div>
+            </div>
+        </div>
+
+        <!-- TABLA CON EXPANSIÓN -->
+        <div class="table-section">
+            <div class="table-header">
+                <div class="table-title">
+                    📋 <span id="filtroActualDisplay">todos los pagos</span>
+                </div>
+                <div class="table-actions">
+                    <button id="printVisibleBtn" class="print-btn">🖨️ Imprimir visible</button>
+                    <button id="exportCSVBtn" class="btn btn-success">📥 CSV</button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table id="paymentsTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 30px;"></th>
+                            <th>Recibo</th>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Tipo</th>
+                            <th>Cédula</th>
+                            <th>Nombre</th>
+                            <th>Detalle</th>
+                            <th>Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+
+            <!-- PAGINACIÓN -->
+            <div class="pagination">
+                <div class="pagination-controls">
+                    <button class="page-btn" id="prevPageBtn">‹</button>
+                    <div id="pageNumbers" style="display: flex; gap: 4px;"></div>
+                    <button class="page-btn" id="nextPageBtn">›</button>
+                    <div style="display: flex; align-items: center; gap: 6px; margin-left: 10px;">
+                        <span>Ir a</span>
+                        <input type="number" id="pageInput" class="page-input" min="1" value="1">
+                        <button class="page-btn" id="goToPageBtn">→</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL DE DETALLE -->
+        <div id="detailModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modalFecha">Detalle del día</h3>
+                    <button class="close-btn" id="closeModalBtn">&times;</button>
+                </div>
+                <div id="modalContent"></div>
+            </div>
+        </div>
+
+        <div style="margin-top: 16px; text-align: center; color: #6a8b6a; font-size: 0.7rem;">
+            <span>JAC Bateas · Puerto Gaitán, Meta</span>
+            <span>📅 <span id="fechaActualDisplay"></span></span>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // VERIFICACIÓN DE AUTENTICACIÓN
+        // ============================================================
+        (function () {
+            const token = sessionStorage.getItem('session_token');
+            const user = sessionStorage.getItem('usuario_actual');
+            if (!token || !user) window.location.href = 'index.html';
+        })();
+
+        // ============================================================
+        // CONFIGURACIÓN
+        // ============================================================
+        const CONFIG = {
+            DESTINATION: {
+                REPO_OWNER: 'carlos2601',
+                REPO_NAME: 'jacbateas',
+                CUOTA_PATH: 'data/cuota.json',
+                BRANCH: 'main'
+            },
+            PAGE_SIZE: 8
+        };
+
+        let appState = {
+            pagos: [],
+            afiliados: [],
+            token: localStorage.getItem('github_token'),
+            fechaActual: new Date(),
+            filtroTexto: '',
+            filtroDia: '',
+            filtroMes: '',
+            filtroAnio: '',
+            filtroTipo: 'todos',
+            currentPage: 1,
+            totalPages: 1,
+            todosPagos: [],
+            pagosAgrupados: [],
+            usuarioActual: JSON.parse(sessionStorage.getItem('usuario_actual') || '{}')
+        };
+
+        // Elementos DOM
+        const dom = {
+            mainApp: document.getElementById('mainApp'),
+            apiModal: document.getElementById('apiModal'),
+            apiTokenInput: document.getElementById('apiTokenInput'),
+            validateTokenBtn: document.getElementById('validateTokenBtn'),
+            apiError: document.getElementById('apiError'),
+            tableBody: document.getElementById('tableBody'),
+            alertMessage: document.getElementById('alertMessage'),
+            searchInput: document.getElementById('searchInput'),
+            filterApplyBtn: document.getElementById('filterApplyBtn'),
+            filterAllBtn: document.getElementById('filterAllBtn'),
+            filterCuotasBtn: document.getElementById('filterCuotasBtn'),
+            filterCertificadosBtn: document.getElementById('filterCertificadosBtn'),
+            exportCSVBtn: document.getElementById('exportCSVBtn'),
+            printVisibleBtn: document.getElementById('printVisibleBtn'),
+            totalRecaudado: document.getElementById('totalRecaudado'),
+            recaudadoCuotas: document.getElementById('recaudadoCuotas'),
+            recaudadoCertificados: document.getElementById('recaudadoCertificados'),
+            mesesPagados: document.getElementById('mesesPagados'),
+            totalCertificados: document.getElementById('totalCertificados'),
+            totalPagadores: document.getElementById('totalPagadores'),
+            reciboMasAlto: document.getElementById('reciboMasAlto'),
+            filtroActualDisplay: document.getElementById('filtroActualDisplay'),
+            fechaActualDisplay: document.getElementById('fechaActualDisplay'),
+            modal: document.getElementById('detailModal'),
+            closeModalBtn: document.getElementById('closeModalBtn'),
+            prevPageBtn: document.getElementById('prevPageBtn'),
+            nextPageBtn: document.getElementById('nextPageBtn'),
+            pageNumbers: document.getElementById('pageNumbers'),
+            pageInput: document.getElementById('pageInput'),
+            goToPageBtn: document.getElementById('goToPageBtn'),
+            userNameDisplay: document.getElementById('userNameDisplay'),
+            selectDia: document.getElementById('selectDia'),
+            selectMes: document.getElementById('selectMes'),
+            selectAnio: document.getElementById('selectAnio')
+        };
+
+        if (dom.userNameDisplay) dom.userNameDisplay.textContent = appState.usuarioActual.usuario || 'Usuario';
+
+        // ============================================================
+        // FUNCIONES DE UTILIDAD
+        // ============================================================
+        function formatearFecha(date) {
+            return date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+
+        function extraerPagos(reg) {
+            const pagos = [];
+            const afiliado = appState.afiliados.find(a => a.cedula === reg.cedula);
+            const nombre = afiliado ? afiliado.nombre : reg.nombre;
+
+            for (let año = 2024; año <= appState.fechaActual.getFullYear(); año++) {
+                const campo = `fecha_pago_año_${año}`;
+                if (reg[campo]) {
+                    const pagosAño = reg[campo].split(';').filter(p => p.trim()).map(p => {
+                        const partes = p.trim().split('_');
+                        return {
+                            cedula: reg.cedula,
+                            nombre,
+                            tipo: 'cuota',
+                            mes: partes[0],
+                            año: parseInt(partes[1]),
+                            valor: parseInt(partes[2]),
+                            fecha: partes[3],
+                            hora: partes[4] || '00:00:00',
+                            recibo: partes[5] || 'N/A',
+                            fechaObj: new Date(partes[3].split('/')[2], partes[3].split('/')[1] - 1, partes[3].split('/')[0])
+                        };
+                    });
+                    pagos.push(...pagosAño);
+                }
+            }
+
+            if (reg.certificado) {
+                const certificados = reg.certificado.split(';').filter(c => c.trim()).map(c => {
+                    const partes = c.trim().split('_');
+                    return {
+                        cedula: reg.cedula,
+                        nombre,
+                        tipo: 'certificado',
+                        mes: partes[0],
+                        año: parseInt(partes[1]),
+                        valor: parseInt(partes[2]),
+                        fecha: partes[3],
+                        hora: partes[4] || '00:00:00',
+                        recibo: partes[5] || 'N/A',
+                        fechaObj: new Date(partes[3].split('/')[2], partes[3].split('/')[1] - 1, partes[3].split('/')[0])
+                    };
+                });
+                pagos.push(...certificados);
+            }
+            return pagos;
+        }
+
+        // ============================================================
+        // CARGAR DATOS
+        // ============================================================
+        async function cargarAfiliados() {
+            const url = 'https://raw.githubusercontent.com/carlos2601/juntadeaccioncomunalbarriobateaspuertogaitanmetalilianalondo-ogallego1010101010101000111010001010010/refs/heads/main/afiliados.json';
+            const res = await fetch(url);
+            return await res.json();
+        }
+
+        async function cargarPagos() {
+            const url = `https://raw.githubusercontent.com/${CONFIG.DESTINATION.REPO_OWNER}/${CONFIG.DESTINATION.REPO_NAME}/refs/heads/${CONFIG.DESTINATION.BRANCH}/${CONFIG.DESTINATION.CUOTA_PATH}`;
+            try {
+                const res = await fetch(url);
+                if (res.status === 404) return [];
+                return (await res.json()).pagos || [];
+            } catch { return []; }
+        }
+
+        async function validarToken(token) {
+            try {
+                const url = `https://api.github.com/repos/${CONFIG.DESTINATION.REPO_OWNER}/${CONFIG.DESTINATION.REPO_NAME}/contents/${CONFIG.DESTINATION.CUOTA_PATH}`;
+                const res = await fetch(url, { headers: { 'Authorization': `token ${token}` } });
+                return res.status === 200 || res.status === 404;
+            } catch { return false; }
+        }
+
+        async function cargarDatos() {
+            try {
+                mostrarAlerta('📥 Cargando datos...', 'info');
+                appState.afiliados = await cargarAfiliados();
+                const pagosData = await cargarPagos();
+                appState.todosPagos = [];
+                pagosData.forEach(reg => appState.todosPagos.push(...extraerPagos(reg)));
+                appState.todosPagos.sort((a, b) => b.fechaObj - a.fechaObj);
+                calcularEstadisticas();
+                aplicarFiltrosYAgrupar();
+                dom.apiModal.style.display = 'none';
+                dom.mainApp.style.display = 'block';
+                mostrarAlerta(`✅ ${appState.todosPagos.length} pagos cargados`, 'success');
+                iniciarTemporizadorInactividad();
+            } catch (e) {
+                mostrarAlerta('Error al cargar: ' + e.message, 'error');
+            }
+        }
+
+        // ============================================================
+        // INACTIVIDAD
+        // ============================================================
+        let inactivityTimer, timerInterval, remainingSeconds = 300;
+
+        function reiniciarTemporizador() {
+            clearTimeout(inactivityTimer); clearInterval(timerInterval);
+            inactivityTimer = setTimeout(() => {
+                document.getElementById('sessionExpiredModal').style.display = 'flex';
+                sessionStorage.clear();
+            }, 300000);
+            remainingSeconds = 300;
+            actualizarDisplayTiempo();
+            timerInterval = setInterval(actualizarDisplayTiempo, 1000);
+        }
+
+        function actualizarDisplayTiempo() {
+            if (remainingSeconds <= 0) { clearInterval(timerInterval); return; }
+            remainingSeconds--;
+            const minutos = Math.floor(remainingSeconds / 60);
+            const segundos = remainingSeconds % 60;
+            const timerDisplay = document.getElementById('timerDisplay');
+            if (timerDisplay) timerDisplay.textContent = `${minutos}:${segundos.toString().padStart(2, '0')}`;
+        }
+
+        function iniciarTemporizadorInactividad() {
+            ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'].forEach(e =>
+                document.addEventListener(e, reiniciarTemporizador));
+            reiniciarTemporizador();
+        }
+
+        // ============================================================
+        // FILTROS Y AGRUPACIÓN
+        // ============================================================
+        function aplicarFiltros() {
+            let pagos = [...appState.todosPagos];
+
+            if (appState.filtroTexto) {
+                const texto = appState.filtroTexto.toLowerCase();
+                pagos = pagos.filter(p => p.nombre.toLowerCase().includes(texto) ||
+                    p.cedula.toLowerCase().includes(texto) || p.recibo.toLowerCase().includes(texto));
+            }
+
+            if (appState.filtroTipo !== 'todos') {
+                pagos = pagos.filter(p => p.tipo === appState.filtroTipo);
+            }
+
+            // FILTRO COMBINADO: día + mes + año
+            pagos = pagos.filter(p => {
+                const [dia, mes, año] = p.fecha.split('/').map(Number);
+                if (appState.filtroDia && dia !== parseInt(appState.filtroDia)) return false;
+                if (appState.filtroMes !== '' && (mes - 1) !== parseInt(appState.filtroMes)) return false;
+                if (appState.filtroAnio && año !== parseInt(appState.filtroAnio)) return false;
+                return true;
+            });
+
+            // Texto del filtro actual
+            if (appState.filtroDia || appState.filtroMes !== '' || appState.filtroAnio) {
+                let texto = '';
+                if (appState.filtroDia) texto += `día ${appState.filtroDia} `;
+                if (appState.filtroMes !== '') {
+                    const meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+                    texto += `${meses[parseInt(appState.filtroMes)]} `;
+                }
+                if (appState.filtroAnio) texto += appState.filtroAnio;
+                dom.filtroActualDisplay.textContent = texto || 'todos los pagos';
+            } else {
+                dom.filtroActualDisplay.textContent = 'todos los pagos';
+            }
+
+            return pagos;
+        }
+
+        function agruparPorFecha(pagos) {
+            const grupos = {};
+            pagos.forEach(p => {
+                if (!grupos[p.fecha]) {
+                    grupos[p.fecha] = { fecha: p.fecha, fechaObj: p.fechaObj, pagos: [], total: 0, cantidad: 0 };
+                }
+                grupos[p.fecha].pagos.push(p);
+                grupos[p.fecha].total += p.valor;
+                grupos[p.fecha].cantidad++;
+            });
+            return Object.values(grupos).sort((a, b) => b.fechaObj - a.fechaObj);
+        }
+
+        function aplicarFiltrosYAgrupar() {
+            const pagosFiltrados = aplicarFiltros();
+            appState.pagosAgrupados = agruparPorFecha(pagosFiltrados);
+            appState.totalPages = Math.ceil(appState.pagosAgrupados.length / CONFIG.PAGE_SIZE);
+            appState.currentPage = 1;
+            renderizarTabla();
+        }
+
+        // ============================================================
+        // RENDERIZAR TABLA
+        // ============================================================
+        function renderizarTabla() {
+            const start = (appState.currentPage - 1) * CONFIG.PAGE_SIZE;
+            const end = start + CONFIG.PAGE_SIZE;
+            const gruposPagina = appState.pagosAgrupados.slice(start, end);
+            let html = '';
+
+            if (gruposPagina.length === 0) {
+                html = `<tr><td colspan="9" style="padding: 40px; text-align: center;">📭 No hay pagos</td></tr>`;
+            } else {
+                gruposPagina.forEach(g => {
+                    const fecha = new Date(g.fecha.split('/')[2], g.fecha.split('/')[1] - 1, g.fecha.split('/')[0]);
+                    const diaSemana = fecha.toLocaleDateString('es-ES', { weekday: 'long' });
+                    const fechaId = g.fecha.replace(/\//g, '-');
+
+                    html += `<tr class="group-row" onclick="toggleGrupo('${fechaId}')">`;
+                    html += `<td><span class="expand-icon" id="icon-${fechaId}">▶</span></td>`;
+                    html += `<td colspan="8"><strong>${diaSemana}, ${g.fecha}</strong> - $${g.total.toLocaleString()} (${g.cantidad})</td>`;
+                    html += `</tr>`;
+
+                    g.pagos.sort((a, b) => parseInt(b.recibo) - parseInt(a.recibo)).forEach(p => {
+                        const tipoClass = p.tipo === 'cuota' ? 'badge-cuota' : 'badge-certificado';
+                        const tipoText = p.tipo === 'cuota' ? '💰 Cuota' : '📜 Certificado';
+                        html += `<tr class="detail-row" data-grupo="${fechaId}">`;
+                        html += `<td></td><td>${p.recibo}</td><td>${p.fecha}</td><td>${p.hora}</td>`;
+                        html += `<td><span class="${tipoClass}">${tipoText}</span></td>`;
+                        html += `<td>${p.cedula}</td><td style="text-align: left;">${p.nombre}</td>`;
+                        html += `<td>${p.mes} ${p.año}</td><td><strong>$${p.valor.toLocaleString()}</strong></td>`;
+                        html += `</tr>`;
+                    });
+                });
+            }
+            dom.tableBody.innerHTML = html;
+            renderPaginacion();
+        }
+
+        window.toggleGrupo = function (fechaId) {
+            const detalles = document.querySelectorAll(`tr.detail-row[data-grupo="${fechaId}"]`);
+            const icon = document.getElementById(`icon-${fechaId}`);
+            if (detalles.length) {
+                const mostrar = !detalles[0].classList.contains('show');
+                detalles.forEach(d => d.classList.toggle('show', mostrar));
+                if (icon) icon.textContent = mostrar ? '▼' : '▶';
+            }
+        };
+
+        // ============================================================
+        // PAGINACIÓN
+        // ============================================================
+        function renderPaginacion() {
+            let html = '';
+            for (let i = 1; i <= appState.totalPages; i++) {
+                if (i === 1 || i === appState.totalPages || (i >= appState.currentPage - 2 && i <= appState.currentPage + 2)) {
+                    html += `<button class="page-btn ${i === appState.currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+                } else if (i === appState.currentPage - 3 || i === appState.currentPage + 3) {
+                    html += `<span>…</span>`;
+                }
+            }
+            dom.pageNumbers.innerHTML = html;
+            dom.pageInput.value = appState.currentPage;
+            dom.prevPageBtn.disabled = appState.currentPage === 1;
+            dom.nextPageBtn.disabled = appState.currentPage === appState.totalPages;
+
+            document.querySelectorAll('.page-btn[data-page]').forEach(btn =>
+                btn.addEventListener('click', () => {
+                    appState.currentPage = parseInt(btn.dataset.page);
+                    renderizarTabla();
+                    reiniciarTemporizador();
+                }));
+        }
+
+        // ============================================================
+        // ESTADÍSTICAS
+        // ============================================================
+        function calcularEstadisticas() {
+            const cuotas = appState.todosPagos.filter(p => p.tipo === 'cuota');
+            const certificados = appState.todosPagos.filter(p => p.tipo === 'certificado');
+            dom.totalRecaudado.textContent = `$${appState.todosPagos.reduce((s, p) => s + p.valor, 0).toLocaleString()}`;
+            dom.recaudadoCuotas.textContent = `$${cuotas.reduce((s, p) => s + p.valor, 0).toLocaleString()}`;
+            dom.recaudadoCertificados.textContent = `$${certificados.reduce((s, p) => s + p.valor, 0).toLocaleString()}`;
+            dom.mesesPagados.textContent = cuotas.length;
+            dom.totalCertificados.textContent = certificados.length;
+            dom.totalPagadores.textContent = new Set(appState.todosPagos.map(p => p.cedula)).size;
+            const maxRecibo = appState.todosPagos.reduce((max, p) => Math.max(max, parseInt(p.recibo) || 0), 0);
+            dom.reciboMasAlto.textContent = maxRecibo.toString().padStart(5, '0');
+        }
+
+        // ============================================================
+        // IMPRIMIR SOLO LO VISIBLE (EXPANDIDO)
+        // ============================================================
+        // ============================================================
+        // IMPRIMIR SOLO LOS DETALLES EXPANDIDOS (SIN FILA DE FECHA)
+        // ============================================================
+        // ============================================================
+        // IMPRIMIR SOLO LOS DETALLES EXPANDIDOS (SIN FILA DE FECHA)
+        // ============================================================
+        function imprimirVisible() {
+            const filasVisibles = [];
+            let totalGeneral = 0;
+            let cantidadTotal = 0;
+
+            document.querySelectorAll('tr.group-row').forEach(row => {
+                const fechaId = row.querySelector('.expand-icon')?.id.replace('icon-', '');
+                if (fechaId) {
+                    const grupo = appState.pagosAgrupados.find(g => g.fecha.replace(/\//g, '-') === fechaId);
+                    if (grupo) {
+                        const detalles = document.querySelectorAll(`tr.detail-row[data-grupo="${fechaId}"].show`);
+
+                        if (detalles.length > 0) {
+                            // SOLO AGREGAR LOS DETALLES, SIN LA FILA DE FECHA
+                            grupo.pagos.filter(p => Array.from(detalles).some(d => d.innerHTML.includes(p.recibo))).forEach(p => {
+                                filasVisibles.push(`<tr>
+                            <td style="width: 20px; text-align: center;"></td>
+                            <td style="font-size: 14px; color: #000000; text-align: center;">${p.recibo}</td>
+                            <td style="font-size: 14px; color: #000000; text-align: center;">${p.fecha}</td>
+                            <td style="font-size: 14px; color: #000000; text-align: center;">${p.hora}</td>
+                            <td style="font-size: 14px; color: #000000; text-align: right; padding-right: 15px;">${p.tipo === 'cuota' ? '💰 Cuota' : '📜 Certificado'}</td>
+                            <td style="font-size: 14px; color: #000000; text-align: right; padding-right: 15px;">${p.cedula}</td>
+                            <td style="font-size: 14px; color: #000000; text-align: left; padding-left: 10px;">${p.nombre}</td>  <!-- IZQUIERDA -->
+                            <td style="font-size: 14px; color: #000000; text-align: right; padding-right: 15px;">${p.mes} ${p.año}</td>
+                            <td style="font-size: 14px; font-weight: 700; color: #000000; text-align: right; padding-right: 15px;">$${p.valor.toLocaleString('es-CO')}</td>
+                        </tr>`);
+                                totalGeneral += p.valor;
+                                cantidadTotal++;
+                            });
+                        }
+                    }
+                }
+            });
+
+            if (!filasVisibles.length) {
+                mostrarAlerta('No hay filas expandidas para imprimir', 'error');
+                return;
+            }
+
+            // Agregar línea de total al final
+            filasVisibles.push(`
+        <tr style="background: #1a4a2a; color: white;">
+            <td colspan="8" style="text-align: right; padding: 15px 8px; font-size: 18px; font-weight: 800;">TOTAL GENERAL (${cantidadTotal} pagos):</td>
+            <td style="text-align: right; padding: 15px 8px; font-size: 20px; font-weight: 800;">$${totalGeneral.toLocaleString('es-CO')}</td>
+        </tr>
+    `);
+
+            const ventana = window.open('', '_blank');
+            ventana.document.write(`
+        <html>
+        <head>
+            <title>Informe JAC Bateas</title>
+            <style>
+                body { 
+                    font-family: Arial, Helvetica, sans-serif; 
+                    padding: 20px;
+                    margin: 0;
+                }
+                h1 { 
+                    color: #1a4a2a; 
+                    font-size: 28px;
+                    font-weight: 800;
+                    margin-bottom: 5px;
+                }
+                .fecha-reporte {
+                    color: #000000;
+                    margin-bottom: 15px;
+                    font-size: 16px;
+                    font-weight: 600;
+                }
+                table { 
+                    border-collapse: collapse; 
+                    width: 100%; 
+                }
+                th { 
+                    background: #ffffff; 
+                    color: #000000; 
+                    padding: 12px 5px; 
+                    font-size: 16px;
+                    font-weight: 800;
+                    border-bottom: 2px solid #1a4a2a;
+                }
+                /* ALINEACIÓN DE TÍTULOS */
+                th:nth-child(1) { text-align: center; width: 20px; }  /* Icono */
+                th:nth-child(2) { text-align: center; }  /* Recibo */
+                th:nth-child(3) { text-align: center; }  /* Fecha */
+                th:nth-child(4) { text-align: center; }  /* Hora */
+                th:nth-child(5) { text-align: right; padding-right: 15px; }  /* Tipo */
+                th:nth-child(6) { text-align: right; padding-right: 15px; }  /* Cédula */
+                th:nth-child(7) { text-align: left; padding-left: 10px; }  /* NOMBRE - IZQUIERDA */
+                th:nth-child(8) { text-align: right; padding-right: 15px; }  /* Detalle */
+                th:nth-child(9) { text-align: right; padding-right: 15px; }  /* Valor */
+                
+                td { 
+                    padding: 8px 5px; 
+                    font-size: 14px;
+                    color: #000000;
+                }
+                /* SIN BORDES EN LAS FILAS */
+                table, tr, td {
+                    border: none;
+                }
+                @media print {
+                    body { padding: 10px; }
+                }
+            </style>
+        </head>
+        <body>
+            <h1>📊 INFORME DE PAGOS - JAC BATEAS</h1>
+            <div class="fecha-reporte">
+                <strong>Fecha:</strong> ${formatearFecha(new Date())} | 
+                <strong>Filtro:</strong> ${dom.filtroActualDisplay.textContent} |
+                <strong>Registros:</strong> ${cantidadTotal}
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>RECIBO</th>
+                        <th>FECHA</th>
+                        <th>HORA</th>
+                        <th>TIPO</th>
+                        <th>CÉDULA</th>
+                        <th>NOMBRE</th>
+                        <th>DETALLE</th>
+                        <th>VALOR</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${filasVisibles.join('')}
+                </tbody>
+            </table>
+        </body>
+        </html>
+    `);
+            ventana.document.close();
+            ventana.print();
+        }
+
+        // ============================================================
+        // EXPORTAR CSV
+        // ============================================================
+        function exportarCSV() {
+            const pagos = aplicarFiltros();
+            let csv = 'Recibo,Fecha,Hora,Tipo,Cédula,Nombre,Detalle,Valor\n';
+            pagos.forEach(p => csv += `${p.recibo},${p.fecha},${p.hora},${p.tipo},${p.cedula},"${p.nombre}",${p.mes} ${p.año},${p.valor}\n`);
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `informe_${formatearFecha(new Date()).replace(/\//g, '-')}.csv`;
+            a.click();
+            mostrarAlerta(`✅ Exportados ${pagos.length} registros`, 'success');
+            reiniciarTemporizador();
+        }
+
+        // ============================================================
+        // ALERTAS
+        // ============================================================
+        function mostrarAlerta(msg, tipo) {
+            dom.alertMessage.textContent = msg;
+            dom.alertMessage.className = `alert show alert-${tipo}`;
+            setTimeout(() => dom.alertMessage.classList.remove('show'), 3000);
+        }
+
+        // ============================================================
+        // EVENTOS
+        // ============================================================
+        function initEventos() {
+            // Llenar selects
+            for (let i = 1; i <= 31; i++) {
+                const opt = document.createElement('option');
+                opt.value = i.toString().padStart(2, '0');
+                opt.textContent = i.toString().padStart(2, '0');
+                dom.selectDia.appendChild(opt);
+            }
+            const añoActual = new Date().getFullYear();
+            for (let i = 2024; i <= añoActual; i++) {
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.textContent = i;
+                dom.selectAnio.appendChild(opt);
+            }
+
+            dom.searchInput.addEventListener('input', e => {
+                appState.filtroTexto = e.target.value;
+                aplicarFiltrosYAgrupar();
+                reiniciarTemporizador();
+            });
+
+            dom.filterApplyBtn.addEventListener('click', () => {
+                appState.filtroDia = dom.selectDia.value;
+                appState.filtroMes = dom.selectMes.value;
+                appState.filtroAnio = dom.selectAnio.value;
+                aplicarFiltrosYAgrupar();
+                reiniciarTemporizador();
+            });
+
+            dom.filterAllBtn.addEventListener('click', () => {
+                appState.filtroDia = ''; appState.filtroMes = ''; appState.filtroAnio = '';
+                appState.filtroTexto = ''; appState.filtroTipo = 'todos';
+                dom.selectDia.value = ''; dom.selectMes.value = ''; dom.selectAnio.value = '';
+                dom.searchInput.value = '';
+                aplicarFiltrosYAgrupar();
+                reiniciarTemporizador();
+            });
+
+            dom.filterCuotasBtn.addEventListener('click', () => {
+                appState.filtroTipo = 'cuota';
+                aplicarFiltrosYAgrupar();
+                reiniciarTemporizador();
+            });
+
+            dom.filterCertificadosBtn.addEventListener('click', () => {
+                appState.filtroTipo = 'certificado';
+                aplicarFiltrosYAgrupar();
+                reiniciarTemporizador();
+            });
+
+            dom.exportCSVBtn.addEventListener('click', exportarCSV);
+            dom.printVisibleBtn.addEventListener('click', imprimirVisible);
+
+            dom.prevPageBtn.addEventListener('click', () => {
+                if (appState.currentPage > 1) { appState.currentPage--; renderizarTabla(); reiniciarTemporizador(); }
+            });
+
+            dom.nextPageBtn.addEventListener('click', () => {
+                if (appState.currentPage < appState.totalPages) { appState.currentPage++; renderizarTabla(); reiniciarTemporizador(); }
+            });
+
+            dom.goToPageBtn.addEventListener('click', () => {
+                const page = parseInt(dom.pageInput.value);
+                if (page >= 1 && page <= appState.totalPages) {
+                    appState.currentPage = page;
+                    renderizarTabla();
+                    reiniciarTemporizador();
+                }
+            });
+
+            dom.validateTokenBtn.addEventListener('click', async () => {
+                const token = dom.apiTokenInput.value.trim();
+                if (!token) { dom.apiError.style.display = 'block'; return; }
+                dom.validateTokenBtn.disabled = true;
+                dom.validateTokenBtn.innerHTML = '<span class="loading">⌛</span> Validando...';
+                if (await validarToken(token)) {
+                    localStorage.setItem('github_token', token);
+                    appState.token = token;
+                    await cargarDatos();
+                } else {
+                    dom.apiError.style.display = 'block';
+                    dom.validateTokenBtn.disabled = false;
+                    dom.validateTokenBtn.innerHTML = 'Validar y continuar';
+                }
+            });
+
+            dom.apiTokenInput.addEventListener('keypress', e => {
+                if (e.key === 'Enter') dom.validateTokenBtn.click();
+            });
+
+            // Logout
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                document.getElementById('logoutConfirmModal').style.display = 'flex';
+            });
+            document.getElementById('confirmLogoutBtn').addEventListener('click', () => {
+                sessionStorage.clear();
+                window.location.href = 'index.html';
+            });
+            document.getElementById('cancelLogoutBtn').addEventListener('click', () => {
+                document.getElementById('logoutConfirmModal').style.display = 'none';
+            });
+            document.getElementById('redirectToLoginBtn').addEventListener('click', () => {
+                window.location.href = 'index.html';
+            });
+
+            dom.closeModalBtn.addEventListener('click', () => {
+                dom.modal.style.display = 'none';
+            });
+
+            window.addEventListener('click', e => {
+                if (e.target === dom.modal) dom.modal.style.display = 'none';
+                if (e.target === document.getElementById('logoutConfirmModal'))
+                    document.getElementById('logoutConfirmModal').style.display = 'none';
+                if (e.target === document.getElementById('sessionExpiredModal'))
+                    window.location.href = 'index.html';
+            });
+        }
+
+        // ============================================================
+        // INICIALIZACIÓN
+        // ============================================================
+        async function inicializar() {
+            dom.fechaActualDisplay.textContent = formatearFecha(appState.fechaActual);
+            initEventos();
+
+            if (appState.token) {
+                dom.apiError.style.display = 'block';
+                dom.apiError.style.color = '#4a6b4a';
+                dom.apiError.textContent = '🔑 Validando token guardado...';
+                dom.validateTokenBtn.disabled = true;
+                if (await validarToken(appState.token)) {
+                    await cargarDatos();
+                } else {
+                    localStorage.removeItem('github_token');
+                    dom.apiTokenInput.value = '';
+                    dom.apiError.style.display = 'none';
+                    dom.validateTokenBtn.disabled = false;
+                    dom.validateTokenBtn.innerHTML = 'Validar y continuar';
+                    dom.apiModal.style.display = 'flex';
+                }
+            } else {
+                dom.apiModal.style.display = 'flex';
+            }
+        }
+
+        inicializar();
+    </script>
+</body>
+
+</html>
