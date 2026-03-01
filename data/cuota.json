@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-03-01T16:45:07.114Z",
+  "ultima_actualizacion": "2026-03-01T16:47:04.602Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -91,6 +91,11 @@
       "cedula": "1120818409",
       "nombre": "MIGUEL SEBASTIAN RINCON POPAYAN",
       "fecha_pago_año_2026": "febrero_2026_5000_01/03/2026_11:45:07_00011"
+    },
+    {
+      "cedula": "1052572877",
+      "nombre": "RAFAEL TEOBALDO ROCHA RIVERA",
+      "certificado": "marzo_2026_20000_01/03/2026_11:47:04_00012"
     }
   ]
 }
