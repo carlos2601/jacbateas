@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-03-01T16:48:49.122Z",
+  "ultima_actualizacion": "2026-03-01T16:50:12.120Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -103,6 +103,11 @@
       "nombre": "BRAYAN MAURICIO BELTRAN RODRIGUEZ",
       "fecha_pago_año_2026": "febrero_2026_5000_01/03/2026_11:48:28_00015",
       "certificado": "marzo_2026_20000_01/03/2026_11:48:49_00016"
+    },
+    {
+      "cedula": "1122626590",
+      "nombre": "NESTOR ALEXANDER GOMEZ ALVAREZ",
+      "certificado": "marzo_2026_20000_01/03/2026_11:50:12_00017"
     }
   ]
 }
