@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -159,7 +160,7 @@
             display: inline-block;
             width: 16px;
             height: 16px;
-            border: 2px solid rgba(255,255,255,0.3);
+            border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
             border-top-color: white;
             animation: spin 0.8s linear infinite;
@@ -167,10 +168,23 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .sistema-badge {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f0f8f0;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            color: #1a4a2a;
+            border: 1px solid #c0e0c0;
         }
     </style>
 </head>
+
 <body>
     <div class="login-container">
         <div class="login-card">
@@ -195,6 +209,12 @@
 
             <button id="loginBtn" class="btn-login">Iniciar sesión</button>
 
+            <div class="sistema-badge">
+                <strong>📌 Accesos:</strong><br>
+                • Tesorera/Presidente: Tesorería (pagos)<br>
+                • Usuario 4438681: Solo informes
+            </div>
+
             <div class="footer">
                 <span>Junta de Acción Comunal · 2025</span>
             </div>
@@ -204,7 +224,7 @@
     <script>
         // Configuración
         const USUARIOS_URL = "https://raw.githubusercontent.com/carlos2601/juntadeaccioncomunalbarriobateaspuertogaitanmetalilianalondo-ogallego1010101010101000111010001010010/refs/heads/main/usuarios.json"
-        
+
         // Elementos DOM
         const usernameInput = document.getElementById('username');
         const passwordInput = document.getElementById('password');
@@ -229,31 +249,30 @@
 
                 // Obtener usuarios desde GitHub
                 const response = await fetch(USUARIOS_URL);
-                
+
                 if (!response.ok) {
                     throw new Error('No se pudo conectar con el servidor');
                 }
 
                 const data = await response.json();
-                
+
                 // Verificar la estructura del JSON
                 console.log('Datos recibidos:', data);
-                
+
                 // Asegurarse de que data.usuarios existe y es un array
                 if (!data || !data.usuarios || !Array.isArray(data.usuarios)) {
                     console.error('Estructura de datos inválida:', data);
                     throw new Error('Error en la estructura de datos de usuarios');
                 }
 
-                // Buscar usuario que coincida (case-insensitive para username)
+                // Buscar usuario que coincida
                 const usuario = data.usuarios.find(u => {
-                    // Verificar que el usuario tenga las propiedades necesarias
                     if (!u || typeof u.usuario !== 'string' || typeof u.password !== 'string') {
                         return false;
                     }
-                    return u.usuario.toLowerCase() === username.toLowerCase() && 
-                           u.password === password &&
-                           u.activo === true;
+                    return u.usuario.toLowerCase() === username.toLowerCase() &&
+                        u.password === password &&
+                        u.activo === true;
                 });
 
                 if (!usuario) {
@@ -273,7 +292,7 @@
 
         // Redirigir según rol y permisos
         function redirigirSegunRol(usuario) {
-            // Guardar información del usuario en sessionStorage (solo para esta sesión)
+            // Guardar información del usuario en sessionStorage
             sessionStorage.setItem('usuario_actual', JSON.stringify({
                 usuario: usuario.usuario,
                 rol: usuario.rol,
@@ -288,18 +307,21 @@
 
             // Mostrar mensaje de éxito
             mostrarAlerta(`¡Bienvenido ${usuario.usuario}!`, 'success');
-            
+
             // Redirigir según el rol
             setTimeout(() => {
-                if (usuario.rol === 'presidente') {
-                    // Presidente: modo solo lectura
-                    window.location.href = `tesoreria.html?mode=readonly&user=${encodeURIComponent(usuario.usuario)}&token=${sessionToken}`;
-                } else if (usuario.rol === 'tesorera') {
-                    // Tesorera: acceso completo
+                // Si el rol es "revisor" o tiene permiso solo_informes, va directo a informes
+                if (usuario.rol === 'revisor' || (usuario.permisos && usuario.permisos.solo_informes)) {
+                    window.location.href = `informes.html?mode=readonly&user=${encodeURIComponent(usuario.usuario)}&token=${sessionToken}`;
+                }
+                // Tesorera y presidente van a tesorería
+                else if (usuario.rol === 'tesorera') {
                     window.location.href = `tesoreria.html?mode=full&user=${encodeURIComponent(usuario.usuario)}&token=${sessionToken}`;
-                } else {
-                    // Otros roles (por si acaso)
+                } else if (usuario.rol === 'presidente') {
                     window.location.href = `tesoreria.html?mode=readonly&user=${encodeURIComponent(usuario.usuario)}&token=${sessionToken}`;
+                } else {
+                    // Por defecto, si no se reconoce el rol, va a informes
+                    window.location.href = `informes.html?mode=readonly&user=${encodeURIComponent(usuario.usuario)}&token=${sessionToken}`;
                 }
             }, 800);
         }
@@ -307,7 +329,7 @@
         // Evento de login
         loginBtn.addEventListener('click', async (e) => {
             e.preventDefault();
-            
+
             const username = usernameInput.value.trim();
             const password = passwordInput.value.trim();
 
@@ -347,8 +369,17 @@
                     const continuar = confirm(`¿Continuar como ${usuario.usuario} (${usuario.rol})?`);
                     if (continuar) {
                         const token = sessionStorage.getItem('session_token');
-                        const mode = usuario.rol === 'tesorera' ? 'full' : 'readonly';
-                        window.location.href = `tesoreria.html?mode=${mode}&user=${encodeURIComponent(usuario.usuario)}&token=${token}`;
+
+                        // Redirigir según el rol
+                        if (usuario.rol === 'revisor' || (usuario.permisos && usuario.permisos.solo_informes)) {
+                            window.location.href = `informes.html?mode=readonly&user=${encodeURIComponent(usuario.usuario)}&token=${token}`;
+                        } else if (usuario.rol === 'tesorera') {
+                            window.location.href = `tesoreria.html?mode=full&user=${encodeURIComponent(usuario.usuario)}&token=${token}`;
+                        } else if (usuario.rol === 'presidente') {
+                            window.location.href = `tesoreria.html?mode=readonly&user=${encodeURIComponent(usuario.usuario)}&token=${token}`;
+                        } else {
+                            window.location.href = `informes.html?mode=readonly&user=${encodeURIComponent(usuario.usuario)}&token=${token}`;
+                        }
                     } else {
                         sessionStorage.clear();
                     }
@@ -359,4 +390,5 @@
         })();
     </script>
 </body>
+
 </html>
