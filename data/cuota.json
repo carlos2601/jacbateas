@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-03-01T16:47:57.610Z",
+  "ultima_actualizacion": "2026-03-01T16:48:28.234Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -97,6 +97,11 @@
       "nombre": "RAFAEL TEOBALDO ROCHA RIVERA",
       "certificado": "marzo_2026_20000_01/03/2026_11:47:04_00012",
       "fecha_pago_año_2026": "enero_2026_5000_01/03/2026_11:47:32_00013; febrero_2026_5000_01/03/2026_11:47:57_00014"
+    },
+    {
+      "cedula": "1120839321",
+      "nombre": "BRAYAN MAURICIO BELTRAN RODRIGUEZ",
+      "fecha_pago_año_2026": "febrero_2026_5000_01/03/2026_11:48:28_00015"
     }
   ]
 }
