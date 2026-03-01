@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-03-01T17:10:24.917Z",
+  "ultima_actualizacion": "2026-03-01T17:11:32.041Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -177,6 +177,11 @@
       "cedula": "1090404864",
       "nombre": "JOHANNA BELEN PEREZ GARCIA",
       "certificado": "marzo_2026_20000_01/03/2026_12:10:24_00030"
+    },
+    {
+      "cedula": "1121832626",
+      "nombre": "JOHN FLAIMIR SALGADO RODRIGUEZ",
+      "certificado": "marzo_2026_20000_01/03/2026_12:11:32_00031"
     }
   ]
 }
