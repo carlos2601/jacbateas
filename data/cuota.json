@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-03-01T16:32:40.154Z",
+  "ultima_actualizacion": "2026-03-01T16:32:56.371Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -51,6 +51,11 @@
       "cedula": "1006903321",
       "nombre": "JAIBER CAMILO NIETO MORENO",
       "certificado": "marzo_2026_20000_01/03/2026_11:32:40_00010"
+    },
+    {
+      "cedula": "5697703",
+      "nombre": "FABIO WLDAMIRO SOLANO MARTINEZ",
+      "certificado": "marzo_2026_20000_01/03/2026_11:32:56_00011"
     }
   ]
 }
