@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-03-01T17:01:27.117Z",
+  "ultima_actualizacion": "2026-03-01T17:01:38.037Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -125,7 +125,7 @@
       "cedula": "1124217292",
       "nombre": "CRISTIAN SAN MARTIN AYALA",
       "certificado": "marzo_2026_20000_01/03/2026_12:00:57_00022",
-      "fecha_pago_año_2026": "enero_2026_5000_01/03/2026_12:01:25_00022"
+      "fecha_pago_año_2026": "enero_2026_5000_01/03/2026_12:01:25_00022; febrero_2026_5000_01/03/2026_12:01:36_00022"
     }
   ]
 }
