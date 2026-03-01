@@ -1450,7 +1450,7 @@
             DESTINATION: {
                 REPO_OWNER: 'carlos2601',
                 REPO_NAME: 'jacbateas',
-                CUOTA_PATH: 'data/cuota.json',  // Guardar en carpeta data
+                CUOTA_PATH: 'data/cuota.json',
                 BRANCH: 'main'
             },
 
@@ -1458,13 +1458,12 @@
             VALOR_CUOTA: 5000,
             VALOR_CERTIFICADO: 20000,
             PAGE_SIZE: 6
-            // API_TOKEN se pide en el modal
         };
 
         let appState = {
             afiliados: [],
             pagos: [],
-            token: null, // Se llenará después de validar
+            token: null,
             fechaActual: new Date(),
             tablaVisible: false,
             filtroActual: '',
@@ -1483,9 +1482,9 @@
         // VARIABLES PARA INACTIVIDAD (5 MINUTOS)
         // ============================================================
         let inactivityTimer;
-        const INACTIVITY_TIME = 5 * 60 * 1000; // 5 minutos en milisegundos
+        const INACTIVITY_TIME = 5 * 60 * 1000;
         let timerInterval;
-        let remainingSeconds = 5 * 60; // 300 segundos
+        let remainingSeconds = 5 * 60;
 
         const dom = {
             mainApp: document.getElementById('mainApp'),
@@ -1599,167 +1598,98 @@
         }
 
         // ============================================================
-        // FUNCIONES DE CACHÉ LOCAL
+        // FUNCIÓN PARA OBTENER AFILIADOS CON PAGOS (ORDENADOS POR ÚLTIMO PAGO)
         // ============================================================
-
-
-        async function sincronizarConGitHub() {
-            if (appState.sincronizando) return;
-
-            appState.sincronizando = true;
-            actualizarIndicadorSync();
-
-            try {
-                console.log('🔄 Sincronizando con GitHub...');
-                const pagosGitHub = await cargarPagos();
-
-                const pagosCombinados = [...pagosGitHub];
-                appState.pagos.forEach(pagoLocal => {
-                    const index = pagosCombinados.findIndex(p => p.cedula === pagoLocal.cedula);
-                    if (index >= 0) {
-                        pagosCombinados[index] = pagoLocal;
-                    } else {
-                        pagosCombinados.push(pagoLocal);
-                    }
-                });
-
-                appState.pagos = pagosCombinados;
-                appState.ultimaSincronizacion = new Date().toISOString();
-                appState.modoOffline = false;
-
-
-
-                console.log('✅ Sincronización completada');
-
-                guardarPagosEnGitHub().catch(e => {
-                    console.log('⚠️ No se pudo guardar en GitHub, pero los datos están en caché');
-                });
-
-                calcularEstadisticas();
-                actualizarSiguienteRecibo();
-                renderizarTabla();
-
-                mostrarAlerta('✅ Datos sincronizados con GitHub', 'success');
-
-            } catch (e) {
-                console.error('Error en sincronización:', e);
-                appState.modoOffline = true;
-                mostrarAlerta('⚠️ Sin conexión a GitHub. Usando datos locales.', 'warning');
-            } finally {
-                appState.sincronizando = false;
-                actualizarIndicadorSync();
-            }
-        }
-
-        function actualizarIndicadorSync() {
-            // Este elemento no existe en el HTML actual, lo omitimos
-        }
-
         // ============================================================
-        // FUNCIÓN DE CONDONACIÓN
+        // FUNCIÓN PARA OBTENER AFILIADOS CON PAGOS (ORDENADOS POR ÚLTIMO RECIBO)
         // ============================================================
-        function esMesCondonado(año, mes) {
-            if (año === 2024) return true;
-            if (año === 2025 && mes >= 0 && mes <= 10) return true;
-            return false;
-        }
+        function obtenerAfiliadosConPagos() {
+            // Obtener todos los pagos
+            const todosPagos = obtenerTodosLosPagos();
 
-        // ============================================================
-        // CARGAR TOKEN GUARDADO AL INICIAR
-        // ============================================================
-        async function cargarTokenGuardado() {
-            const tokenGuardado = localStorage.getItem('github_token');
-            if (tokenGuardado) {
-                // Mostrar mensaje de validación
-                dom.apiError.style.display = 'block';
-                dom.apiError.style.color = '#4a6b4a';
-                dom.apiError.textContent = '🔑 Validando token guardado...';
-                dom.validateTokenBtn.disabled = true;
+            // Crear un objeto para guardar el último recibo de cada afiliado
+            const ultimoReciboPorCedula = {};
+            const ultimaFechaPorCedula = {}; // Por si acaso
 
-                const esValido = await validarToken(tokenGuardado);
-                if (esValido) {
-                    // Token válido, cargar datos
-                    await cargarDatosConToken(tokenGuardado);
-                } else {
-                    // Token inválido, limpiar y mostrar modal
-                    localStorage.removeItem('github_token');
-                    dom.apiTokenInput.value = '';
-                    dom.apiError.style.display = 'none';
-                    dom.validateTokenBtn.disabled = false;
-                    dom.validateTokenBtn.innerHTML = 'Validar y continuar';
+            // Registrar el último recibo (más alto) de cada persona
+            todosPagos.forEach(pago => {
+                const cedula = pago.cedula;
+                const numRecibo = parseInt(pago.recibo) || 0;
+
+                if (!ultimoReciboPorCedula[cedula] || numRecibo > ultimoReciboPorCedula[cedula]) {
+                    ultimoReciboPorCedula[cedula] = numRecibo;
+                    ultimaFechaPorCedula[cedula] = pago.fechaObj;
                 }
+            });
+
+            // Obtener las cédulas únicas que han pagado
+            const cedulasQueHanPagado = Object.keys(ultimoReciboPorCedula);
+
+            // Obtener los afiliados completos de esas cédulas
+            let afiliadosConPagos = appState.afiliados.filter(af =>
+                cedulasQueHanPagado.includes(af.cedula)
+            );
+
+            // Ordenarlos por número de recibo (más alto primero = más reciente)
+            afiliadosConPagos.sort((a, b) => {
+                const reciboA = ultimoReciboPorCedula[a.cedula] || 0;
+                const reciboB = ultimoReciboPorCedula[b.cedula] || 0;
+                return reciboB - reciboA; // Mayor recibo primero
+            });
+
+            return afiliadosConPagos;
+        }
+
+        // ============================================================
+        // FUNCIÓN PARA OBTENER AFILIADOS SEGÚN BÚSQUEDA
+        // ============================================================
+        function obtenerAfiliadosParaMostrar() {
+            const filtro = appState.filtroActual.trim();
+
+            if (filtro !== '') {
+                appState.modoBusqueda = true;
+
+                // Buscar por cédula exacta
+                let afiliadoPorCedula = appState.afiliados.find(af => af.cedula === filtro);
+                if (afiliadoPorCedula) {
+                    appState.ultimoTipoBusqueda = 'cédula';
+                    return [afiliadoPorCedula];
+                }
+
+                // Buscar por número de recibo
+                const todosPagos = obtenerTodosLosPagos();
+                const pagosConRecibo = todosPagos.filter(p =>
+                    p.recibo && p.recibo.toLowerCase().includes(filtro.toLowerCase())
+                );
+
+                if (pagosConRecibo.length > 0) {
+                    appState.ultimoTipoBusqueda = 'recibo';
+                    const cedulasUnicas = [...new Set(pagosConRecibo.map(p => p.cedula))];
+                    const afiliadosEncontrados = appState.afiliados.filter(af =>
+                        cedulasUnicas.includes(af.cedula)
+                    );
+
+                    afiliadosEncontrados.sort((a, b) => {
+                        const pagosA = pagosConRecibo.filter(p => p.cedula === a.cedula).length;
+                        const pagosB = pagosConRecibo.filter(p => p.cedula === b.cedula).length;
+                        return pagosB - pagosA;
+                    });
+
+                    return afiliadosEncontrados;
+                }
+
+                appState.ultimoTipoBusqueda = 'sin resultados';
+                return [];
             } else {
-                // No hay token guardado, mostrar modal normalmente
-                dom.apiModal.style.display = 'flex';
-            }
-        }
-
-        // ============================================================
-        // FUNCIÓN PARA VALIDAR TOKEN
-        // ============================================================
-        async function validarToken(token) {
-            try {
-                const url = `https://api.github.com/repos/${CONFIG.REPO_OWNER}/${CONFIG.REPO_NAME}/contents/${CONFIG.CUOTA_PATH}`;
-                const res = await fetch(url, {
-                    headers: { 'Authorization': `token ${token}` }
-                });
-
-                if (res.status === 200 || res.status === 404) {
-                    // Si es válido, guardar en localStorage
-                    localStorage.setItem('github_token', token);
-                    return true;
-                }
-
-                return false;
-            } catch (e) {
-                console.error('Error validando token:', e);
-                return false;
-            }
-        }
-
-
-        // ============================================================
-        // INICIO - CARGAR DATOS DESPUÉS DE VALIDAR TOKEN
-        // ============================================================
-        async function cargarDatosConToken(token) {
-            appState.token = token;
-
-            try {
-                mostrarAlerta('📥 Cargando afiliados...', 'info');
-                appState.afiliados = await cargarAfiliados();
-
-                mostrarAlerta('📥 Cargando pagos desde GitHub...', 'info');
-                appState.pagos = await cargarPagos();
-
-                calcularEstadisticas();
-                actualizarSiguienteRecibo();
-
-                // Ocultar modal y mostrar app
-                dom.apiModal.style.display = 'none';
-                dom.mainApp.style.display = 'block';
-
-                appState.tablaVisible = true;
-                dom.tableContainer.style.display = 'block';
-                dom.toggleTableBtn.innerHTML = '🕵️ Ocultar tabla';
-
                 appState.modoBusqueda = false;
-                appState.filtroActual = '';
-                dom.searchInput.value = '';
-
-                appState.currentPage = 1;
-                renderizarTabla();
-
-                mostrarAlerta(`✅ ${appState.afiliados.length} afiliados cargados`, 'success');
-
-                initActivityDetection();
-
-            } catch (e) {
-                mostrarAlerta('Error al cargar datos: ' + e.message, 'error');
+                appState.ultimoTipoBusqueda = '';
+                // SOLO DEVUELVE AFILIADOS QUE HAN PAGADO
+                return obtenerAfiliadosConPagos();
             }
         }
 
         // ============================================================
-        // UTILIDADES
+        // FUNCIONES DE UTILIDAD
         // ============================================================
         function parseFecha(fechaStr) {
             if (!fechaStr) return new Date();
@@ -1779,15 +1709,13 @@
             if (!str) return [];
             return str.split(';').filter(p => p.trim()).map(p => {
                 const partes = p.trim().split('_');
-                // Nuevo formato: mes_año_valor_fecha_hora_recibo
-                // partes[0]=mes, [1]=año, [2]=valor, [3]=fecha, [4]=hora, [5]=recibo
                 return {
                     mes: partes[0],
                     año: parseInt(partes[1]),
                     valor: parseInt(partes[2]),
                     fecha: partes[3],
-                    hora: partes[4] || '00:00:00', // Si no hay hora (datos antiguos), asumir 00:00:00
-                    recibo: partes[5] || partes[4] || 'N/A' // Compatibilidad hacia atrás
+                    hora: partes[4] || '00:00:00',
+                    recibo: partes[5] || 'N/A'
                 };
             }).filter(p => p.año === año);
         }
@@ -1848,33 +1776,18 @@
             return pagos;
         }
 
-        function obtenerUltimosAfiliadosConPagos() {
-            const todosPagos = obtenerTodosLosPagos();
-            const pagosOrdenados = [...todosPagos].sort((a, b) => b.fechaObj - a.fechaObj);
-            const cedulasUnicas = [];
-            const afiliadosUnicos = [];
-
-            for (const pago of pagosOrdenados) {
-                if (!cedulasUnicas.includes(pago.cedula)) {
-                    cedulasUnicas.push(pago.cedula);
-                    const afiliado = appState.afiliados.find(a => a.cedula === pago.cedula);
-                    if (afiliado) {
-                        afiliadosUnicos.push(afiliado);
-                    }
-                    if (afiliadosUnicos.length >= CONFIG.PAGE_SIZE) {
-                        break;
-                    }
-                }
-            }
-            return afiliadosUnicos;
-        }
-
         function mesEstaPagado(cedula, año, mes) {
             const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
             const registro = appState.pagos.find(p => p.cedula === cedula);
             if (!registro) return false;
             const pagosStr = registro[`fecha_pago_año_${año}`] || '';
             return pagosStr.split(';').some(p => p.trim().startsWith(`${meses[mes]}_${año}`));
+        }
+
+        function esMesCondonado(año, mes) {
+            if (año === 2024) return true;
+            if (año === 2025 && mes >= 0 && mes <= 10) return true;
+            return false;
         }
 
         function obtenerEstadoMes(cedula, año, mes, fechaAfiliacion) {
@@ -1964,7 +1877,6 @@
                 }
             });
 
-            // Formato de 5 dígitos
             const siguiente = (maxRecibo + 1).toString().padStart(5, '0');
             dom.nextReceiptNumber.textContent = siguiente;
             return siguiente;
@@ -2052,12 +1964,10 @@
             if (dom.prevPageBtn) dom.prevPageBtn.disabled = currentPage === 1;
             if (dom.nextPageBtn) dom.nextPageBtn.disabled = currentPage === totalPages;
 
-            // Quitar event listeners anteriores para evitar duplicados
             document.querySelectorAll('.page-btn[data-page]').forEach(btn => {
                 btn.replaceWith(btn.cloneNode(true));
             });
 
-            // Agregar event listeners nuevos
             document.querySelectorAll('.page-btn[data-page]').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -2069,51 +1979,6 @@
                     }
                 });
             });
-        }
-
-        // ============================================================
-        // FILTRO - BUSCA POR CÉDULA Y RECIBO
-        // ============================================================
-        function obtenerAfiliadosParaMostrar() {
-            const filtro = appState.filtroActual.trim();
-
-            if (filtro !== '') {
-                appState.modoBusqueda = true;
-
-                let afiliadoPorCedula = appState.afiliados.find(af => af.cedula === filtro);
-                if (afiliadoPorCedula) {
-                    appState.ultimoTipoBusqueda = 'cédula';
-                    return [afiliadoPorCedula];
-                }
-
-                const todosPagos = obtenerTodosLosPagos();
-                const pagosConRecibo = todosPagos.filter(p =>
-                    p.recibo && p.recibo.toLowerCase().includes(filtro.toLowerCase())
-                );
-
-                if (pagosConRecibo.length > 0) {
-                    appState.ultimoTipoBusqueda = 'recibo';
-                    const cedulasUnicas = [...new Set(pagosConRecibo.map(p => p.cedula))];
-                    const afiliadosEncontrados = appState.afiliados.filter(af =>
-                        cedulasUnicas.includes(af.cedula)
-                    );
-
-                    afiliadosEncontrados.sort((a, b) => {
-                        const pagosA = pagosConRecibo.filter(p => p.cedula === a.cedula).length;
-                        const pagosB = pagosConRecibo.filter(p => p.cedula === b.cedula).length;
-                        return pagosB - pagosA;
-                    });
-
-                    return afiliadosEncontrados;
-                }
-
-                appState.ultimoTipoBusqueda = 'sin resultados';
-                return [];
-            } else {
-                appState.modoBusqueda = false;
-                appState.ultimoTipoBusqueda = '';
-                return obtenerUltimosAfiliadosConPagos();
-            }
         }
 
         // ============================================================
@@ -2224,6 +2089,10 @@
                         🔍 Busca por cédula exacta o número de recibo
                     </span>
                 </td></tr>`;
+            } else if (afiliadosPagina.length === 0 && !appState.modoBusqueda) {
+                html = `<tr><td colspan="18" style="padding: 40px; text-align: center; color: #6a8b6a;">
+                    📭 No hay pagos registrados aún
+                </td></tr>`;
             }
 
             dom.tableBody.innerHTML = html;
@@ -2332,7 +2201,7 @@
         });
 
         // ============================================================
-        // GUARDAR RECIBO Y PAGO INMEDIATO (CON VALIDACIÓN DE TIEMPO)
+        // GUARDAR RECIBO Y PAGO
         // ============================================================
         async function guardarPagoConRecibo() {
             resetInactivityTimer();
@@ -2342,29 +2211,24 @@
             const recibo = dom.receiptNumber.value.trim();
             if (!recibo) return mostrarAlerta('❌ Número de recibo obligatorio', 'error');
 
-            // Validar formato de 5 dígitos
             if (!/^\d{5}$/.test(recibo)) {
                 return mostrarAlerta('❌ El recibo debe tener 5 dígitos (ej: 00001)', 'error');
             }
 
-            // Obtener todos los pagos para validaciones
             const todosPagos = obtenerTodosLosPagos();
             const ahora = new Date();
             const fecha = formatearFecha(ahora);
             const hora = formatearHora(ahora);
 
-            // Buscar si el recibo ya existe para ALGUIEN
             const pagosConEsteRecibo = todosPagos.filter(p => p.recibo === recibo);
 
             if (pagosConEsteRecibo.length > 0) {
-                // Verificar si es otro usuario
                 const esOtroUsuario = pagosConEsteRecibo.some(p => p.cedula !== appState.pendingPayment.cedula);
 
                 if (esOtroUsuario) {
                     return mostrarAlerta(`❌ Recibo ${recibo} ya fue usado por otro afiliado`, 'error');
                 }
 
-                // Encontrar la fecha MÁS ANTIGUA de este recibo para este usuario
                 let fechaMasAntigua = null;
 
                 pagosConEsteRecibo.forEach(p => {
@@ -2376,7 +2240,6 @@
                             const [horaP, minP, segP] = p.hora.split(':').map(Number);
                             fechaPago = new Date(año, mes - 1, dia, horaP, minP, segP);
                         } else {
-                            // Por compatibilidad con datos antiguos (sin hora)
                             fechaPago = new Date(año, mes - 1, dia, 0, 0, 0);
                         }
 
@@ -2387,10 +2250,8 @@
                 });
 
                 if (fechaMasAntigua) {
-                    // Calcular diferencia en minutos desde el pago más antiguo
                     const diferenciaMinutos = (ahora - fechaMasAntigua) / (1000 * 60);
 
-                    // Verificar límite de 30 minutos
                     if (diferenciaMinutos > 30) {
                         const horas = Math.floor(diferenciaMinutos / 60);
                         const minutos = Math.floor(diferenciaMinutos % 60);
@@ -2403,17 +2264,13 @@
                         }
 
                         return mostrarAlerta(
-                            `❌ Recibo ${recibo} expiró (hace ${tiempoMensaje}).\n` +
-                            `Máximo 30 minutos para usar el mismo recibo.`,
+                            `❌ Recibo ${recibo} expiró (hace ${tiempoMensaje}).\nMáximo 30 minutos para usar el mismo recibo.`,
                             'error'
                         );
                     }
 
-                    // Mostrar tiempo restante
                     const tiempoRestante = Math.round(30 - diferenciaMinutos);
-                    if (!confirm(`⚠️ El recibo ${recibo} se usó por primera vez hace ${Math.round(diferenciaMinutos)} minutos.\n` +
-                        `⏰ Tienes ${tiempoRestante} minutos restantes.\n\n` +
-                        `¿Deseas continuar con este mismo recibo?`)) {
+                    if (!confirm(`⚠️ El recibo ${recibo} se usó por primera vez hace ${Math.round(diferenciaMinutos)} minutos.\n⏰ Tienes ${tiempoRestante} minutos restantes.\n\n¿Deseas continuar con este mismo recibo?`)) {
                         return;
                     }
                 }
@@ -2442,7 +2299,6 @@
                 if (tipoPago === 'cuota') {
                     const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
                     const campo = `fecha_pago_año_${appState.pendingPayment.año}`;
-                    // AHORA LAS CUOTAS TAMBIÉN INCLUYEN HORA
                     const pagoStr = `${meses[appState.pendingPayment.mes]}_${appState.pendingPayment.año}_${CONFIG.VALOR_CUOTA}_${fecha}_${hora}_${recibo}`;
 
                     registro[campo] = registro[campo] ? `${registro[campo]}; ${pagoStr}` : pagoStr;
@@ -2459,7 +2315,6 @@
                     registro.certificado = registro.certificado ? `${registro.certificado}; ${certificadoStr}` : certificadoStr;
                 }
 
-                // Guardar directamente en GitHub
                 await guardarPagosEnGitHub();
 
                 calcularEstadisticas();
@@ -2490,7 +2345,7 @@
                     pagos: appState.pagos
                 };
 
-                const url = `https://api.github.com/repos/${CONFIG.REPO_OWNER}/${CONFIG.REPO_NAME}/contents/${CONFIG.CUOTA_PATH}`;
+                const url = `https://api.github.com/repos/${CONFIG.DESTINATION.REPO_OWNER}/${CONFIG.DESTINATION.REPO_NAME}/contents/${CONFIG.DESTINATION.CUOTA_PATH}`;
 
                 let sha = null;
                 try {
@@ -2513,7 +2368,7 @@
                         message: `Pago ${dom.tipoCuota.checked ? 'cuota' : 'certificado'} - ${new Date().toLocaleDateString()}`,
                         content: btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2)))),
                         sha,
-                        branch: CONFIG.BRANCH
+                        branch: CONFIG.DESTINATION.BRANCH
                     })
                 });
 
@@ -2684,16 +2539,24 @@
         };
 
         // ============================================================
-        // REPORTES
+        // REPORTES CORREGIDOS
         // ============================================================
         function generarReporteCompacto(titulo, filtroFn) {
             resetInactivityTimer();
 
-            const pagos = filtroFn ? obtenerTodosLosPagos().filter(filtroFn) : obtenerTodosLosPagos();
+            // Obtener todos los pagos
+            const todosLosPagos = obtenerTodosLosPagos();
 
+            // Aplicar filtro si existe
+            let pagosFiltrados = todosLosPagos;
+            if (filtroFn) {
+                pagosFiltrados = todosLosPagos.filter(filtroFn);
+            }
+
+            // Agrupar por usuario
             const usuarios = {};
 
-            pagos.forEach(p => {
+            pagosFiltrados.forEach(p => {
                 if (!usuarios[p.cedula]) {
                     usuarios[p.cedula] = {
                         cedula: p.cedula,
@@ -2734,7 +2597,7 @@
                 <tbody>`;
 
             if (Object.keys(usuarios).length === 0) {
-                html += `<tr><td colspan="4" style="padding: 40px; text-align: center; color: #6a8b6a;">No hay registros</td></tr>`;
+                html += `<tr><td colspan="4" style="padding: 40px; text-align: center; color: #6a8b6a;">No hay registros para este período</td></tr>`;
             } else {
                 Object.values(usuarios).sort((a, b) => a.nombre.localeCompare(b.nombre)).forEach(u => {
                     html += `<tr style="border-bottom: 1px solid #d8ecd8;">`;
@@ -2748,7 +2611,7 @@
                         } else {
                             detalle = `${item.icon} Certificado ${item.mes} ${item.año}`;
                         }
-                        html += `<span class="month-badge" style="display: inline-block; margin: 2px; background: ${item.tipo === 'cuota' ? '#e0f0e0' : '#fff3cd'}; white-space: nowrap;" title="Recibo: ${item.recibo}">${detalle}</span> `;
+                        html += `<span class="month-badge" style="display: inline-block; margin: 2px; background: ${item.tipo === 'cuota' ? '#e0f0e0' : '#fff3cd'}; white-space: nowrap;" title="Recibo: ${item.recibo} - Fecha: ${item.fecha}">${detalle}</span> `;
                     });
                     html += `</td>`;
                     html += `<td style="padding: 8px; text-align: right; font-weight: 700; color: #1a7a3a; word-break: break-word;">$${u.total.toLocaleString()}</td>`;
@@ -2814,23 +2677,104 @@
         }
 
         // ============================================================
+        // VALIDAR TOKEN
+        // ============================================================
+        async function validarToken(token) {
+            try {
+                const url = `https://api.github.com/repos/${CONFIG.DESTINATION.REPO_OWNER}/${CONFIG.DESTINATION.REPO_NAME}/contents/${CONFIG.DESTINATION.CUOTA_PATH}`;
+                const res = await fetch(url, {
+                    headers: { 'Authorization': `token ${token}` }
+                });
+
+                if (res.status === 200 || res.status === 404) {
+                    localStorage.setItem('github_token', token);
+                    return true;
+                }
+
+                return false;
+            } catch (e) {
+                console.error('Error validando token:', e);
+                return false;
+            }
+        }
+
+        // ============================================================
         // CARGAR DATOS
         // ============================================================
         async function cargarAfiliados() {
-            const url = `https://raw.githubusercontent.com/${CONFIG.REPO_OWNER}/${CONFIG.REPO_NAME}/refs/heads/${CONFIG.BRANCH}/${CONFIG.AFILIADOS_PATH}`;
+            const url = `https://raw.githubusercontent.com/${CONFIG.SOURCE.REPO_OWNER}/${CONFIG.SOURCE.REPO_NAME}/refs/heads/${CONFIG.SOURCE.BRANCH}/${CONFIG.SOURCE.AFILIADOS_PATH}`;
             const res = await fetch(url);
             if (!res.ok) throw new Error('No se pudo cargar afiliados');
             return await res.json();
         }
 
         async function cargarPagos() {
-            const url = `https://raw.githubusercontent.com/${CONFIG.REPO_OWNER}/${CONFIG.REPO_NAME}/refs/heads/${CONFIG.BRANCH}/${CONFIG.CUOTA_PATH}`;
+            const url = `https://raw.githubusercontent.com/${CONFIG.DESTINATION.REPO_OWNER}/${CONFIG.DESTINATION.REPO_NAME}/refs/heads/${CONFIG.DESTINATION.BRANCH}/${CONFIG.DESTINATION.CUOTA_PATH}`;
             try {
                 const res = await fetch(url);
                 if (res.status === 404) return [];
                 return (await res.json()).pagos || [];
             } catch {
                 return [];
+            }
+        }
+
+        async function cargarTokenGuardado() {
+            const tokenGuardado = localStorage.getItem('github_token');
+            if (tokenGuardado) {
+                dom.apiError.style.display = 'block';
+                dom.apiError.style.color = '#4a6b4a';
+                dom.apiError.textContent = '🔑 Validando token guardado...';
+                dom.validateTokenBtn.disabled = true;
+
+                const esValido = await validarToken(tokenGuardado);
+                if (esValido) {
+                    await cargarDatosConToken(tokenGuardado);
+                } else {
+                    localStorage.removeItem('github_token');
+                    dom.apiTokenInput.value = '';
+                    dom.apiError.style.display = 'none';
+                    dom.validateTokenBtn.disabled = false;
+                    dom.validateTokenBtn.innerHTML = 'Validar y continuar';
+                }
+            } else {
+                dom.apiModal.style.display = 'flex';
+            }
+        }
+
+        async function cargarDatosConToken(token) {
+            appState.token = token;
+
+            try {
+                mostrarAlerta('📥 Cargando afiliados...', 'info');
+                appState.afiliados = await cargarAfiliados();
+
+                mostrarAlerta('📥 Cargando pagos desde GitHub...', 'info');
+                appState.pagos = await cargarPagos();
+
+                calcularEstadisticas();
+                actualizarSiguienteRecibo();
+
+                dom.apiModal.style.display = 'none';
+                dom.mainApp.style.display = 'block';
+
+                appState.tablaVisible = true;
+                dom.tableContainer.style.display = 'block';
+                dom.toggleTableBtn.innerHTML = '🕵️ Ocultar tabla';
+
+                appState.modoBusqueda = false;
+                appState.filtroActual = '';
+                dom.searchInput.value = '';
+
+                appState.currentPage = 1;
+                renderizarTabla();
+
+                mostrarAlerta(`✅ ${appState.afiliados.length} afiliados cargados`, 'success');
+
+                initActivityDetection();
+
+            } catch (e) {
+                mostrarAlerta('Error al cargar datos: ' + e.message, 'error');
             }
         }
 
@@ -2870,7 +2814,6 @@
             }
         });
 
-        // Permitir validar con Enter
         dom.apiTokenInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 dom.validateTokenBtn.click();
@@ -3013,42 +2956,48 @@
                     try {
                         saveBtn.innerHTML = '<span class="loading">⌛</span> Sincronizando';
                         saveBtn.disabled = true;
-                        await sincronizarConGitHub();
+                        await guardarPagosEnGitHub();
+                        mostrarAlerta('✅ Datos sincronizados con GitHub', 'success');
                     } catch (e) {
                         mostrarAlerta('Error al sincronizar: ' + e.message, 'error');
                     } finally {
-                        saveBtn.innerHTML = '💾 Sincronizar con GitHub';
+                        saveBtn.innerHTML = '💾 Guardar Todo';
                         saveBtn.disabled = false;
                     }
                 });
             }
 
+            // REPORTES CORREGIDOS
             dom.paymentsTodayBtn.addEventListener('click', () => {
                 resetInactivityTimer();
                 const hoy = appState.fechaActual;
-                const d = hoy.getDate().toString().padStart(2, '0');
-                const m = hoy.getMonth();
-                const a = hoy.getFullYear();
-                generarReporteCompacto('Pagos de hoy', p => {
-                    const [dd, mm, aa] = p.fecha.split('/');
-                    return dd === d && parseInt(mm) - 1 === m && parseInt(aa) === a;
+                const fechaHoyStr = formatearFecha(hoy);
+
+                generarReporteCompacto(`Pagos del día ${fechaHoyStr}`, p => {
+                    return p.fecha === fechaHoyStr;
                 });
             });
 
             dom.paymentsMonthBtn.addEventListener('click', () => {
                 resetInactivityTimer();
-                const m = appState.fechaActual.getMonth();
-                const a = appState.fechaActual.getFullYear();
-                generarReporteCompacto(`Pagos de ${['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'][m]} ${a}`, p => {
-                    const [dd, mm, aa] = p.fecha.split('/');
-                    return parseInt(mm) - 1 === m && parseInt(aa) === a;
+                const mesActual = appState.fechaActual.getMonth();
+                const añoActual = appState.fechaActual.getFullYear();
+                const nombreMes = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'][mesActual];
+
+                generarReporteCompacto(`Pagos de ${nombreMes} ${añoActual}`, p => {
+                    const [dia, mes, año] = p.fecha.split('/').map(Number);
+                    return (mes - 1) === mesActual && año === añoActual;
                 });
             });
 
             dom.paymentsYearBtn.addEventListener('click', () => {
                 resetInactivityTimer();
-                const a = appState.fechaActual.getFullYear();
-                generarReporteCompacto(`Pagos ${a}`, p => parseInt(p.fecha.split('/')[2]) === a);
+                const añoActual = appState.fechaActual.getFullYear();
+
+                generarReporteCompacto(`Pagos del año ${añoActual}`, p => {
+                    const [dia, mes, año] = p.fecha.split('/').map(Number);
+                    return año === añoActual;
+                });
             });
 
             dom.paymentsAllBtn.addEventListener('click', () => {
@@ -3187,7 +3136,6 @@
                 });
             }
 
-            // ===== BOTÓN PARA VOLTEAR TODAS LAS TARJETAS =====
             const toggleAllCardsBtn = document.getElementById('toggleAllCardsBtn');
             if (toggleAllCardsBtn) {
                 toggleAllCardsBtn.addEventListener('click', () => {
@@ -3195,14 +3143,12 @@
                     const tarjetas = document.querySelectorAll('.stat-card');
                     let todasVolteadas = true;
 
-                    // Verificar si todas están volteadas
                     tarjetas.forEach(t => {
                         if (!t.classList.contains('flipped')) {
                             todasVolteadas = false;
                         }
                     });
 
-                    // Voltear o desvoltear según el estado
                     tarjetas.forEach(t => {
                         if (todasVolteadas) {
                             t.classList.remove('flipped');
@@ -3233,7 +3179,6 @@
 
             inicializarEventos();
 
-            // Intentar cargar token guardado
             await cargarTokenGuardado();
         }
 
