@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-03-01T16:32:56.371Z",
+  "ultima_actualizacion": "2026-03-01T16:33:13.955Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -56,6 +56,11 @@
       "cedula": "5697703",
       "nombre": "FABIO WLDAMIRO SOLANO MARTINEZ",
       "certificado": "marzo_2026_20000_01/03/2026_11:32:56_00011"
+    },
+    {
+      "cedula": "1006944191",
+      "nombre": "LAURA MILENA SERRANO FLORIAN",
+      "certificado": "marzo_2026_20000_01/03/2026_11:33:13_00012"
     }
   ]
 }
