@@ -1074,7 +1074,7 @@
                 document.getElementById('sessionExpiredModal').style.display = 'flex';
                 sessionStorage.clear();
             }, 300000);
-            remainingSeconds = 300;
+            remainingSeconds = 3600;
             actualizarDisplayTiempo();
             timerInterval = setInterval(actualizarDisplayTiempo, 1000);
         }
@@ -1572,5 +1572,6 @@
         inicializar();
     </script>
 </body>
+
 
 </html>
