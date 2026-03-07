@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Tokens - JAC Bateas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(145deg, #4c724c 0%, #2a4a2a 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #1a4a2a;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+        }
+        
+        .token-display {
+            background: #f8fff8;
+            border: 2px dashed #4c724c;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 1.2rem;
+            word-break: break-all;
+            color: #1a4a2a;
+            font-weight: bold;
+        }
+        
+        .btn {
+            background: #1a4a2a;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #2a6a3a;
+        }
+        
+        .info-box {
+            background: #e6f0e6;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+            font-size: 0.9rem;
+            color: #2a4a2a;
+        }
+        
+        .copy-btn {
+            background: #4a90e2;
+        }
+        
+        .copy-btn:hover {
+            background: #3a80d2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Generador de Tokens de Acceso</h1>
+        
+        <div class="info-box">
+            <strong>⚠️ Información importante:</strong>
+            <ul style="margin: 10px 0 0 20px;">
+                <li>Los tokens tienen validez de <strong>3 días</strong></li>
+                <li>Cada token es <strong>único y aleatorio</strong></li>
+                <li>Guarda este token en un lugar seguro</li>
+                <li>Comparte solo con usuarios autorizados</li>
+            </ul>
+        </div>
+        
+        <div class="token-display" id="tokenDisplay">
+            Presiona "Generar Token" para crear uno nuevo
+        </div>
+        
+        <div>
+            <button class="btn" onclick="generarToken()">🔄 Generar Token</button>
+            <button class="btn copy-btn" onclick="copiarToken()">📋 Copiar Token</button>
+        </div>
+        
+        <div class="info-box" style="margin-top: 30px;">
+            <strong>🗓️ Tokens Activos:</strong>
+            <div id="tokensActivos"></div>
+        </div>
+    </div>
+
+    <script>
+        // Base de datos local de tokens (en un caso real, esto estaría en un servidor)
+        const TOKENS_DB = 'tokens_jacbateas';
+        
+        function generarToken() {
+            // Generar token aleatorio de 32 caracteres
+            const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let token = '';
+            
+            for (let i = 0; i < 32; i++) {
+                token += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+            }
+            
+            // Fecha de creación y expiración (3 días después)
+            const fechaCreacion = new Date();
+            const fechaExpiracion = new Date();
+            fechaExpiracion.setDate(fechaExpiracion.getDate() + 3);
+            
+            // Guardar token en localStorage
+            const tokenData = {
+                token: token,
+                creado: fechaCreacion.toISOString(),
+                expira: fechaExpiracion.toISOString(),
+                activo: true
+            };
+            
+            guardarTokenEnDB(tokenData);
+            actualizarDisplay(token);
+            actualizarListaTokens();
+            
+            return token;
+        }
+        
+        function guardarTokenEnDB(tokenData) {
+            let tokens = JSON.parse(localStorage.getItem(TOKENS_DB) || '[]');
+            
+            // Desactivar tokens antiguos del mismo tipo
+            tokens = tokens.map(t => ({ ...t, activo: false }));
+            
+            // Agregar nuevo token
+            tokens.push(tokenData);
+            
+            localStorage.setItem(TOKENS_DB, JSON.stringify(tokens));
+        }
+        
+        function actualizarDisplay(token) {
+            const display = document.getElementById('tokenDisplay');
+            const fechaExpiracion = new Date();
+            fechaExpiracion.setDate(fechaExpiracion.getDate() + 3);
+            
+            display.innerHTML = `
+                <strong>Token Generado:</strong><br>
+                <span style="color: #1a5a2a;">${token}</span><br><br>
+                <small>⏰ Válido hasta: ${fechaExpiracion.toLocaleDateString('es-ES')}</small>
+            `;
+        }
+        
+        function copiarToken() {
+            const display = document.getElementById('tokenDisplay');
+            const tokenText = display.textContent.includes('Token Generado') ? 
+                display.querySelector('span').textContent : 
+                display.textContent;
+            
+            navigator.clipboard.writeText(tokenText).then(() => {
+                alert('✅ Token copiado al portapapeles');
+            });
+        }
+        
+        function actualizarListaTokens() {
+            const contenedor = document.getElementById('tokensActivos');
+            let tokens = JSON.parse(localStorage.getItem(TOKENS_DB) || '[]');
+            
+            // Filtrar tokens activos y válidos
+            tokens = tokens.filter(token => {
+                const expiracion = new Date(token.expira);
+                return token.activo && expiracion > new Date();
+            });
+            
+            if (tokens.length === 0) {
+                contenedor.innerHTML = '<em>No hay tokens activos</em>';
+                return;
+            }
+            
+            let html = '<ul style="margin-top: 10px;">';
+            tokens.forEach(token => {
+                const expiracion = new Date(token.expira);
+                html += `
+                    <li style="margin: 5px 0;">
+                        ${token.token.substring(0, 8)}... - 
+                        <small>Vence: ${expiracion.toLocaleDateString('es-ES')}</small>
+                    </li>
+                `;
+            });
+            html += '</ul>';
+            
+            contenedor.innerHTML = html;
+        }
+        
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', actualizarListaTokens);
+    </script>
+</body>
+</html>
