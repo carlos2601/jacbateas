@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +12,7 @@
             box-sizing: border-box;
             font-family: 'Inter', sans-serif;
         }
-        
+
         body {
             background: linear-gradient(145deg, #4c724c 0%, #2a4a2a 100%);
             min-height: 100vh;
@@ -20,23 +21,31 @@
             justify-content: center;
             padding: 20px;
         }
-        
+
         .container {
             background: white;
             border-radius: 20px;
             padding: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 800px;
             width: 100%;
-            text-align: center;
         }
-        
+
         h1 {
             color: #1a4a2a;
             margin-bottom: 30px;
             font-size: 1.8rem;
+            text-align: center;
         }
-        
+
+        h2 {
+            color: #1a4a2a;
+            font-size: 1.3rem;
+            margin: 20px 0 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #4c724c;
+        }
+
         .token-display {
             background: #f8fff8;
             border: 2px dashed #4c724c;
@@ -48,8 +57,45 @@
             word-break: break-all;
             color: #1a4a2a;
             font-weight: bold;
+            text-align: center;
         }
-        
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #1a4a2a;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #d0e4d0;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #1a4a2a;
+            box-shadow: 0 0 0 3px rgba(26, 74, 42, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
         .btn {
             background: #1a4a2a;
             color: white;
@@ -60,160 +106,686 @@
             cursor: pointer;
             margin: 10px 5px;
             transition: background 0.3s;
+            font-weight: 600;
         }
-        
+
         .btn:hover {
             background: #2a6a3a;
         }
-        
-        .info-box {
-            background: #e6f0e6;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 20px 0;
-            text-align: left;
-            font-size: 0.9rem;
-            color: #2a4a2a;
+
+        .btn-secondary {
+            background: #4a6b4a;
         }
-        
-        .copy-btn {
+
+        .btn-secondary:hover {
+            background: #5a7b5a;
+        }
+
+        .btn-danger {
+            background: #c04040;
+        }
+
+        .btn-danger:hover {
+            background: #a03030;
+        }
+
+        .btn-copy {
             background: #4a90e2;
         }
-        
-        .copy-btn:hover {
+
+        .btn-copy:hover {
             background: #3a80d2;
+        }
+
+
+
+        .tokens-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .token-card {
+            background: white;
+            border: 2px solid #4c724c;
+            border-radius: 15px;
+            padding: 20px;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .token-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .token-card.active {
+            border-color: #2a8e5a;
+            background: linear-gradient(145deg, #ffffff, #f0fff0);
+        }
+
+        .token-card.inactive {
+            border-color: #c04040;
+            background: linear-gradient(145deg, #ffffff, #fff0f0);
+            opacity: 0.8;
+        }
+
+        .token-card.expired {
+            border-color: #c04040;
+            background: linear-gradient(145deg, #ffffff, #fff0f0);
+        }
+
+        .token-card.future {
+            border-color: #ffaa00;
+            background: linear-gradient(145deg, #ffffff, #fff8e0);
+        }
+
+        .token-card .token-value {
+            font-family: monospace;
+            font-size: 0.85rem;
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 8px;
+            word-break: break-all;
+            margin: 15px 0;
+            border: 1px solid #ddd;
+            font-weight: 500;
+        }
+
+        .token-card .fecha {
+            font-size: 0.8rem;
+            color: #4a6b4a;
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .token-card .estado {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .estado.activo {
+            background: #2a8e5a;
+            color: white;
+        }
+
+        .estado.inactivo {
+            background: #c04040;
+            color: white;
+        }
+
+        .estado.future {
+            background: #ffaa00;
+            color: #1a4a2a;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #c04040;
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .delete-btn:hover {
+            background: #ffe4e4;
+            color: #a03030;
+        }
+
+        .filtros {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filtro-btn {
+            padding: 8px 20px;
+            border: 2px solid #4c724c;
+            background: white;
+            color: #1a4a2a;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .filtro-btn:hover {
+            background: #e6f0e6;
+        }
+
+        .filtro-btn.active {
+            background: #1a4a2a;
+            color: white;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        .badge-dias {
+            background: #1a4a2a;
+            color: white;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #2a8e5a;
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .action-buttons button {
+            flex: 1;
+            padding: 8px;
+            font-size: 0.8rem;
+        }
+
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-item {
+            background: #f0f8f0;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-item .number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1a4a2a;
+        }
+
+        .stat-item .label {
+            font-size: 0.8rem;
+            color: #4a6b4a;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .tokens-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-summary {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <h1>🔐 Generador de Tokens de Acceso</h1>
-        
-        <div class="info-box">
-            <strong>⚠️ Información importante:</strong>
-            <ul style="margin: 10px 0 0 20px;">
-                <li>Los tokens tienen validez de <strong>3 días</strong></li>
-                <li>Cada token es <strong>único y aleatorio</strong></li>
-                <li>Guarda este token en un lugar seguro</li>
-                <li>Comparte solo con usuarios autorizados</li>
-            </ul>
+        <h1>🔐 Administrador de Tokens JAC Bateas</h1>
+
+
+
+
+
+        <div class="form-group">
+            <label>👤 Nombre del Usuario:</label>
+            <input type="text" id="usuarioNombre" placeholder="Ej: Juan Pérez, María García...">
         </div>
-        
-        <div class="token-display" id="tokenDisplay">
-            Presiona "Generar Token" para crear uno nuevo
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>📅 Fecha de Inicio:</label>
+                <input type="date" id="fechaInicio" value="<?php echo date('Y-m-d'); ?>">
+            </div>
+
+            <div class="form-group">
+                <label>⏰ Fecha de Expiración:</label>
+                <input type="date" id="fechaExpiracion" value="<?php echo date('Y-m-d', strtotime('+3 days')); ?>">
+            </div>
         </div>
-        
-        <div>
-            <button class="btn" onclick="generarToken()">🔄 Generar Token</button>
-            <button class="btn copy-btn" onclick="copiarToken()">📋 Copiar Token</button>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <button class="btn" onclick="generarToken()">🔄 Generar Token Personalizado</button>
+            <button class="btn btn-secondary" onclick="generarTokenRapido()">⚡ Generar Rápido (3 días)</button>
         </div>
-        
-        <div class="info-box" style="margin-top: 30px;">
-            <strong>🗓️ Tokens Activos:</strong>
-            <div id="tokensActivos"></div>
+
+        <h2>📊 Estadísticas</h2>
+        <div class="stats-summary" id="statsSummary">
+            <div class="stat-item">
+                <div class="number" id="totalTokens">0</div>
+                <div class="label">Total Tokens</div>
+            </div>
+            <div class="stat-item">
+                <div class="number" id="activosTokens">0</div>
+                <div class="label">Activos</div>
+            </div>
+            <div class="stat-item">
+                <div class="number" id="futurosTokens">0</div>
+                <div class="label">Futuros</div>
+            </div>
+        </div>
+
+        <h2>📋 Lista de Tokens</h2>
+
+        <div class="filtros">
+            <button class="filtro-btn active" onclick="filtrarTokens('todos')" id="filtroTodos">📋 Todos</button>
+            <button class="filtro-btn" onclick="filtrarTokens('activos')" id="filtroActivos">✅ Activos</button>
+            <button class="filtro-btn" onclick="filtrarTokens('futuros')" id="filtroFuturos">⏳ Futuros</button>
+            <button class="filtro-btn" onclick="filtrarTokens('expirados')" id="filtroExpirados">❌ Expirados</button>
+        </div>
+
+        <div id="tokensContainer" class="tokens-grid">
+            <!-- Los tokens se cargarán aquí -->
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: center; margin-top: 30px;">
+            <button class="btn btn-danger" onclick="limpiarExpirados()">🗑️ Limpiar Tokens Expirados</button>
+            <button class="btn btn-secondary" onclick="exportarTokens()">📥 Exportar Tokens</button>
         </div>
     </div>
 
     <script>
-        // Base de datos local de tokens (en un caso real, esto estaría en un servidor)
         const TOKENS_DB = 'tokens_jacbateas';
-        
+        let filtroActual = 'todos';
+
         function generarToken() {
+            const usuario = document.getElementById('usuarioNombre').value.trim() || 'Usuario';
+            const fechaInicio = document.getElementById('fechaInicio').value;
+            const fechaExpiracion = document.getElementById('fechaExpiracion').value;
+
+            if (!fechaInicio || !fechaExpiracion) {
+                alert('❌ Debes seleccionar ambas fechas');
+                return;
+            }
+
+            const fechaInicioObj = new Date(fechaInicio);
+            const fechaExpiracionObj = new Date(fechaExpiracion);
+            const ahora = new Date();
+
+            // Validar fechas
+            if (fechaExpiracionObj <= fechaInicioObj) {
+                alert('❌ La fecha de expiración debe ser posterior a la fecha de inicio');
+                return;
+            }
+
             // Generar token aleatorio de 32 caracteres
             const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
             let token = '';
-            
+
             for (let i = 0; i < 32; i++) {
                 token += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
             }
-            
-            // Fecha de creación y expiración (3 días después)
-            const fechaCreacion = new Date();
-            const fechaExpiracion = new Date();
-            fechaExpiracion.setDate(fechaExpiracion.getDate() + 3);
-            
-            // Guardar token en localStorage
+
+            // Determinar estado inicial
+            let estado = 'futuro';
+            if (fechaInicioObj <= ahora && fechaExpiracionObj > ahora) {
+                estado = 'activo';
+            } else if (fechaExpiracionObj <= ahora) {
+                estado = 'expirado';
+            }
+
+            // Guardar token
             const tokenData = {
                 token: token,
-                creado: fechaCreacion.toISOString(),
-                expira: fechaExpiracion.toISOString(),
-                activo: true
+                usuario: usuario,
+                fechaInicio: fechaInicioObj.toISOString(),
+                fechaExpiracion: fechaExpiracionObj.toISOString(),
+                creado: new Date().toISOString(),
+                estado: estado
             };
-            
-            guardarTokenEnDB(tokenData);
-            actualizarDisplay(token);
+
+            guardarToken(tokenData);
             actualizarListaTokens();
-            
-            return token;
+            mostrarNotificacion('✅ Token generado exitosamente');
         }
-        
-        function guardarTokenEnDB(tokenData) {
+
+        function generarTokenRapido() {
+            // Generar token con 3 días de validez desde hoy
+            const hoy = new Date();
+            const expiracion = new Date();
+            expiracion.setDate(expiracion.getDate() + 3);
+
+            document.getElementById('fechaInicio').value = hoy.toISOString().split('T')[0];
+            document.getElementById('fechaExpiracion').value = expiracion.toISOString().split('T')[0];
+            generarToken();
+        }
+
+        function guardarToken(tokenData) {
             let tokens = JSON.parse(localStorage.getItem(TOKENS_DB) || '[]');
-            
-            // Desactivar tokens antiguos del mismo tipo
-            tokens = tokens.map(t => ({ ...t, activo: false }));
-            
-            // Agregar nuevo token
             tokens.push(tokenData);
-            
             localStorage.setItem(TOKENS_DB, JSON.stringify(tokens));
         }
-        
-        function actualizarDisplay(token) {
-            const display = document.getElementById('tokenDisplay');
-            const fechaExpiracion = new Date();
-            fechaExpiracion.setDate(fechaExpiracion.getDate() + 3);
-            
-            display.innerHTML = `
-                <strong>Token Generado:</strong><br>
-                <span style="color: #1a5a2a;">${token}</span><br><br>
-                <small>⏰ Válido hasta: ${fechaExpiracion.toLocaleDateString('es-ES')}</small>
-            `;
+
+        function eliminarToken(index) {
+            if (confirm('¿Estás seguro de eliminar este token?')) {
+                let tokens = JSON.parse(localStorage.getItem(TOKENS_DB) || '[]');
+                tokens.splice(index, 1);
+                localStorage.setItem(TOKENS_DB, JSON.stringify(tokens));
+                actualizarListaTokens();
+                mostrarNotificacion('🗑️ Token eliminado');
+            }
         }
-        
-        function copiarToken() {
-            const display = document.getElementById('tokenDisplay');
-            const tokenText = display.textContent.includes('Token Generado') ? 
-                display.querySelector('span').textContent : 
-                display.textContent;
-            
-            navigator.clipboard.writeText(tokenText).then(() => {
-                alert('✅ Token copiado al portapapeles');
+
+        function copiarToken(token) {
+            navigator.clipboard.writeText(token).then(() => {
+                mostrarNotificacion('📋 Token copiado al portapapeles');
             });
         }
-        
-        function actualizarListaTokens() {
-            const contenedor = document.getElementById('tokensActivos');
+
+        function filtrarTokens(filtro) {
+            filtroActual = filtro;
+
+            // Actualizar botones
+            document.querySelectorAll('.filtro-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(`filtro${filtro.charAt(0).toUpperCase() + filtro.slice(1)}`).classList.add('active');
+
+            actualizarListaTokens();
+        }
+
+        function limpiarExpirados() {
             let tokens = JSON.parse(localStorage.getItem(TOKENS_DB) || '[]');
-            
-            // Filtrar tokens activos y válidos
-            tokens = tokens.filter(token => {
-                const expiracion = new Date(token.expira);
-                return token.activo && expiracion > new Date();
+            const ahora = new Date();
+            tokens = tokens.filter(token => new Date(token.fechaExpiracion) > ahora);
+            localStorage.setItem(TOKENS_DB, JSON.stringify(tokens));
+            actualizarListaTokens();
+            mostrarNotificacion('🧹 Tokens expirados eliminados');
+        }
+
+        function exportarTokens() {
+            let tokens = JSON.parse(localStorage.getItem(TOKENS_DB) || '[]');
+            const dataStr = JSON.stringify(tokens, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+            const exportFileDefaultName = `tokens_${new Date().toISOString().split('T')[0]}.json`;
+
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+
+            mostrarNotificacion('📥 Tokens exportados');
+        }
+
+        function mostrarNotificacion(mensaje) {
+            // Crear notificación temporal
+            const notificacion = document.createElement('div');
+            notificacion.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #1a4a2a;
+                color: white;
+                padding: 12px 24px;
+                border-radius: 8px;
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+            `;
+            notificacion.textContent = mensaje;
+            document.body.appendChild(notificacion);
+
+            setTimeout(() => {
+                notificacion.remove();
+            }, 3000);
+        }
+
+        function actualizarEstadoTokens() {
+            let tokens = JSON.parse(localStorage.getItem(TOKENS_DB) || '[]');
+            const ahora = new Date();
+            let modificado = false;
+
+            tokens = tokens.map(token => {
+                const fechaInicio = new Date(token.fechaInicio);
+                const fechaExpiracion = new Date(token.fechaExpiracion);
+
+                let nuevoEstado = token.estado;
+                if (fechaInicio > ahora) {
+                    nuevoEstado = 'futuro';
+                } else if (fechaExpiracion <= ahora) {
+                    nuevoEstado = 'expirado';
+                } else {
+                    nuevoEstado = 'activo';
+                }
+
+                if (nuevoEstado !== token.estado) {
+                    modificado = true;
+                    token.estado = nuevoEstado;
+                }
+                return token;
             });
-            
-            if (tokens.length === 0) {
-                contenedor.innerHTML = '<em>No hay tokens activos</em>';
+
+            if (modificado) {
+                localStorage.setItem(TOKENS_DB, JSON.stringify(tokens));
+            }
+
+            return tokens;
+        }
+
+        function actualizarEstadisticas(tokens) {
+            const ahora = new Date();
+            const total = tokens.length;
+            const activos = tokens.filter(t => new Date(t.fechaInicio) <= ahora && new Date(t.fechaExpiracion) > ahora).length;
+            const futuros = tokens.filter(t => new Date(t.fechaInicio) > ahora).length;
+            const expirados = tokens.filter(t => new Date(t.fechaExpiracion) <= ahora).length;
+
+            document.getElementById('totalTokens').textContent = total;
+            document.getElementById('activosTokens').textContent = activos;
+            document.getElementById('futurosTokens').textContent = futuros;
+        }
+
+        function calcularDiasRestantes(fechaExpiracion) {
+            const hoy = new Date();
+            const exp = new Date(fechaExpiracion);
+            const diff = exp - hoy;
+            const dias = Math.ceil(diff / (1000 * 60 * 60 * 24));
+            return dias;
+        }
+
+        function calcularPorcentajeVida(fechaInicio, fechaExpiracion) {
+            const inicio = new Date(fechaInicio);
+            const exp = new Date(fechaExpiracion);
+            const ahora = new Date();
+
+            const total = exp - inicio;
+            const transcurrido = ahora - inicio;
+            const porcentaje = (transcurrido / total) * 100;
+
+            return Math.min(100, Math.max(0, porcentaje));
+        }
+
+        function actualizarListaTokens() {
+            let tokens = actualizarEstadoTokens();
+            const contenedor = document.getElementById('tokensContainer');
+            const ahora = new Date();
+
+            actualizarEstadisticas(tokens);
+
+            // Filtrar según selección
+            let tokensFiltrados = tokens;
+            if (filtroActual === 'activos') {
+                tokensFiltrados = tokens.filter(t => t.estado === 'activo');
+            } else if (filtroActual === 'futuros') {
+                tokensFiltrados = tokens.filter(t => t.estado === 'futuro');
+            } else if (filtroActual === 'expirados') {
+                tokensFiltrados = tokens.filter(t => t.estado === 'expirado');
+            }
+
+            // Ordenar: activos primero, luego futuros, luego expirados
+            tokensFiltrados.sort((a, b) => {
+                const orden = { 'activo': 0, 'futuro': 1, 'expirado': 2 };
+                return orden[a.estado] - orden[b.estado] || new Date(b.fechaInicio) - new Date(a.fechaInicio);
+            });
+
+            if (tokensFiltrados.length === 0) {
+                contenedor.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 60px; color: #666; background: #f8f8f8; border-radius: 10px;">📭 No hay tokens para mostrar</div>';
                 return;
             }
-            
-            let html = '<ul style="margin-top: 10px;">';
-            tokens.forEach(token => {
-                const expiracion = new Date(token.expira);
+
+            let html = '';
+            tokensFiltrados.forEach((token, index) => {
+                const fechaInicio = new Date(token.fechaInicio).toLocaleString('es-ES', {
+                    day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                });
+                const fechaExpiracion = new Date(token.fechaExpiracion).toLocaleString('es-ES', {
+                    day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                });
+
+                const diasRestantes = calcularDiasRestantes(token.fechaExpiracion);
+                const porcentajeVida = calcularPorcentajeVida(token.fechaInicio, token.fechaExpiracion);
+
+                let estadoClass = '';
+                let estadoTexto = '';
+                let estadoColor = '';
+
+                switch (token.estado) {
+                    case 'activo':
+                        estadoClass = 'activo';
+                        estadoTexto = '✓ ACTIVO';
+                        estadoColor = '#2a8e5a';
+                        break;
+                    case 'futuro':
+                        estadoClass = 'future';
+                        estadoTexto = '⏳ FUTURO';
+                        estadoColor = '#ffaa00';
+                        break;
+                    case 'expirado':
+                        estadoClass = 'inactive';
+                        estadoTexto = '✗ EXPIRADO';
+                        estadoColor = '#c04040';
+                        break;
+                }
+
+                const tokenIndex = tokens.findIndex(t => t.token === token.token);
+
                 html += `
-                    <li style="margin: 5px 0;">
-                        ${token.token.substring(0, 8)}... - 
-                        <small>Vence: ${expiracion.toLocaleDateString('es-ES')}</small>
-                    </li>
+                    <div class="token-card ${token.estado}">
+                        <button class="delete-btn" onclick="eliminarToken(${tokenIndex})" title="Eliminar token">✖</button>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <span class="estado ${estadoClass}">${estadoTexto}</span>
+                            <span style="background: #f0f0f0; padding: 4px 8px; border-radius: 12px; font-size: 0.7rem;">
+                                👤 ${token.usuario}
+                            </span>
+                        </div>
+                        
+                        <div class="token-value">${token.token}</div>
+                        
+                        <div class="fecha">
+                            <span>📅 Inicio:</span> ${fechaInicio}
+                        </div>
+                        <div class="fecha">
+                            <span>⏰ Expira:</span> ${fechaExpiracion}
+                        </div>
+                        
+                        ${token.estado === 'activo' ? `
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${porcentajeVida}%;"></div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.7rem;">
+                                <span>⏳ ${diasRestantes} días restantes</span>
+                                <span>${Math.round(porcentajeVida)}%</span>
+                            </div>
+                        ` : token.estado === 'futuro' ? `
+                            <div style="background: #fff8e0; padding: 8px; border-radius: 5px; margin-top: 10px; font-size: 0.7rem; text-align: center;">
+                                ⏳ Inicia en ${Math.ceil((new Date(token.fechaInicio) - ahora) / (1000 * 60 * 60 * 24))} días
+                            </div>
+                        ` : `
+                            <div style="background: #ffe4e4; padding: 8px; border-radius: 5px; margin-top: 10px; font-size: 0.7rem; text-align: center;">
+                                ⌛ Expirado hace ${Math.ceil((ahora - new Date(token.fechaExpiracion)) / (1000 * 60 * 60 * 24))} días
+                            </div>
+                        `}
+                        
+                        ${token.estado !== 'expirado' ? `
+                            <div class="action-buttons">
+                                <button class="btn-copy" onclick="copiarToken('${token.token}')" style="background: #4a90e2; color: white; border: none; padding: 8px; border-radius: 5px; cursor: pointer;">
+                                    📋 Copiar Token
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
                 `;
             });
-            html += '</ul>';
-            
+
             contenedor.innerHTML = html;
         }
-        
-        // Inicializar
-        document.addEventListener('DOMContentLoaded', actualizarListaTokens);
+
+        // Establecer fechas por defecto (hoy y hoy + 3 días)
+        document.addEventListener('DOMContentLoaded', () => {
+            const hoy = new Date();
+            const expiracion = new Date();
+            expiracion.setDate(expiracion.getDate() + 3);
+
+            document.getElementById('fechaInicio').value = hoy.toISOString().split('T')[0];
+            document.getElementById('fechaExpiracion').value = expiracion.toISOString().split('T')[0];
+
+            actualizarListaTokens();
+        });
+
+        // Agregar animación CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
+
 </html>
