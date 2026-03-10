@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-03-10T00:27:15.495Z",
+  "ultima_actualizacion": "2026-03-10T00:27:22.354Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -243,7 +243,7 @@
     {
       "cedula": "82331966",
       "nombre": "WILMAR MANUEL CHAMORRO",
-      "fecha_pago_año_2026": "enero_2026_5000_09/03/2026_19:27:15_00041"
+      "fecha_pago_año_2026": "enero_2026_5000_09/03/2026_19:27:15_00041; febrero_2026_5000_09/03/2026_19:27:21_00041"
     }
   ]
 }
