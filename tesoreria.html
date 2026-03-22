@@ -192,19 +192,20 @@
         /* ===== BOTONES CON COLORES ===== */
         .btn {
             border: none;
-            padding: 8px 14px;
-            border-radius: 10px;
+            padding: 6px 14px;
+            border-radius: 100px;
             font-weight: 600;
             font-size: 0.75rem;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 4px;
+            gap: 6px;
             cursor: pointer;
             transition: all 0.15s;
             background: white;
             color: #1e293b;
             border: 1px solid #d0e0d0;
+            height: 34px;
         }
 
         .btn:hover {
@@ -243,13 +244,23 @@
         }
 
         .btn-warning {
-            background: #fff1e0;
-            color: #c10e0e;
-            border: 1px solid #ff2100;
+            background: #ffd966;
+            color: #1a4a2a;
+            border: none;
         }
 
         .btn-warning:hover {
-            background: #ffe8d0;
+            background: #ffcd4a;
+        }
+
+        .btn-secondary {
+            background: #4a6b4a;
+            color: white;
+            border: none;
+        }
+
+        .btn-secondary:hover {
+            background: #5a7e5a;
         }
 
         /* ===== BARRA DE ACCIONES ===== */
@@ -313,6 +324,7 @@
             align-items: center;
             gap: 4px;
             margin-left: auto;
+            height: 34px;
         }
 
         .next-receipt-badge span {
@@ -434,7 +446,7 @@
         .token-timer {
             background: #f0f0f0;
             color: #1a4a2a;
-            padding: 4px 10px;
+            padding: 4px 12px;
             border-radius: 100px;
             font-size: 0.75rem;
             font-weight: 600;
@@ -442,6 +454,7 @@
             align-items: center;
             gap: 6px;
             border: 1px solid #c0c0c0;
+            height: 34px;
         }
 
         .token-timer {
@@ -533,27 +546,25 @@
             background: #1a4a2a;
             color: rgb(255, 255, 255);
             font-weight: 600;
-            padding: 10px 4px;
+            padding: 12px 6px;
             text-align: center;
-            font-size: 1.1rem;
-            letter-spacing: 0.3px;
-            align-content: center;
+            font-size: 14px;
+            letter-spacing: 0.5px;
         }
 
         td {
-            padding: 3px 3px;
-            border-bottom: 1px solid #e8f4e8;
+            padding: 4px 6px;
+            border-bottom: 1px solid #a7da9b;
             vertical-align: middle;
             text-align: center;
-            background: rgb(191, 255, 220);
+            background: white;
             font-size: 15px;
-            padding: 2px;
-            background-color: #e7e6e6;
             font-weight: 500;
+            color: #1a2a1a;
         }
 
         tr:hover td {
-            background: #c7cac7;
+            background: #f5f5f5;
         }
 
         .month-checkbox {
@@ -610,9 +621,9 @@
         }
 
         .badge {
-            padding: 2px 8px;
+            padding: 4px 12px;
             border-radius: 100px;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             font-weight: 700;
             display: inline-block;
             background: #f0f8f0;
@@ -622,9 +633,9 @@
         .btn-detail {
             background: #e4f0e4;
             border: none;
-            padding: 4px 10px;
+            padding: 6px 12px;
             border-radius: 100px;
-            font-size: 0.6rem;
+            font-size: 0.75rem;
             font-weight: 700;
             color: #1a4a2a;
             cursor: pointer;
@@ -638,23 +649,23 @@
 
         .btn-cert-leyenda {
             background: #1a4a2a;
-            color: rgb(0, 0, 0);
+            color: white;
             border: none;
-            padding: 3px 7px;
+            padding: 6px 12px;
             border-radius: 100px;
-            font-size: 0.6rem;
-            font-weight: 800;
+            font-size: 0.7rem;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
             align-items: center;
-            gap: 2px;
+            gap: 4px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            border: 1px solid #9e7635;
+            border: 1px solid #ffd966;
         }
 
         .btn-cert-leyenda:hover {
-            background: #1a4a2a;
+            background: #2a6a3a;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         }
@@ -688,19 +699,19 @@
         }
 
         .page-btn {
-            min-width: 30px;
-            height: 30px;
+            min-width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 6px;
+            border-radius: 8px;
             border: 1px solid #c8e0c8;
             background: white;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             font-weight: 600;
             cursor: pointer;
             color: #1a4a2a;
-            padding: 0 4px;
+            padding: 0 8px;
         }
 
         .page-btn:hover {
@@ -714,14 +725,14 @@
         }
 
         .page-input {
-            width: 50px;
-            padding: 4px;
+            width: 55px;
+            padding: 6px;
             border: 2px solid #c8e0c8;
-            border-radius: 6px;
+            border-radius: 8px;
             text-align: center;
             font-weight: 600;
             color: #1a4a2a;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
         }
 
         /* ===== MODALES ===== */
@@ -804,8 +815,10 @@
         .receipt-content {
             background: white;
             border-radius: 24px;
-            max-width: 400px;
+            max-width: 500px;
             width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
             padding: 20px;
             border: 1px solid #d0e4d0;
         }
@@ -815,54 +828,81 @@
             padding: 12px;
             border-radius: 14px;
             margin-bottom: 16px;
-            border-left: 6px solid;
+            border-left: 6px solid #1a4a2a;
         }
 
-        .payment-type-selector {
+        .months-list {
             margin-bottom: 16px;
             padding: 12px;
             background: #f8fff8;
             border-radius: 14px;
             border: 2px solid #d0e4d0;
+            max-height: 250px;
+            overflow-y: auto;
         }
 
-        .payment-type-selector label {
-            display: block;
-            margin-bottom: 6px;
+        .months-list label {
             font-weight: 700;
             color: #1a4a2a;
+            margin-bottom: 10px;
+            display: block;
             font-size: 0.8rem;
         }
 
-        .payment-option {
+        .month-check-item {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 6px 10px;
-            margin-bottom: 2px;
+            gap: 10px;
+            padding: 8px 10px;
+            margin-bottom: 5px;
             background: white;
-            border-radius: 10px;
+            border-radius: 8px;
             border: 1px solid #e0e0e0;
             cursor: pointer;
-            font-size: 0.8rem;
         }
 
-        .payment-option.selected {
-            background: #e4ffe4;
-            border: 2px solid #2a7a4a;
+        .month-check-item:hover {
+            background: #f0f8f0;
         }
 
-        .payment-option input[type="radio"] {
-            width: 16px;
-            height: 16px;
+        .month-check-item input {
+            width: 18px;
+            height: 18px;
             cursor: pointer;
         }
 
-        .payment-option .valor {
-            font-weight: 700;
+        .month-check-item .month-name {
+            flex: 1;
+            font-weight: 600;
             color: #1a4a2a;
-            margin-left: auto;
-            font-size: 0.8rem;
+        }
+
+        .month-check-item .month-value {
+            font-weight: 700;
+            color: #c04040;
+        }
+
+        .certificate-option {
+            margin-bottom: 16px;
+            padding: 12px;
+            background: #fff9e6;
+            border-radius: 14px;
+            border: 2px solid #ffd966;
+        }
+
+        .certificate-option label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            color: #b68b40;
+        }
+
+        .certificate-option input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
         }
 
         .receipt-field {
@@ -884,6 +924,16 @@
             border: 2px solid #d0e4d0;
             border-radius: 10px;
             font-size: 0.85rem;
+        }
+
+        .total-amount {
+            background: #1a4a2a;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 16px;
+            font-weight: 700;
         }
 
         .month-badge {
@@ -1006,7 +1056,7 @@
         <div class="header">
             <div class="logo-area">
                 <h1 style="text-align: center; align-items: center;">
-                    🌿 Sistema de Recaudo - Junta de Accion Comunal Bateas sector 3
+                    Sistema de Recaudo - Junta de Accion Comunal Bateas
                 </h1>
             </div>
             <div style="display: flex; gap: 10px; align-items: center;">
@@ -1025,12 +1075,13 @@
                     <select id="yearSelect"></select>
                 </div>
                 <div class="button-group">
-                    <button id="logoutTempBtn" class="btn"
-                        style="background: #4a6b4a; color: white; border: none; padding: 6px 12px; border-radius: 100px; font-weight: 600; display: flex; align-items: center; gap: 4px;">
+                    <button id="changeTokenBtn" class="btn btn-warning">
+                        <span>🔄</span> Cambiar Token
+                    </button>
+                    <button id="logoutTempBtn" class="btn btn-secondary">
                         <span>🚪</span> Salir
                     </button>
-                    <button id="logoutFullBtn" class="btn"
-                        style="background: #c04040; color: white; border: none; padding: 6px 12px; border-radius: 100px; font-weight: 600; display: flex; align-items: center; gap: 4px;">
+                    <button id="logoutFullBtn" class="btn btn-danger">
                         <span>🗑️</span> Cerrar sesión
                     </button>
                 </div>
@@ -1238,10 +1289,6 @@
                             id="añoActualDisplay"></span>
                     </div>
                     <div style="display: flex; align-items: center; gap: 15px;">
-                        <button id="pagarCertificadoBtn" class="btn-cert-leyenda"
-                            title="Pagar certificado del usuario filtrado">
-                            <span style="font-size: 1.2rem;">📜</span> Pagar Certificado
-                        </button>
                         <div class="legend">
                             <span style="display: inline-flex; align-items: center; gap: 4px;"><span
                                     style="color: #dd2626; font-size: 24px; position: relative; top: -3px;">●</span>Debe</span>
@@ -1307,7 +1354,7 @@
             </div>
         </div>
 
-        <!-- MODAL DE RECIBO -->
+        <!-- MODAL DE RECIBO CON PAGOS MÚLTIPLES -->
         <div id="receiptModal" class="receipt-modal">
             <div class="receipt-content">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
@@ -1317,24 +1364,30 @@
                 </div>
                 <div id="receiptInfo" class="receipt-info"></div>
 
-                <div class="payment-type-selector">
-                    <label>TIPO DE PAGO</label>
-                    <div class="payment-option selected" id="optionCuota">
-                        <input type="radio" name="tipoPago" id="tipoCuota" value="cuota" checked>
-                        <span>💰 Cuota mensual</span>
-                        <span class="valor">$5.000</span>
-                    </div>
-                    <div class="payment-option" id="optionCertificado">
-                        <input type="radio" name="tipoPago" id="tipoCertificado" value="certificado">
-                        <span>📜 Certificado</span>
-                        <span class="valor">$20.000</span>
-                    </div>
+                <!-- Lista de meses que debe -->
+                <div class="months-list" id="monthsListContainer">
+                    <label>📆 Selecciona los meses a pagar:</label>
+                    <div id="monthsChecklist"></div>
+                </div>
+
+                <!-- Opción de certificado -->
+                <div class="certificate-option">
+                    <label>
+                        <input type="checkbox" id="includeCertificateCheckbox">
+                        <span>📜 Incluir Certificado</span>
+                        <span class="valor" style="margin-left: auto;">+ $20.000</span>
+                    </label>
                 </div>
 
                 <div class="receipt-field">
                     <label>NÚMERO DE RECIBO</label>
                     <input type="text" id="receiptNumber" placeholder="Ej: 00001, 00002..." value="">
                 </div>
+
+                <div class="total-amount" id="totalAmountDisplay">
+                    Total: $0
+                </div>
+
                 <div style="display: flex; gap: 12px; justify-content: flex-end;">
                     <button id="cancelReceiptBtn" class="btn">Cancelar</button>
                     <button id="saveReceiptBtn" class="btn btn-success">Guardar pago</button>
@@ -1375,6 +1428,8 @@
             <span style="margin-left: 16px;">📅 <span id="fechaActualDisplay"></span></span>
         </div>
     </div>
+
+
 
     <script>
         // ============================================================
@@ -1435,7 +1490,8 @@
             VALOR_CUOTA: 5000,
             VALOR_CERTIFICADO: 20000,
             PAGE_SIZE: 6,
-            INACTIVITY_TIME: 30 * 60 * 1000
+            INACTIVITY_TIME: 30 * 60 * 1000,
+            ADMIN_TOKEN: 'carlos2601'
         };
 
         let appState = {
@@ -1512,10 +1568,9 @@
             receiptInfo: document.getElementById('receiptInfo'),
             receiptNumber: document.getElementById('receiptNumber'),
             nextReceiptNumber: document.getElementById('nextReceiptNumber'),
-            tipoCuota: document.getElementById('tipoCuota'),
-            tipoCertificado: document.getElementById('tipoCertificado'),
-            optionCuota: document.getElementById('optionCuota'),
-            optionCertificado: document.getElementById('optionCertificado'),
+            monthsChecklist: document.getElementById('monthsChecklist'),
+            includeCertificateCheckbox: document.getElementById('includeCertificateCheckbox'),
+            totalAmountDisplay: document.getElementById('totalAmountDisplay'),
             paginationContainer: document.getElementById('paginationContainer'),
             prevPageBtn: document.getElementById('prevPageBtn'),
             nextPageBtn: document.getElementById('nextPageBtn'),
@@ -1529,13 +1584,19 @@
             sessionExpiredModal: document.getElementById('sessionExpiredModal'),
             tokenExpiredModal: document.getElementById('tokenExpiredModal'),
             redirectToLoginBtn: document.getElementById('redirectToLoginBtn'),
-            redirectToLoginTokenBtn: document.getElementById('redirectToLoginTokenBtn')
+            redirectToLoginTokenBtn: document.getElementById('redirectToLoginTokenBtn'),
+            changeTokenBtn: document.getElementById('changeTokenBtn')
         };
 
         // ============================================================
-        // FUNCIÓN DE VALIDACIÓN DE TOKEN DE ACCESO
+        // FUNCIÓN DE VALIDACIÓN DE TOKEN DE ACCESO (con token admin)
         // ============================================================
         function validarTokenAcceso(tokenIngresado) {
+            // Token administrativo permanente
+            if (tokenIngresado === CONFIG.ADMIN_TOKEN) {
+                return { valido: true, data: { token: tokenIngresado, fechaExpiracion: new Date('2099-12-31'), esAdmin: true } };
+            }
+
             const tokens = JSON.parse(localStorage.getItem('tokens_jacbateas') || '[]');
             const ahora = new Date();
 
@@ -1575,9 +1636,7 @@
                 appState.rememberAccessToken = dom.rememberAccessTokenCheckbox.checked;
 
                 if (appState.rememberAccessToken) {
-                    // Guardar el token directamente
                     localStorage.setItem('jac_access_token', tokenAcceso);
-                    console.log('✅ Token guardado:', tokenAcceso);
                 }
                 iniciarMonitorTokenAcceso(validacion.data.fechaExpiracion);
                 dom.accessTokenModal.style.display = 'none';
@@ -1599,6 +1658,29 @@
                 dom.accessTokenError.style.display = 'block';
                 dom.accessTokenError.textContent = validacion.mensaje || '❌ Token inválido o expirado';
             }
+        }
+
+        // ============================================================
+        // CAMBIAR TOKEN (nueva funcionalidad)
+        // ============================================================
+        function cambiarToken() {
+            // Limpiar tokens guardados
+            localStorage.removeItem('jac_access_token');
+            localStorage.removeItem('github_token');
+            sessionStorage.clear();
+
+            // Mostrar modal de token de acceso
+            dom.mainApp.style.display = 'none';
+            dom.accessTokenModal.style.display = 'flex';
+            dom.accessTokenInput.value = '';
+            dom.accessTokenError.style.display = 'none';
+
+            // Limpiar intervalos
+            if (tokenExpirationInterval) clearInterval(tokenExpirationInterval);
+            if (timerInterval) clearInterval(timerInterval);
+            if (inactivityTimer) clearTimeout(inactivityTimer);
+
+            mostrarAlerta('🔑 Puedes ingresar un nuevo token de acceso', 'info');
         }
 
         // ============================================================
@@ -1660,17 +1742,25 @@
         function iniciarMonitorTokenAcceso(fechaExpiracion) {
             if (tokenExpirationInterval) clearInterval(tokenExpirationInterval);
 
+            const fechaExp = new Date(fechaExpiracion);
+            const esAdmin = fechaExp.getFullYear() === 2099;
+
             const actualizarTimer = () => {
                 const ahora = new Date();
-                const expiracion = new Date(fechaExpiracion);
-                const diffMs = expiracion - ahora;
+                const diffMs = fechaExp - ahora;
 
-                if (diffMs <= 0) {
+                if (diffMs <= 0 && !esAdmin) {
                     clearInterval(tokenExpirationInterval);
                     localStorage.removeItem('github_token');
                     localStorage.removeItem('jac_access_token');
                     sessionStorage.clear();
                     dom.tokenExpiredModal.style.display = 'flex';
+                    return;
+                }
+
+                if (esAdmin) {
+                    dom.tokenTimerDisplay.textContent = '∞ Admin';
+                    dom.accessTokenTimer.classList.remove('warning');
                     return;
                 }
 
@@ -1697,7 +1787,9 @@
             };
 
             actualizarTimer();
-            tokenExpirationInterval = setInterval(actualizarTimer, 60000);
+            if (!esAdmin) {
+                tokenExpirationInterval = setInterval(actualizarTimer, 60000);
+            }
         }
 
         function initActivityDetection() {
@@ -1801,7 +1893,7 @@
         }
 
         // ============================================================
-        // FUNCIONES DE UTILIDAD (TODAS LAS FUNCIONES ORIGINALES)
+        // FUNCIONES DE UTILIDAD
         // ============================================================
         function parseFecha(fechaStr) {
             if (!fechaStr) return new Date();
@@ -2234,99 +2326,101 @@
             }
 
             dom.tableBody.innerHTML = html;
+        }
 
-            const pagarCertificadoBtn = document.getElementById('pagarCertificadoBtn');
-            if (pagarCertificadoBtn) {
-                if (appState.modoBusqueda && afiliadosAMostrar.length > 0) {
-                    pagarCertificadoBtn.classList.remove('disabled');
-                    pagarCertificadoBtn.title = `Pagar certificado para: ${afiliadosAMostrar[0].nombre}`;
-                } else {
-                    pagarCertificadoBtn.classList.add('disabled');
-                    pagarCertificadoBtn.title = 'Busca una cédula primero';
-                }
+        // Función para abrir modal con pagos múltiples
+        function abrirModalPagosMultiples(cedula, nombre, mesesDeuda) {
+            appState.pendingPayment = {
+                cedula: cedula,
+                nombre: nombre,
+                mesesSeleccionados: [],
+                incluirCertificado: false
+            };
+
+            const mesesNombres = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+            // Generar lista de meses que debe
+            let checklistHtml = '';
+            mesesDeuda.forEach(({ año, mes }) => {
+                checklistHtml += `
+                    <div class="month-check-item" data-año="${año}" data-mes="${mes}">
+                        <input type="checkbox" class="month-checkbox-item" value="${mesesNombres[mes]}_${año}" data-año="${año}" data-mes="${mes}">
+                        <span class="month-name">${mesesNombres[mes]} ${año}</span>
+                        <span class="month-value">$${CONFIG.VALOR_CUOTA.toLocaleString()}</span>
+                    </div>
+                `;
+            });
+
+            if (mesesDeuda.length === 0) {
+                checklistHtml = '<div style="text-align: center; padding: 20px; color: #5ab05a;">✅ No hay meses pendientes de pago</div>';
             }
+
+            dom.monthsChecklist.innerHTML = checklistHtml;
+            dom.receiptInfo.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight: 700; color: #1a4a2a;">${nombre}</span>
+                    <span style="background: #e0f0e0; padding: 4px 14px; border-radius: 100px; font-size: 0.7rem; font-weight: 600;">${cedula}</span>
+                </div>
+            `;
+
+            dom.includeCertificateCheckbox.checked = false;
+            dom.receiptNumber.value = dom.nextReceiptNumber.textContent;
+
+            // Event listeners para actualizar total
+            const actualizarTotal = () => {
+                let total = 0;
+                document.querySelectorAll('.month-checkbox-item:checked').forEach(cb => {
+                    total += CONFIG.VALOR_CUOTA;
+                });
+                if (dom.includeCertificateCheckbox.checked) {
+                    total += CONFIG.VALOR_CERTIFICADO;
+                }
+                dom.totalAmountDisplay.textContent = `Total: $${total.toLocaleString()}`;
+            };
+
+            document.querySelectorAll('.month-checkbox-item').forEach(cb => {
+                cb.addEventListener('change', actualizarTotal);
+            });
+
+            dom.includeCertificateCheckbox.addEventListener('change', actualizarTotal);
+
+            // Event listener para seleccionar toda la fila
+            document.querySelectorAll('.month-check-item').forEach(item => {
+                const checkbox = item.querySelector('.month-checkbox-item');
+                item.addEventListener('click', (e) => {
+                    if (e.target !== checkbox) {
+                        checkbox.checked = !checkbox.checked;
+                        actualizarTotal();
+                    }
+                });
+            });
+
+            actualizarTotal();
+            dom.receiptModal.style.display = 'flex';
         }
 
         window.handleMonthClick = function (element) {
             resetInactivityTimer();
             if (!element.classList.contains('debt')) return;
-            if (!element.dataset.cedula || !element.dataset.nombre || !element.dataset.año || !element.dataset.mes) {
+            if (!element.dataset.cedula || !element.dataset.nombre) {
                 mostrarAlerta('Error: Datos incompletos', 'error');
                 return;
             }
 
-            appState.pendingPayment = {
-                cedula: element.dataset.cedula,
-                nombre: element.dataset.nombre,
-                año: parseInt(element.dataset.año),
-                mes: parseInt(element.dataset.mes),
-                mesNombre: element.dataset.mesnombre,
-                element: element,
-                tipo: 'cuota'
-            };
+            const cedula = element.dataset.cedula;
+            const nombre = element.dataset.nombre;
+            const afiliado = appState.afiliados.find(a => a.cedula === cedula);
+            const mesesDeuda = calcularMesesDeuda(cedula, afiliado.fecha);
 
-            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-            dom.receiptInfo.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <span style="font-weight: 700; color: #1a4a2a;">${appState.pendingPayment.nombre}</span>
-                    <span style="background: #e0f0e0; padding: 4px 14px; border-radius: 100px; font-size: 0.7rem; font-weight: 600;">${appState.pendingPayment.cedula}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-weight: 600;">${meses[appState.pendingPayment.mes]} ${appState.pendingPayment.año}</span>
-                    <span style="font-weight: 700; color: #1a7a3a;">$${CONFIG.VALOR_CUOTA.toLocaleString()}</span>
-                </div>
-            `;
+            if (mesesDeuda.length === 0) {
+                mostrarAlerta('✅ Este afiliado no tiene meses pendientes', 'success');
+                return;
+            }
 
-            dom.tipoCuota.checked = true;
-            dom.optionCuota.classList.add('selected');
-            dom.optionCertificado.classList.remove('selected');
-            dom.optionCuota.style.display = 'flex';
-            dom.optionCertificado.style.display = 'flex';
-            dom.receiptNumber.value = dom.nextReceiptNumber.textContent;
-            dom.receiptModal.style.display = 'flex';
-            setTimeout(() => dom.receiptNumber.focus(), 100);
+            abrirModalPagosMultiples(cedula, nombre, mesesDeuda);
         };
 
-        dom.optionCuota.addEventListener('click', () => {
-            resetInactivityTimer();
-            dom.tipoCuota.checked = true;
-            dom.optionCuota.classList.add('selected');
-            dom.optionCertificado.classList.remove('selected');
-            if (appState.pendingPayment && appState.pendingPayment.mes !== undefined) {
-                const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-                dom.receiptInfo.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                        <span style="font-weight: 700; color: #1a4a2a;">${appState.pendingPayment.nombre}</span>
-                        <span style="background: #e0f0e0; padding: 4px 14px; border-radius: 100px; font-size: 0.7rem; font-weight: 600;">${appState.pendingPayment.cedula}</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-weight: 600;">${meses[appState.pendingPayment.mes]} ${appState.pendingPayment.año}</span>
-                        <span style="font-weight: 700; color: #1a7a3a;">$${CONFIG.VALOR_CUOTA.toLocaleString()}</span>
-                    </div>
-                `;
-            }
-        });
-
-        dom.optionCertificado.addEventListener('click', () => {
-            resetInactivityTimer();
-            dom.tipoCertificado.checked = true;
-            dom.optionCertificado.classList.add('selected');
-            dom.optionCuota.classList.remove('selected');
-            if (appState.pendingPayment) {
-                dom.receiptInfo.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                        <span style="font-weight: 700; color: #1a4a2a;">${appState.pendingPayment.nombre}</span>
-                        <span style="background: #e0f0e0; padding: 4px 14px; border-radius: 100px; font-size: 0.7rem; font-weight: 600;">${appState.pendingPayment.cedula}</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-weight: 600;">CERTIFICADO</span>
-                        <span style="font-weight: 700; color: #b68b40;">$${CONFIG.VALOR_CERTIFICADO.toLocaleString()}</span>
-                    </div>
-                `;
-            }
-        });
-
-        async function guardarPagoConRecibo() {
+        async function guardarPagoMultiple() {
             resetInactivityTimer();
             if (!appState.pendingPayment) return mostrarAlerta('❌ No hay pago pendiente', 'error');
 
@@ -2336,10 +2430,28 @@
                 return mostrarAlerta('❌ El recibo debe tener 5 dígitos (ej: 00001)', 'error');
             }
 
-            const todosPagos = obtenerTodosLosPagos();
+            // Obtener meses seleccionados
+            const mesesSeleccionados = [];
+            document.querySelectorAll('.month-checkbox-item:checked').forEach(cb => {
+                mesesSeleccionados.push({
+                    año: parseInt(cb.dataset.año),
+                    mes: parseInt(cb.dataset.mes),
+                    nombreMes: cb.value.split('_')[0]
+                });
+            });
+
+            const incluirCertificado = dom.includeCertificateCheckbox.checked;
+
+            if (mesesSeleccionados.length === 0 && !incluirCertificado) {
+                return mostrarAlerta('❌ Debes seleccionar al menos un mes o un certificado', 'error');
+            }
+
             const ahora = new Date();
             const fecha = formatearFecha(ahora);
             const hora = formatearHora(ahora);
+
+            // Verificar recibo duplicado
+            const todosPagos = obtenerTodosLosPagos();
             const pagosConEsteRecibo = todosPagos.filter(p => p.recibo === recibo);
 
             if (pagosConEsteRecibo.length > 0) {
@@ -2368,21 +2480,14 @@
                 if (fechaMasAntigua) {
                     const diferenciaMinutos = (ahora - fechaMasAntigua) / (1000 * 60);
                     if (diferenciaMinutos > 30) {
-                        const horas = Math.floor(diferenciaMinutos / 60);
                         const minutos = Math.floor(diferenciaMinutos % 60);
-                        let tiempoMensaje = horas > 0 ? `${horas}h ${minutos}min` : `${minutos}min`;
-                        return mostrarAlerta(`❌ Recibo ${recibo} expiró (hace ${tiempoMensaje}).\nMáximo 30 minutos para usar el mismo recibo.`, 'error');
-                    }
-                    const tiempoRestante = Math.round(30 - diferenciaMinutos);
-                    if (!confirm(`⚠️ El recibo ${recibo} se usó por primera vez hace ${Math.round(diferenciaMinutos)} minutos.\n⏰ Tienes ${tiempoRestante} minutos restantes.\n\n¿Deseas continuar con este mismo recibo?`)) {
-                        return;
+                        return mostrarAlerta(`❌ Recibo ${recibo} expiró (hace ${minutos}min). Máximo 30 minutos para usar el mismo recibo.`, 'error');
                     }
                 }
             }
 
             if (!appState.githubToken) return mostrarAlerta('❌ Token de GitHub no disponible', 'error');
 
-            const tipoPago = dom.tipoCuota.checked ? 'cuota' : 'certificado';
             const saveBtn = dom.saveReceiptBtn;
             const originalText = saveBtn.innerHTML;
 
@@ -2396,17 +2501,18 @@
                     appState.pagos.push(registro);
                 }
 
-                if (tipoPago === 'cuota') {
-                    const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-                    const campo = `fecha_pago_año_${appState.pendingPayment.año}`;
-                    const pagoStr = `${meses[appState.pendingPayment.mes]}_${appState.pendingPayment.año}_${CONFIG.VALOR_CUOTA}_${fecha}_${hora}_${recibo}`;
+                const mesesNombres = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+
+                // Guardar cada mes seleccionado
+                for (const mesItem of mesesSeleccionados) {
+                    const campo = `fecha_pago_año_${mesItem.año}`;
+                    const pagoStr = `${mesesNombres[mesItem.mes]}_${mesItem.año}_${CONFIG.VALOR_CUOTA}_${fecha}_${hora}_${recibo}`;
                     registro[campo] = registro[campo] ? `${registro[campo]}; ${pagoStr}` : pagoStr;
-                    if (appState.pendingPayment.element) {
-                        appState.pendingPayment.element.classList.remove('debt', 'selected');
-                        appState.pendingPayment.element.classList.add('paid');
-                    }
-                } else {
-                    const mesActual = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'][appState.fechaActual.getMonth()];
+                }
+
+                // Guardar certificado si está seleccionado
+                if (incluirCertificado) {
+                    const mesActual = mesesNombres[appState.fechaActual.getMonth()];
                     const añoActual = appState.fechaActual.getFullYear();
                     const certificadoStr = `${mesActual}_${añoActual}_${CONFIG.VALOR_CERTIFICADO}_${fecha}_${hora}_${recibo}`;
                     registro.certificado = registro.certificado ? `${registro.certificado}; ${certificadoStr}` : certificadoStr;
@@ -2416,7 +2522,12 @@
                 calcularEstadisticas();
                 actualizarSiguienteRecibo();
                 renderizarTabla();
-                mostrarAlerta(`✅ ${tipoPago === 'cuota' ? 'Cuota' : 'Certificado'} guardado - Recibo: ${recibo}`, 'success');
+
+                let mensaje = `✅ Pago registrado - Recibo: ${recibo}\n`;
+                if (mesesSeleccionados.length > 0) mensaje += `💰 ${mesesSeleccionados.length} cuota(s) pagada(s)\n`;
+                if (incluirCertificado) mensaje += `📜 Certificado incluido`;
+                mostrarAlerta(mensaje, 'success');
+
                 dom.receiptModal.style.display = 'none';
                 appState.pendingPayment = null;
             } catch (e) {
@@ -2435,6 +2546,7 @@
             dom.modalNombre.textContent = `📋 ${afiliado.nombre}`;
             const registro = appState.pagos.find(p => p.cedula === cedula) || {};
             const info = calcularInfoDetalle(cedula, afiliado.fecha);
+            const mesesDeuda = calcularMesesDeuda(cedula, afiliado.fecha);
 
             let html = `<div style="background: #f0f8f0; padding: 16px; border-radius: 14px; margin-bottom: 16px; border-left: 0px solid #2a7a4a;">
                 <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; text-align: center;">
@@ -2451,6 +2563,15 @@
                     <span style="background: #e0f0e0; padding: 4px 14px; border-radius: 100px;">${afiliado.fecha}</span>
                 </div>
             </div>`;
+
+            // Botón para pagar múltiples meses desde el detalle
+            if (mesesDeuda.length > 0) {
+                html += `<div style="margin-bottom: 16px; text-align: center;">
+                    <button onclick="window.abrirPagoMultipleDesdeDetalle('${afiliado.cedula}', '${afiliado.nombre.replace(/'/g, "\\'")}')" class="btn btn-primary" style="background: #1a4a2a; padding: 8px 20px;">
+                        💰 Pagar ${mesesDeuda.length} mes(es) pendiente(s)
+                    </button>
+                </div>`;
+            }
 
             const mesesNombres = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
             const afiliacion = parseFecha(afiliado.fecha);
@@ -2532,7 +2653,6 @@
                 html += `<div style="padding: 8px; text-align: center; background: #f0f8f0; border-radius: 14px; color: #4a6b4a;">No hay pagos registrados</div>`;
             }
 
-            const mesesDeuda = calcularMesesDeuda(cedula, afiliado.fecha);
             if (mesesDeuda.length) {
                 html += `<h4 style="color: #c04040; margin: 20px 0 12px; font-weight: 700;">⚠️ Deuda pendiente</h4>`;
                 html += `<div style="background: #fff0f0; padding: 16px; border-radius: 14px; border: 1px solid #e0b0b0;">`;
@@ -2555,6 +2675,20 @@
 
             dom.modalContent.innerHTML = html;
             dom.modal.style.display = 'flex';
+        };
+
+        // Función para abrir pago múltiple desde el detalle
+        window.abrirPagoMultipleDesdeDetalle = function (cedula, nombre) {
+            resetInactivityTimer();
+            const afiliado = appState.afiliados.find(a => a.cedula === cedula);
+            if (!afiliado) return;
+            const mesesDeuda = calcularMesesDeuda(cedula, afiliado.fecha);
+            if (mesesDeuda.length === 0) {
+                mostrarAlerta('✅ Este afiliado no tiene meses pendientes', 'success');
+                return;
+            }
+            dom.modal.style.display = 'none';
+            abrirModalPagosMultiples(cedula, nombre, mesesDeuda);
         };
 
         function generarReporteCompacto(titulo, filtroFn) {
@@ -2584,7 +2718,7 @@
                     <th style="padding: 10px; text-align: left;">Nombre</th>
                     <th style="padding: 10px; text-align: left;">Detalle</th>
                     <th style="padding: 10px; text-align: right;">Total</th>
-                 </tr></thead><tbody>`;
+                  </tr></thead><tbody>`;
 
             if (Object.keys(usuarios).length === 0) {
                 html += `<tr><td colspan="4" style="padding: 40px; text-align: center; color: #6a8b6a;">No hay registros para este período</td></tr>`;
@@ -2604,7 +2738,7 @@
                 html += `<tr style="background: #e0f0e0; font-weight: 700;">
                     <td colspan="3" style="padding: 10px; text-align: right;">Total general:</td>
                     <td style="padding: 10px; text-align: right; color: #1a4a2a;">$${total.toLocaleString()}</td>
-                 </tr>`;
+                  </tr>`;
             }
             html += `</tbody></table>`;
             dom.reportTitle.textContent = titulo;
@@ -2622,7 +2756,7 @@
                     <th style="padding: 10px;">Recibo</th><th style="padding: 10px;">Cédula</th>
                     <th style="padding: 10px;">Nombre</th><th style="padding: 10px;">Fecha</th>
                     <th style="padding: 10px;">Hora</th><th style="padding: 10px;">Valor</th>
-                 </tr></thead><tbody>`;
+                  </tr></thead><tbody>`;
 
             if (certificados.length === 0) {
                 html += `<tr><td colspan="6" style="padding: 40px; text-align: center;">No hay certificados emitidos</td></tr>`;
@@ -2635,13 +2769,13 @@
                         <td style="padding: 8px; text-align: center;">${c.fecha}</td>
                         <td style="padding: 8px; text-align: center;">${c.hora}</td>
                         <td style="padding: 8px; text-align: right; font-weight: 700; color: #b68b40;">$${c.valor.toLocaleString()}</td>
-                     </tr>`;
+                      </tr>`;
                 });
                 const total = certificados.reduce((s, c) => s + c.valor, 0);
                 html += `<tr style="background: #fff3cd; font-weight: 700;">
                     <td colspan="5" style="padding: 10px; text-align: right;">Total certificados:</td>
                     <td style="padding: 10px; text-align: right;">$${total.toLocaleString()}</td>
-                 </tr>`;
+                  </tr>`;
             }
             html += `</tbody></table>`;
             dom.reportTitle.textContent = '📜 Certificados emitidos';
@@ -2703,6 +2837,7 @@
 
             dom.validateAccessTokenBtn.addEventListener('click', procesarValidacionAccessToken);
             dom.validateGithubTokenBtn.addEventListener('click', procesarValidacionGithubToken);
+            dom.changeTokenBtn.addEventListener('click', cambiarToken);
 
             dom.accessTokenInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') procesarValidacionAccessToken();
@@ -2711,11 +2846,9 @@
                 if (e.key === 'Enter') procesarValidacionGithubToken();
             });
 
-            // Intentar cargar token guardado
             const tokenGuardado = localStorage.getItem('jac_access_token');
 
             if (tokenGuardado) {
-                // Validar el token guardado
                 const validacion = validarTokenAcceso(tokenGuardado);
 
                 if (validacion.valido) {
@@ -2723,7 +2856,6 @@
                     iniciarMonitorTokenAcceso(validacion.data.fechaExpiracion);
                     dom.accessTokenModal.style.display = 'none';
 
-                    // Buscar token de GitHub guardado
                     const githubToken = localStorage.getItem('github_token');
                     if (githubToken) {
                         const valido = await validarTokenGitHub(githubToken);
@@ -2744,6 +2876,7 @@
             dom.accessTokenModal.style.display = 'flex';
             dom.accessTokenInput.focus();
         }
+
         // ============================================================
         // EVENTOS DEL PANEL
         // ============================================================
@@ -2832,23 +2965,13 @@
                 resetInactivityTimer();
                 dom.receiptModal.style.display = 'none';
                 appState.pendingPayment = null;
-                dom.optionCuota.style.display = 'flex';
-                dom.optionCertificado.style.display = 'flex';
-                dom.tipoCuota.checked = true;
-                dom.optionCuota.classList.add('selected');
-                dom.optionCertificado.classList.remove('selected');
             });
             dom.cancelReceiptBtn.addEventListener('click', () => {
                 resetInactivityTimer();
                 dom.receiptModal.style.display = 'none';
                 appState.pendingPayment = null;
-                dom.optionCuota.style.display = 'flex';
-                dom.optionCertificado.style.display = 'flex';
-                dom.tipoCuota.checked = true;
-                dom.optionCuota.classList.add('selected');
-                dom.optionCertificado.classList.remove('selected');
             });
-            dom.saveReceiptBtn.addEventListener('click', guardarPagoConRecibo);
+            dom.saveReceiptBtn.addEventListener('click', guardarPagoMultiple);
 
             const saveBtn = document.getElementById('savePaymentsBtn');
             if (saveBtn) {
@@ -2932,33 +3055,8 @@
                 if (e.target === dom.receiptModal) {
                     dom.receiptModal.style.display = 'none';
                     appState.pendingPayment = null;
-                    dom.optionCuota.style.display = 'flex';
-                    dom.optionCertificado.style.display = 'flex';
-                    dom.tipoCuota.checked = true;
-                    dom.optionCuota.classList.add('selected');
-                    dom.optionCertificado.classList.remove('selected');
                 }
             });
-
-            const pagarCertificadoBtn = document.getElementById('pagarCertificadoBtn');
-            if (pagarCertificadoBtn) {
-                pagarCertificadoBtn.addEventListener('click', function () {
-                    resetInactivityTimer();
-                    const filtro = appState.filtroActual.trim();
-                    if (!filtro) { mostrarAlerta('❌ Debes buscar una cédula primero', 'error'); return; }
-                    const afiliado = appState.afiliados.find(af => af.cedula === filtro);
-                    if (!afiliado) { mostrarAlerta('❌ Cédula no encontrada', 'error'); return; }
-                    appState.pendingPayment = { cedula: afiliado.cedula, nombre: afiliado.nombre, tipo: 'certificado' };
-                    dom.receiptInfo.innerHTML = `<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;"><span style="font-weight: 700; color: #1a4a2a;">${afiliado.nombre}</span><span style="background: #e0f0e0; padding: 4px 14px; border-radius: 100px; font-size: 0.7rem; font-weight: 600;">${afiliado.cedula}</span></div><div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-weight: 600;">CERTIFICADO</span><span style="font-weight: 700; color: #b68b40;">$${CONFIG.VALOR_CERTIFICADO.toLocaleString()}</span></div>`;
-                    dom.optionCuota.style.display = 'none';
-                    dom.optionCertificado.style.display = 'flex';
-                    dom.tipoCertificado.checked = true;
-                    dom.optionCertificado.classList.add('selected');
-                    dom.receiptNumber.value = dom.nextReceiptNumber.textContent;
-                    dom.receiptModal.style.display = 'flex';
-                    setTimeout(() => dom.receiptNumber.focus(), 100);
-                });
-            }
 
             const toggleAllCardsBtn = document.getElementById('toggleAllCardsBtn');
             if (toggleAllCardsBtn) {
