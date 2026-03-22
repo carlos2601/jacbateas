@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-03-22T18:15:39.363Z",
+  "ultima_actualizacion": "2026-03-22T18:17:51.404Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -308,6 +308,12 @@
       "fecha_pago_año_2025": "diciembre_2025_5000_22/03/2026_13:15:39_00052",
       "fecha_pago_año_2026": "enero_2026_5000_22/03/2026_13:15:39_00052; febrero_2026_5000_22/03/2026_13:15:39_00052; marzo_2026_5000_22/03/2026_13:15:39_00052",
       "certificado": "marzo_2026_20000_22/03/2026_13:15:39_00052"
+    },
+    {
+      "cedula": "6965116",
+      "nombre": "BERNARDINO RODRIGUEZ BARRERA",
+      "fecha_pago_año_2026": "marzo_2026_5000_22/03/2026_13:17:51_00053",
+      "certificado": "marzo_2026_20000_22/03/2026_13:17:51_00053"
     }
   ]
 }
