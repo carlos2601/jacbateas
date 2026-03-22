@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-03-22T18:13:55.684Z",
+  "ultima_actualizacion": "2026-03-22T18:14:20.281Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -281,6 +281,12 @@
       "nombre": "SAMUEL ESTEBAN SUANCA GALEANO",
       "fecha_pago_año_2026": "enero_2026_5000_22/03/2026_13:13:55_00048; febrero_2026_5000_22/03/2026_13:13:55_00048; marzo_2026_5000_22/03/2026_13:13:55_00048",
       "certificado": "marzo_2026_20000_22/03/2026_13:13:55_00048"
+    },
+    {
+      "cedula": "17360170",
+      "nombre": "JAIME ALIRIO TIQUE FRANCO",
+      "fecha_pago_año_2026": "marzo_2026_5000_22/03/2026_13:14:20_00049",
+      "certificado": "marzo_2026_20000_22/03/2026_13:14:20_00049"
     }
   ]
 }
