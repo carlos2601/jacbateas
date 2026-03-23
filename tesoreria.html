@@ -263,6 +263,24 @@
             background: #5a7e5a;
         }
 
+        .btn-multiple-pagos {
+            background: #1a4a2a;
+            color: white;
+            border: none;
+            padding: 2px 8px;
+            border-radius: 100px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: 8px;
+            transition: all 0.15s;
+        }
+
+        .btn-multiple-pagos:hover {
+            background: #2a6a3a;
+            transform: scale(1.05);
+        }
+
         /* ===== BARRA DE ACCIONES ===== */
         .action-bar {
             display: flex;
@@ -647,35 +665,11 @@
             background: #d4e8d4;
         }
 
-        .btn-cert-leyenda {
-            background: #1a4a2a;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 100px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
+        .debt-cell {
             display: flex;
             align-items: center;
-            gap: 4px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            border: 1px solid #ffd966;
-        }
-
-        .btn-cert-leyenda:hover {
-            background: #2a6a3a;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-        }
-
-        .btn-cert-leyenda.disabled {
-            background: #cccccc;
-            border-color: #999999;
-            cursor: not-allowed;
-            opacity: 0.6;
-            pointer-events: none;
+            justify-content: center;
+            gap: 5px;
         }
 
         /* ===== PAGINACIÓN ===== */
@@ -1428,8 +1422,6 @@
             <span style="margin-left: 16px;">📅 <span id="fechaActualDisplay"></span></span>
         </div>
     </div>
-
-
 
     <script>
         // ============================================================
@@ -2239,6 +2231,7 @@
 
             dom.añoActualDisplay.textContent = añoSeleccionado;
 
+            // Ocultar paginación cuando está en modo búsqueda
             if (dom.paginationContainer) {
                 dom.paginationContainer.style.display = appState.modoBusqueda ? 'none' : 'flex';
             }
@@ -2261,7 +2254,14 @@
                 html += `<td style="font-weight: 600; color: #1a4a2a;">${afiliado.cedula}<\/td>`;
                 html += `<td style="text-align: left;">${afiliado.nombre}<\/td>`;
                 html += `<td><span class="badge">${afiliado.fecha}<\/span><\/td>`;
-                html += `<td><span style="font-weight: 900; color: ${deudaTotal > 0 ? '#dd0f0f' : '#5ab05a'};">$${deudaTotal.toLocaleString()}<\/span><\/td>`;
+
+                // Columna de Deuda con botón de pagos múltiples si está en modo búsqueda
+                if (appState.modoBusqueda && deudaTotal > 0) {
+                    html += `<td><div class="debt-cell"><span style="font-weight: 900; color: #dd0f0f;">$${deudaTotal.toLocaleString()}</span><button class="btn-multiple-pagos" onclick="window.abrirPagoMultipleDesdeBusqueda('${afiliado.cedula}', '${afiliado.nombre.replace(/'/g, "\\'")}')">💰 Pagar</button></div><\/td>`;
+                } else {
+                    html += `<td><span style="font-weight: 900; color: ${deudaTotal > 0 ? '#dd0f0f' : '#5ab05a'};">$${deudaTotal.toLocaleString()}<\/span><\/td>`;
+                }
+
                 html += `<td style="font-size: 1.2rem;">${tieneCertificado}<\/td>`;
                 html += `<td><button class="btn-detail" onclick="window.verDetalle('${afiliado.cedula}')">Ver<\/button><\/td>`;
 
@@ -2297,36 +2297,52 @@
                 html += `<\/tr>`;
             });
 
-            const filasFaltantes = CONFIG.PAGE_SIZE - totalAfiliadosEnPagina;
-            for (let i = 0; i < filasFaltantes; i++) {
-                html += `<tr style="opacity: 0.7; background-color: #f5f5f5;">
-                    <td style="color: #aaa;">&nbsp;<\/td>
-                    <td style="color: #aaa; text-align: left;">&nbsp;<\/td>
-                    <td><span class="badge" style="background: #ddd; color: #666;">&nbsp;<\/span><\/td>
-                    <td><span style="color: #aaa;">&nbsp;<\/span><\/td>
-                    <td>&nbsp;<\/td>
-                    <td><button class="btn-detail" style="opacity: 0.3; background: #ddd;" disabled>&nbsp;<\/button><\/td>`;
-                for (let mes = 0; mes < 12; mes++) {
-                    html += `<td><div style="width: 26px; height: 26px; background: #e0e0e0; border-radius: 4px;"><\/div><\/td>`;
+            // MODIFICACIÓN: En modo búsqueda NO se muestran filas en blanco
+            if (!appState.modoBusqueda) {
+                const filasFaltantes = CONFIG.PAGE_SIZE - totalAfiliadosEnPagina;
+                for (let i = 0; i < filasFaltantes; i++) {
+                    html += `<tr style="opacity: 0.7; background-color: #f5f5f5;">
+                        <td style="color: #aaa;">&nbsp;<\/td>
+                        <td style="color: #aaa; text-align: left;">&nbsp;<\/td>
+                        <td><span class="badge" style="background: #ddd; color: #666;">&nbsp;<\/span><\/td>
+                        <td><span style="color: #aaa;">&nbsp;<\/span><\/td>
+                        <td>&nbsp;<\/td>
+                        <td><button class="btn-detail" style="opacity: 0.3; background: #ddd;" disabled>&nbsp;<\/button><\/td>`;
+                    for (let mes = 0; mes < 12; mes++) {
+                        html += `<td><div style="width: 26px; height: 26px; background: #e0e0e0; border-radius: 4px;"><\/div><\/td>`;
+                    }
+                    html += `<\/tr>`;
                 }
-                html += `<\/tr>`;
             }
 
             if (afiliadosPagina.length === 0 && appState.modoBusqueda) {
-                html = `<tr><td colspan="18" style="padding: 40px; text-align: center; color: #6a8b6a;">
+                html = `发展<td colspan="18" style="padding: 40px; text-align: center; color: #6a8b6a;">
                     ❌ No se encontraron resultados para "${appState.filtroActual}"<br>
                     <span style="font-size: 0.8rem; margin-top: 10px; display: block;">
                         🔍 Busca por cédula exacta o número de recibo
                     </span>
                 <\/td><\/tr>`;
             } else if (afiliadosPagina.length === 0 && !appState.modoBusqueda) {
-                html = `<tr><td colspan="18" style="padding: 40px; text-align: center; color: #6a8b6a;">
+                html = `发展<td colspan="18" style="padding: 40px; text-align: center; color: #6a8b6a;">
                     📭 No hay pagos registrados aún
                 <\/td><\/tr>`;
             }
 
             dom.tableBody.innerHTML = html;
         }
+
+        // Función para abrir pago múltiple desde búsqueda
+        window.abrirPagoMultipleDesdeBusqueda = function (cedula, nombre) {
+            resetInactivityTimer();
+            const afiliado = appState.afiliados.find(a => a.cedula === cedula);
+            if (!afiliado) return;
+            const mesesDeuda = calcularMesesDeuda(cedula, afiliado.fecha);
+            if (mesesDeuda.length === 0) {
+                mostrarAlerta('✅ Este afiliado no tiene meses pendientes', 'success');
+                return;
+            }
+            abrirModalPagosMultiples(cedula, nombre, mesesDeuda);
+        };
 
         // Función para abrir modal con pagos múltiples
         function abrirModalPagosMultiples(cedula, nombre, mesesDeuda) {
@@ -2718,7 +2734,7 @@
                     <th style="padding: 10px; text-align: left;">Nombre</th>
                     <th style="padding: 10px; text-align: left;">Detalle</th>
                     <th style="padding: 10px; text-align: right;">Total</th>
-                  </tr></thead><tbody>`;
+                   </tr></thead><tbody>`;
 
             if (Object.keys(usuarios).length === 0) {
                 html += `<tr><td colspan="4" style="padding: 40px; text-align: center; color: #6a8b6a;">No hay registros para este período</td></tr>`;
@@ -2738,7 +2754,7 @@
                 html += `<tr style="background: #e0f0e0; font-weight: 700;">
                     <td colspan="3" style="padding: 10px; text-align: right;">Total general:</td>
                     <td style="padding: 10px; text-align: right; color: #1a4a2a;">$${total.toLocaleString()}</td>
-                  </tr>`;
+                   </tr>`;
             }
             html += `</tbody></table>`;
             dom.reportTitle.textContent = titulo;
@@ -2756,7 +2772,7 @@
                     <th style="padding: 10px;">Recibo</th><th style="padding: 10px;">Cédula</th>
                     <th style="padding: 10px;">Nombre</th><th style="padding: 10px;">Fecha</th>
                     <th style="padding: 10px;">Hora</th><th style="padding: 10px;">Valor</th>
-                  </tr></thead><tbody>`;
+                   </tr></thead><tbody>`;
 
             if (certificados.length === 0) {
                 html += `<tr><td colspan="6" style="padding: 40px; text-align: center;">No hay certificados emitidos</td></tr>`;
@@ -2769,13 +2785,13 @@
                         <td style="padding: 8px; text-align: center;">${c.fecha}</td>
                         <td style="padding: 8px; text-align: center;">${c.hora}</td>
                         <td style="padding: 8px; text-align: right; font-weight: 700; color: #b68b40;">$${c.valor.toLocaleString()}</td>
-                      </tr>`;
+                       </tr>`;
                 });
                 const total = certificados.reduce((s, c) => s + c.valor, 0);
                 html += `<tr style="background: #fff3cd; font-weight: 700;">
                     <td colspan="5" style="padding: 10px; text-align: right;">Total certificados:</td>
                     <td style="padding: 10px; text-align: right;">$${total.toLocaleString()}</td>
-                  </tr>`;
+                   </tr>`;
             }
             html += `</tbody></table>`;
             dom.reportTitle.textContent = '📜 Certificados emitidos';
