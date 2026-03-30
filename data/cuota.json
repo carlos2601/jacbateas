@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-03-30T01:01:30.182Z",
+  "ultima_actualizacion": "2026-03-30T01:03:52.397Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -388,6 +388,12 @@
       "nombre": "MICHAEL IVAN MORENO ORTIZ",
       "fecha_pago_año_2026": "marzo_2026_5000_29/03/2026_20:01:30_00066",
       "certificado": "marzo_2026_20000_29/03/2026_20:01:30_00066"
+    },
+    {
+      "cedula": "86051064",
+      "nombre": "JULIO CESAR BARON RAMIREZ",
+      "fecha_pago_año_2026": "enero_2026_5000_29/03/2026_20:03:52_00067; febrero_2026_5000_29/03/2026_20:03:52_00067; marzo_2026_5000_29/03/2026_20:03:52_00067",
+      "certificado": "marzo_2026_20000_29/03/2026_20:03:52_00067"
     }
   ]
 }
