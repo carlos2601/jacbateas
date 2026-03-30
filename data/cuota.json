@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-03-28T00:08:40.105Z",
+  "ultima_actualizacion": "2026-03-30T00:48:41.380Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -365,6 +365,12 @@
       "nombre": "GLENDIX ALBERTO SANCHEZ",
       "fecha_pago_año_2025": "diciembre_2025_5000_27/03/2026_19:08:40_00061",
       "fecha_pago_año_2026": "enero_2026_5000_27/03/2026_19:08:40_00061; febrero_2026_5000_27/03/2026_19:08:40_00061; marzo_2026_5000_27/03/2026_19:08:40_00061"
+    },
+    {
+      "cedula": "9506488",
+      "nombre": "LUIS ALBERTO TORRES SOSA",
+      "fecha_pago_año_2026": "enero_2026_5000_29/03/2026_19:48:41_00060; febrero_2026_5000_29/03/2026_19:48:41_00060; marzo_2026_5000_29/03/2026_19:48:41_00060",
+      "certificado": "marzo_2026_20000_29/03/2026_19:48:41_00060"
     }
   ]
 }
