@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-03-30T01:12:29.310Z",
+  "ultima_actualizacion": "2026-03-30T01:12:52.189Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -405,6 +405,11 @@
       "cedula": "52731749",
       "nombre": "SANDRA MILENA BARBOSA ARISMENDI",
       "fecha_pago_año_2026": "marzo_2026_5000_29/03/2026_20:12:29_00070"
+    },
+    {
+      "cedula": "8329214",
+      "nombre": "IVAN DARIO FURNIELES CHIMA",
+      "fecha_pago_año_2026": "marzo_2026_5000_29/03/2026_20:12:52_00071"
     }
   ]
 }
