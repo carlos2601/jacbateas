@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-03-30T01:18:39.132Z",
+  "ultima_actualizacion": "2026-03-30T01:19:06.275Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -457,6 +457,11 @@
       "cedula": "39287007",
       "nombre": "LIDIS AMPARO MARQUEZ JIMENEZ",
       "fecha_pago_año_2026": "enero_2026_5000_29/03/2026_20:18:39_00079; febrero_2026_5000_29/03/2026_20:18:39_00079; marzo_2026_5000_29/03/2026_20:18:39_00079"
+    },
+    {
+      "cedula": "93436315",
+      "nombre": "RAUL ANTONIO ORTIZ GONZALEZ",
+      "fecha_pago_año_2026": "enero_2026_5000_29/03/2026_20:19:06_00080; febrero_2026_5000_29/03/2026_20:19:06_00080; marzo_2026_5000_29/03/2026_20:19:06_00080"
     }
   ]
 }
