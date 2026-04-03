@@ -1,0 +1,3200 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>JAC Bateas · Control de Cuotas y Certificados</title>
+    <style>
+        /* ===== RESET Y VARIABLES - DISEÑO CON COLORES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #4c724c 0%, #4c724c 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5px;
+        }
+
+        .app {
+            max-width: 1440px;
+            width: 100%;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 15px 35px rgba(30, 74, 44, 0.08);
+            padding: 5px;
+            border: 1px solid rgba(200, 220, 200, 0.3);
+        }
+
+        /* ===== HEADER CON COLOR ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2px;
+            padding-bottom: 1px;
+            border-bottom: 2px solid #d0e6d0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .logo-area h1 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1a4a2a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-area h1 span {
+            background: #e6f0e6;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #1a4a2a;
+            letter-spacing: 0.3px;
+            border: 1px solid #b8d8b8;
+        }
+
+        .year-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f2f9f2;
+            padding: 6px 18px;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            color: #1a4a2a;
+            border: 1px solid #c0e0c0;
+            font-weight: 500;
+        }
+
+        .year-badge select {
+            border: none;
+            background: transparent;
+            padding: 4px 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #1a4a2a;
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* ===== MODAL DE API ===== */
+        .api-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 74, 42, 0.4);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 20000;
+            padding: 20px;
+        }
+
+        .api-modal-content {
+            background: white;
+            border-radius: 24px;
+            max-width: 400px;
+            width: 100%;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 40, 0, 0.3);
+            border: 2px solid #1a4a2a;
+        }
+
+        .api-modal-content h2 {
+            color: #1a4a2a;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .api-modal-content p {
+            color: #4a6b4a;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .api-modal-content input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #d0e4d0;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            outline: none;
+        }
+
+        .api-modal-content input:focus {
+            border-color: #1a4a2a;
+        }
+
+        .api-modal-content button {
+            background: #1a4a2a;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .api-modal-content button:hover {
+            background: #2a6a3a;
+        }
+
+        .api-modal-content .error-message {
+            color: #c04040;
+            margin-top: 10px;
+            font-size: 0.8rem;
+            display: none;
+        }
+
+        .remember-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+            padding: 8px;
+            background: #f8fff8;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .remember-checkbox input {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .remember-checkbox label {
+            font-size: 0.85rem;
+            color: #1a4a2a;
+            cursor: pointer;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        /* ===== BOTONES CON COLORES ===== */
+        .btn {
+            border: none;
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.15s;
+            background: white;
+            color: #1e293b;
+            border: 1px solid #d0e0d0;
+            height: 34px;
+        }
+
+        .btn:hover {
+            background: #f0f8f0;
+            border-color: #a0c0a0;
+        }
+
+        .btn-primary {
+            background: #1a4a2a;
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #2a6a3a;
+        }
+
+        .btn-success {
+            background: #1e7a4a;
+            color: white;
+            border: none;
+        }
+
+        .btn-success:hover {
+            background: #2a8e5a;
+        }
+
+        .btn-danger {
+            background: #c04040;
+            color: white;
+            border: none;
+        }
+
+        .btn-danger:hover {
+            background: #a03030;
+        }
+
+        .btn-warning {
+            background: #ffd966;
+            color: #1a4a2a;
+            border: none;
+        }
+
+        .btn-warning:hover {
+            background: #ffcd4a;
+        }
+
+        .btn-secondary {
+            background: #4a6b4a;
+            color: white;
+            border: none;
+        }
+
+        .btn-secondary:hover {
+            background: #5a7e5a;
+        }
+
+        .btn-certificate {
+            background: #b68b40;
+            color: white;
+            border: none;
+            padding: 2px 8px;
+            border-radius: 100px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: 8px;
+            transition: all 0.15s;
+        }
+
+        .btn-certificate:hover {
+            background: #9a6e2a;
+            transform: scale(1.05);
+        }
+
+        .btn-multiple-pagos {
+            background: #1a4a2a;
+            color: white;
+            border: none;
+            padding: 2px 8px;
+            border-radius: 100px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: 8px;
+            transition: all 0.15s;
+        }
+
+        .btn-multiple-pagos:hover {
+            background: #2a6a3a;
+            transform: scale(1.05);
+        }
+
+        /* ===== BARRA DE ACCIONES ===== */
+        .action-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 2px;
+            align-items: center;
+            background: #1a4a2a;
+            padding: 12px 16px;
+            border-radius: 20px;
+            border: 1px solid #d8ecd8;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 180px;
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 1.5px solid #d8ecd8;
+            border-radius: 10px;
+            padding: 0 10px;
+            transition: all 0.15s;
+        }
+
+        .search-box:focus-within {
+            border-color: #2a7a4a;
+            box-shadow: 0 0 0 3px rgba(42, 122, 74, 0.1);
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 8px 6px;
+            border: none;
+            background: transparent;
+            font-size: 0.85rem;
+        }
+
+        .search-box input:focus {
+            outline: none;
+        }
+
+        .report-group {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        /* ===== BADGE PARA SIGUIENTE RECIBO ===== */
+        .next-receipt-badge {
+            background: #ffd966;
+            color: #1a4a2a;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            border: 1px solid #b68b40;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: auto;
+            height: 34px;
+        }
+
+        .next-receipt-badge span {
+            background: #1a4a2a;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+        }
+
+        /* ===== TARJETAS DE ESTADÍSTICAS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 4px;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 8px 2px;
+            border-radius: 8px;
+            border: 1px solid #39b339;
+            box-shadow: 0 2px 6px rgba(0, 40, 0, 0.02);
+            border-top: 3px solid #8fc98f;
+            min-height: 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+            position: relative;
+            min-height: 90px;
+        }
+
+        .stat-card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .stat-card .stat-front,
+        .stat-card .stat-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            top: 0;
+            left: 0;
+            padding: 8px 2px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: white;
+        }
+
+        .stat-card .stat-front {
+            transform: rotateY(0deg);
+            z-index: 2;
+        }
+
+        .stat-card .stat-back {
+            transform: rotateY(180deg);
+            background: #1a4a2a;
+            color: white;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            border: 2px solid #ffd966;
+        }
+
+        .stat-back .eye-icon {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .stat-back .back-text {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-align: center;
+            padding: 0 5px;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: #4a6b4a;
+            text-transform: uppercase;
+            letter-spacing: 0.2px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            white-space: nowrap;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a3a2a;
+            line-height: 1.3;
+            margin: 2px 0;
+        }
+
+        .stat-desc {
+            font-size: 0.5rem;
+            color: #6a8b6a;
+            margin-top: 4px;
+            white-space: nowrap;
+        }
+
+        /* ===== TIMERS EN HEADER ===== */
+        .timers-container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .session-timer,
+        .token-timer {
+            background: #f0f0f0;
+            color: #1a4a2a;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid #c0c0c0;
+            height: 34px;
+        }
+
+        .token-timer {
+            background: #fff3cd;
+            border-color: #ffd966;
+        }
+
+        .token-timer.warning {
+            background: #ffd966;
+            animation: pulse 1s infinite;
+        }
+
+        .timer-warning {
+            background: #ffd966;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* ===== TABLA CON COLORES ===== */
+        .table-section {
+            background: #2b831c;
+            border-radius: 20px;
+            border: 3px solid #2b831c;
+            margin-bottom: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 40, 0, 0.02);
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 5px;
+            background: #f4fff4;
+            border-bottom: 2px solid #c8e4c8;
+            background-color: #caddce;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .table-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #1a4a2a;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend {
+            display: flex;
+            gap: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .legend span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.7rem;
+        }
+
+        th {
+            background: #1a4a2a;
+            color: rgb(255, 255, 255);
+            font-weight: 600;
+            padding: 12px 6px;
+            text-align: center;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 4px 6px;
+            border-bottom: 1px solid #a7da9b;
+            vertical-align: middle;
+            text-align: center;
+            background: white;
+            font-size: 15px;
+            font-weight: 500;
+            color: #1a2a1a;
+        }
+
+        tr:hover td {
+            background: #f5f5f5;
+        }
+
+        .month-checkbox {
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            transition: all 0.1s;
+        }
+
+        .month-checkbox.debt {
+            background: #fff1f0;
+            border: 2px solid #d41515;
+            cursor: pointer;
+        }
+
+        .month-checkbox.debt:hover {
+            background: #ffe4e0;
+            transform: scale(1.05);
+            border-color: #c04040;
+        }
+
+        .month-checkbox.paid {
+            background: #e4ffe4;
+            border: 2px solid #5ab05a;
+        }
+
+        .month-checkbox.paid::after {
+            content: "✓";
+            color: #2a7a2a;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .month-checkbox.condoned {
+            background: #e4ffe4;
+            border: 2px solid #ffd966;
+        }
+
+        .month-checkbox.condoned::after {
+            content: "✓";
+            color: #2a7a2a;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .month-checkbox.future {
+            background: #f0f8f0;
+            border: 2px solid #a0c0a0;
+            opacity: 0.6;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: inline-block;
+            background: #f0f8f0;
+            color: #1a4a2a;
+        }
+
+        .btn-detail {
+            background: #e4f0e4;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #1a4a2a;
+            cursor: pointer;
+            transition: all 0.1s;
+            border: 1px solid #b8d8b8;
+        }
+
+        .btn-detail:hover {
+            background: #d4e8d4;
+        }
+
+        .debt-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .recibo-cell {
+            font-weight: 700;
+            color: #ff0000;
+            background: #e8f0e8;
+            padding: 4px 8px;
+            border-radius: 100px;
+            display: inline-block;
+            font-size: 1.0rem;
+            font-family: monospace;
+        }
+
+        /* ===== PAGINACIÓN ===== */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px 16px;
+            gap: 16px;
+            border-top: 2px solid #d8ecd8;
+            background: #caddce;
+            flex-wrap: wrap;
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .page-btn {
+            min-width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            border: 1px solid #c8e0c8;
+            background: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: #1a4a2a;
+            padding: 0 8px;
+        }
+
+        .page-btn:hover {
+            background: #e0f0e0;
+        }
+
+        .page-btn.active {
+            background: #1a4a2a;
+            color: white;
+            border-color: #1a4a2a;
+        }
+
+        .page-input {
+            width: 55px;
+            padding: 6px;
+            border: 2px solid #c8e0c8;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            color: #1a4a2a;
+            font-size: 0.75rem;
+        }
+
+        /* ===== MODALES ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 74, 42, 0.4);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 40, 0, 0.3);
+            border: 1px solid #d0e4d0;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #c8e4c8;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 10;
+        }
+
+        .modal-header h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a4a2a;
+            text-align: center;
+            flex: 1;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: #6a8b6a;
+            padding: 2px 6px;
+        }
+
+        .close-btn:hover {
+            color: #1a4a2a;
+        }
+
+        .receipt-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 74, 42, 0.4);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+            padding: 20px;
+        }
+
+        .receipt-content {
+            background: white;
+            border-radius: 24px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 20px;
+            border: 1px solid #d0e4d0;
+        }
+
+        .receipt-info {
+            background: #f2fff2;
+            padding: 12px;
+            border-radius: 14px;
+            margin-bottom: 16px;
+            border-left: 6px solid #1a4a2a;
+        }
+
+        .months-list {
+            margin-bottom: 16px;
+            padding: 12px;
+            background: #f8fff8;
+            border-radius: 14px;
+            border: 2px solid #d0e4d0;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .months-list label {
+            font-weight: 700;
+            color: #1a4a2a;
+            margin-bottom: 10px;
+            display: block;
+            font-size: 0.8rem;
+        }
+
+        .month-check-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            margin-bottom: 5px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            cursor: pointer;
+        }
+
+        .month-check-item:hover {
+            background: #f0f8f0;
+        }
+
+        .month-check-item input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .month-check-item .month-name {
+            flex: 1;
+            font-weight: 600;
+            color: #1a4a2a;
+        }
+
+        .month-check-item .month-value {
+            font-weight: 700;
+            color: #c04040;
+        }
+
+        .certificate-option {
+            margin-bottom: 16px;
+            padding: 12px;
+            background: #fff9e6;
+            border-radius: 14px;
+            border: 2px solid #ffd966;
+        }
+
+        .certificate-option label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            color: #b68b40;
+        }
+
+        .certificate-option input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .receipt-field {
+            margin-bottom: 16px;
+        }
+
+        .receipt-field label {
+            display: block;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #1a4a2a;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .receipt-field input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #d0e4d0;
+            border-radius: 10px;
+            font-size: 0.85rem;
+        }
+
+        .total-amount {
+            background: #1a4a2a;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .month-badge {
+            background: #ffffff;
+            color: rgb(0, 0, 0);
+            padding: 2px 8px;
+            border-radius: 100px;
+            font-size: 0.6rem;
+            display: inline-block;
+            margin: 1px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .loading {
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: none;
+            z-index: 10002;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #e4ffe4;
+            color: #1a4a2a;
+            border-left: 6px solid #2a8e5a;
+        }
+
+        .alert-error {
+            background: #ffe4e4;
+            color: #8a2a2a;
+            border-left: 6px solid #c04040;
+        }
+
+        .alert-info {
+            background: #e4f0ff;
+            color: #2a4a6a;
+            border-left: 6px solid #4a8ac0;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        @media (max-width: 1200px) {
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 800px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- MODAL DE VALIDACIÓN DE TOKEN DE ACCESO -->
+    <div id="accessTokenModal" class="api-modal">
+        <div class="api-modal-content">
+            <h2>🔐 Validar Token de Acceso</h2>
+            <p>Ingresa el token de acceso generado en el panel de administración</p>
+            <input type="password" id="accessTokenInput" placeholder="Token de acceso" autofocus>
+            <div class="remember-checkbox">
+                <input type="checkbox" id="rememberAccessTokenCheckbox">
+                <label for="rememberAccessTokenCheckbox">🔒 Recordar token en este equipo</label>
+            </div>
+            <button id="validateAccessTokenBtn">Validar y continuar</button>
+            <div id="accessTokenError" class="error-message">❌ Token inválido o expirado</div>
+        </div>
+    </div>
+
+    <!-- MODAL DE TOKEN DE GITHUB -->
+    <div id="githubTokenModal" class="api-modal" style="display: none;">
+        <div class="api-modal-content">
+            <h2>🔐 Configuración API GitHub</h2>
+            <p>Ingresa el token de GitHub para acceder al sistema</p>
+            <input type="password" id="githubTokenInput" placeholder="Token GitHub">
+            <div class="remember-checkbox">
+                <input type="checkbox" id="rememberGithubTokenCheckbox">
+                <label for="rememberGithubTokenCheckbox">🔒 Recordar token en este equipo</label>
+            </div>
+            <button id="validateGithubTokenBtn">Validar y continuar</button>
+            <div id="githubTokenError" class="error-message">❌ Token inválido. Intenta nuevamente.</div>
+        </div>
+    </div>
+
+    <!-- APLICACIÓN PRINCIPAL -->
+    <div class="app" id="mainApp" style="display: none;">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="logo-area">
+                <h1 style="text-align: center; align-items: center;">
+                    Sistema de Recaudo - Junta de Accion Comunal Bateas
+                </h1>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <div class="timers-container">
+                    <div id="sessionTimer" class="session-timer">
+                        <span>⏱️</span>
+                        <span id="timerDisplay">30:00</span>
+                    </div>
+                    <div id="accessTokenTimer" class="token-timer">
+                        <span>🔑</span>
+                        <span id="tokenTimerDisplay">--:--:--</span>
+                    </div>
+                </div>
+                <div class="year-badge">
+                    <span>📅</span>
+                    <select id="yearSelect"></select>
+                </div>
+                <div class="button-group">
+                    <button id="changeTokenBtn" class="btn btn-warning">
+                        <span>🔄</span> Cambiar Token
+                    </button>
+                    <button id="logoutTempBtn" class="btn btn-secondary">
+                        <span>🚪</span> Salir
+                    </button>
+                    <button id="logoutFullBtn" class="btn btn-danger">
+                        <span>🗑️</span> Cerrar sesión
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL DE CONFIRMACIÓN DE SALIR -->
+        <div id="logoutTempConfirmModal" class="modal" style="display: none;">
+            <div class="modal-content" style="max-width: 400px; text-align: center;">
+                <div class="modal-header">
+                    <h3 style="text-align: center; flex: 1;">🚪 Salir del sistema</h3>
+                    <button class="close-btn" id="closeLogoutTempModalBtn">&times;</button>
+                </div>
+                <div style="padding: 20px 0;">
+                    <p style="margin-bottom: 20px; font-size: 1rem;">¿Deseas salir del sistema?</p>
+                    <p style="margin-bottom: 20px; font-size: 0.8rem; color: #4a6b4a;">Los tokens guardados se
+                        conservarán para la próxima sesión</p>
+                    <div style="display: flex; gap: 12px; justify-content: center;">
+                        <button id="confirmLogoutTempBtn" class="btn btn-primary">Sí, salir</button>
+                        <button id="cancelLogoutTempBtn" class="btn">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL DE CONFIRMACIÓN DE CIERRE DE SESIÓN COMPLETA -->
+        <div id="logoutFullConfirmModal" class="modal" style="display: none;">
+            <div class="modal-content" style="max-width: 400px; text-align: center;">
+                <div class="modal-header">
+                    <h3 style="text-align: center; flex: 1;">🗑️ Cerrar sesión completa</h3>
+                    <button class="close-btn" id="closeLogoutFullModalBtn">&times;</button>
+                </div>
+                <div style="padding: 20px 0;">
+                    <p style="margin-bottom: 20px; font-size: 1rem;">¿Estás seguro que deseas cerrar la sesión completa?
+                    </p>
+                    <p style="margin-bottom: 20px; font-size: 0.8rem; color: #c04040;">⚠️ Se eliminarán todos los tokens
+                        guardados en este equipo</p>
+                    <div style="display: flex; gap: 12px; justify-content: center;">
+                        <button id="confirmLogoutFullBtn" class="btn btn-danger">Sí, cerrar sesión completa</button>
+                        <button id="cancelLogoutFullBtn" class="btn">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL DE SESIÓN EXPIRADA -->
+        <div id="sessionExpiredModal" class="modal" style="display: none;">
+            <div class="modal-content" style="max-width: 400px; text-align: center;">
+                <div class="modal-header">
+                    <h3 style="text-align: center; flex: 1;">⏰ Sesión expirada</h3>
+                </div>
+                <div style="padding: 20px 0;">
+                    <p style="margin-bottom: 20px; font-size: 1rem;">Tu sesión ha expirado por inactividad de 30
+                        minutos.</p>
+                    <div style="display: flex; gap: 12px; justify-content: center;">
+                        <button id="redirectToLoginBtn" class="btn btn-primary">Ir al inicio de sesión</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL DE TOKEN DE ACCESO EXPIRADO -->
+        <div id="tokenExpiredModal" class="modal" style="display: none;">
+            <div class="modal-content" style="max-width: 400px; text-align: center;">
+                <div class="modal-header">
+                    <h3 style="text-align: center; flex: 1;">⌛ Token de acceso expirado</h3>
+                </div>
+                <div style="padding: 20px 0;">
+                    <p style="margin-bottom: 20px; font-size: 1rem;">Tu token de acceso ha expirado. Se ha eliminado el
+                        token de GitHub guardado.</p>
+                    <div style="display: flex; gap: 12px; justify-content: center;">
+                        <button id="redirectToLoginTokenBtn" class="btn btn-primary">Ir al inicio de sesión</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ALERTAS FLOTANTES -->
+        <div id="alertMessage" class="alert"></div>
+
+        <!-- ACCIONES -->
+        <div class="action-bar">
+            <div class="search-box">
+                <span style="color: #6a8b6a;">🔍</span>
+                <input type="text" id="searchInput" placeholder="Buscar por cédula o número de recibo...">
+            </div>
+            <button id="toggleTableBtn" class="btn btn-primary">
+                📋 Mostrar tabla
+            </button>
+            <button id="toggleAllCardsBtn" class="btn" style="background: #1a4a2a; color: white;"
+                title="Mostrar/ocultar todas las tarjetas">
+                <span>👁️</span> Tarjetas
+            </button>
+            <div class="report-group">
+                <button id="paymentsTodayBtn" class="btn">📅 Hoy</button>
+                <button id="paymentsMonthBtn" class="btn">📆 Mes</button>
+                <button id="paymentsYearBtn" class="btn">📊 Año</button>
+                <button id="paymentsAllBtn" class="btn">📋 Todos</button>
+                <button id="certificatesReportBtn" class="btn" style="background: #ffd966;">📜 Certificados</button>
+            </div>
+            <div class="next-receipt-badge">
+                Sgte. Recibo <span id="nextReceiptNumber">00001</span>
+            </div>
+        </div>
+
+        <!-- ESTADÍSTICAS CON VOLTEO -->
+        <div class="stats-grid">
+            <div class="stat-card" onclick="this.classList.toggle('flipped')">
+                <div class="stat-front">
+                    <div class="stat-label">👥 Afiliados</div>
+                    <div class="stat-value" id="totalAfiliados">0</div>
+                    <div class="stat-desc">total registrados</div>
+                </div>
+                <div class="stat-back">
+                    <div class="eye-icon">👁️</div>
+                    <div class="back-text">Toca para ver</div>
+                </div>
+            </div>
+            <div class="stat-card" onclick="this.classList.toggle('flipped')">
+                <div class="stat-front">
+                    <div class="stat-label">✅ Al día</div>
+                    <div class="stat-value" id="usuariosAlDia">0</div>
+                    <div class="stat-desc">sin deuda</div>
+                </div>
+                <div class="stat-back">
+                    <div class="eye-icon">👁️</div>
+                    <div class="back-text">Toca para ver</div>
+                </div>
+            </div>
+            <div class="stat-card" onclick="this.classList.toggle('flipped')">
+                <div class="stat-front">
+                    <div class="stat-label">📆 Meses pagados</div>
+                    <div class="stat-value" id="mesesPagados">0</div>
+                    <div class="stat-desc">cancelados</div>
+                </div>
+                <div class="stat-back">
+                    <div class="eye-icon">👁️</div>
+                    <div class="back-text">Toca para ver</div>
+                </div>
+            </div>
+            <div class="stat-card" onclick="this.classList.toggle('flipped')">
+                <div class="stat-front">
+                    <div class="stat-label">📜 Certificados</div>
+                    <div class="stat-value" id="totalCertificados">0</div>
+                    <div class="stat-desc">emitidos</div>
+                </div>
+                <div class="stat-back">
+                    <div class="eye-icon">👁️</div>
+                    <div class="back-text">Toca para ver</div>
+                </div>
+            </div>
+            <div class="stat-card" onclick="this.classList.toggle('flipped')">
+                <div class="stat-front">
+                    <div class="stat-label">💰 Recaudado cuotas</div>
+                    <div class="stat-value" id="recaudadoCuotas">$0</div>
+                    <div class="stat-desc">valor cuotas</div>
+                </div>
+                <div class="stat-back">
+                    <div class="eye-icon">👁️</div>
+                    <div class="back-text">Toca para ver</div>
+                </div>
+            </div>
+            <div class="stat-card" onclick="this.classList.toggle('flipped')">
+                <div class="stat-front">
+                    <div class="stat-label">🧾 Recaudado certificados</div>
+                    <div class="stat-value" id="recaudadoCertificados">$0</div>
+                    <div class="stat-desc">valor certificados</div>
+                </div>
+                <div class="stat-back">
+                    <div class="eye-icon">👁️</div>
+                    <div class="back-text">Toca para ver</div>
+                </div>
+            </div>
+            <div class="stat-card" onclick="this.classList.toggle('flipped')">
+                <div class="stat-front">
+                    <div class="stat-label">💰 Total recaudado</div>
+                    <div class="stat-value" id="totalRecaudado">$0</div>
+                    <div class="stat-desc">general</div>
+                </div>
+                <div class="stat-back">
+                    <div class="eye-icon">👁️</div>
+                    <div class="back-text">Toca para ver</div>
+                </div>
+            </div>
+            <div class="stat-card" onclick="this.classList.toggle('flipped')">
+                <div class="stat-front">
+                    <div class="stat-label">⚠️ Deuda total</div>
+                    <div class="stat-value" id="deudaTotal">$0</div>
+                    <div class="stat-desc">pendiente</div>
+                </div>
+                <div class="stat-back">
+                    <div class="eye-icon">👁️</div>
+                    <div class="back-text">Toca para ver</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABLA CON PAGINACIÓN -->
+        <div id="tableContainer" style="display: none;">
+            <div class="table-section">
+                <div class="table-header">
+                    <div class="table-title">
+                        📋 Registro de pagos · <span
+                            style="background: #d0e8d0; padding: 4px 14px; border-radius: 100px;"
+                            id="añoActualDisplay"></span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div class="legend">
+                            <span style="display: inline-flex; align-items: center; gap: 4px;"><span
+                                    style="color: #dd2626; font-size: 24px; position: relative; top: -3px;">●</span>Debe</span>
+                            <span style="display: inline-flex; align-items: center; gap: 4px;"><span
+                                    style="color: #2aac2a; font-size: 24px; position: relative; top: -3px;">●</span>Pagado</span>
+                            <span style="display: inline-flex; align-items: center; gap: 4px;"><span
+                                    style="color: #ffd966; font-size: 24px; position: relative; top: -3px;">●</span>Condonado</span>
+                            <span style="display: inline-flex; align-items: center; gap: 4px;"><span
+                                    style="color: #ffffff; font-size: 24px; position: relative; top: -3px;">●</span>Futuro</span>
+                            <span style="display: inline-flex; align-items: center; gap: 4px;"><span
+                                    style="color: #ffd966; font-size: 12px; position: relative; top: -3px;">📜</span>Certificado</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="paymentsTable">
+                        <thead id="tableHeader">
+                            <tr>
+                                <th>Cédula</th>
+                                <th style="min-width: 180px;">Nombre y Apellidos</th>
+                                <th>Afiliación</th>
+                                <th>Deuda</th>
+                                <th>Cert</th>
+                                <th>Detalle</th>
+                                <th>N° Recibo</th>
+                                <th>Ene</th>
+                                <th>Feb</th>
+                                <th>Mar</th>
+                                <th>Abr</th>
+                                <th>May</th>
+                                <th>Jun</th>
+                                <th>Jul</th>
+                                <th>Ago</th>
+                                <th>Sep</th>
+                                <th>Oct</th>
+                                <th>Nov</th>
+                                <th>Dic</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination" id="paginationContainer">
+                    <div style="display: flex; gap: 2px; align-items: center;">
+                        <span style="font-size: 0.7rem; color: #4a6b4a; font-weight: 600;">📌 página</span>
+                    </div>
+                    <div class="pagination-controls">
+                        <button class="page-btn" id="prevPageBtn">‹</button>
+                        <div id="pageNumbers" style="display: flex; gap: 4px;"></div>
+                        <button class="page-btn" id="nextPageBtn">›</button>
+                        <div style="display: flex; align-items: center; gap: 6px; margin-left: 6px;">
+                            <span style="font-size: 0.65rem; font-weight: 600;">Ir a</span>
+                            <input type="number" id="pageInput" class="page-input" min="1" value="1">
+                            <button class="page-btn" id="goToPageBtn">→</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: center; gap: 12px; margin-top: 16px;">
+                <button id="savePaymentsBtn" class="btn btn-success">💾 Guardar Todo</button>
+            </div>
+        </div>
+
+        <!-- MODAL DE RECIBO CON PAGOS MÚLTIPLES -->
+        <div id="receiptModal" class="receipt-modal">
+            <div class="receipt-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h3 style="font-size: 1rem; font-weight: 700; color: #1a4a2a;">🧾 Registrar pago</h3>
+                    <button id="closeReceiptBtn"
+                        style="background: none; border: none; font-size: 1.3rem; cursor: pointer; color: #6a8b6a;">&times;</button>
+                </div>
+                <div id="receiptInfo" class="receipt-info"></div>
+
+                <!-- Lista de meses que debe -->
+                <div class="months-list" id="monthsListContainer">
+                    <label>📆 Selecciona los meses a pagar:</label>
+                    <div id="monthsChecklist"></div>
+                </div>
+
+                <!-- Opción de certificado -->
+                <div class="certificate-option">
+                    <label>
+                        <input type="checkbox" id="includeCertificateCheckbox">
+                        <span>📜 Incluir Certificado</span>
+                        <span class="valor" style="margin-left: auto;">+ $20.000</span>
+                    </label>
+                </div>
+
+                <div class="receipt-field">
+                    <label>NÚMERO DE RECIBO</label>
+                    <input type="text" id="receiptNumber" placeholder="Ej: 00001, 00002..." value="">
+                </div>
+
+                <div class="receipt-field">
+                    <label>📅 FECHA DE PAGO REAL</label>
+                    <input type="date" id="paymentDate" value="">
+                    <small style="font-size: 0.65rem; color: #6a8b6a; display: block; margin-top: 4px;">
+                        Fecha en que se realizó el pago (puede ser diferente a la fecha de registro)
+                    </small>
+                </div>
+
+                <div class="total-amount" id="totalAmountDisplay">
+                    Total: $0
+                </div>
+
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                    <button id="cancelReceiptBtn" class="btn">Cancelar</button>
+                    <button id="saveReceiptBtn" class="btn btn-success">Guardar pago</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL DE REPORTE -->
+        <div id="reportModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="reportTitle">Reporte de pagos</h3>
+                    <div style="display: flex; gap: 2px;">
+                        <button id="printReportBtn" class="btn" style="padding: 4px 10px;">🖨️</button>
+                        <button class="close-btn" id="closeReportModalBtn">&times;</button>
+                    </div>
+                </div>
+                <div id="reportContent" style="overflow-x: auto;"></div>
+            </div>
+        </div>
+
+        <!-- MODAL DE DETALLE -->
+        <div id="detailModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modalNombre">Detalle del afiliado</h3>
+                    <div style="display: flex; gap: 2px;">
+                        <button id="printDetailBtn" class="btn" style="padding: 4px 10px;">🖨️</button>
+                        <button class="close-btn" id="closeModalBtn">&times;</button>
+                    </div>
+                </div>
+                <div id="modalContent"></div>
+            </div>
+        </div>
+
+        <div style="margin-top: 24px; text-align: center; color: #6a8b6a; font-size: 0.6rem; font-weight: 500;">
+            <span>Junta de Acción Comunal Barrio Bateas · Puerto Gaitán, Meta</span>
+            <span style="margin-left: 16px;">📅 <span id="fechaActualDisplay"></span></span>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // VERIFICACIÓN DE AUTENTICACIÓN INICIAL
+        // ============================================================
+        (function verificarAutenticacion() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            const user = urlParams.get('user');
+            const mode = urlParams.get('mode');
+
+            const sessionToken = sessionStorage.getItem('session_token');
+            const usuarioActual = sessionStorage.getItem('usuario_actual');
+
+            if (!token && !sessionToken) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            if (token && !sessionToken) {
+                sessionStorage.setItem('session_token', token);
+            }
+
+            if (user && !usuarioActual) {
+                try {
+                    const usuarioInfo = {
+                        usuario: user,
+                        rol: mode === 'full' ? 'tesorera' : 'presidente',
+                        modo: mode
+                    };
+                    sessionStorage.setItem('usuario_actual', JSON.stringify(usuarioInfo));
+                } catch (e) {
+                    console.error('Error al guardar usuario:', e);
+                }
+            }
+
+            if (!sessionStorage.getItem('usuario_actual')) {
+                window.location.href = 'index.html';
+            }
+        })();
+
+        // ============================================================
+        // CONFIGURACIÓN
+        // ============================================================
+        const CONFIG = {
+            SOURCE: {
+                REPO_OWNER: 'carlos2601',
+                REPO_NAME: 'juntadeaccioncomunalbarriobateaspuertogaitanmetalilianalondo-ogallego1010101010101000111010001010010',
+                AFILIADOS_PATH: 'afiliados.json',
+                BRANCH: 'main'
+            },
+            DESTINATION: {
+                REPO_OWNER: 'carlos2601',
+                REPO_NAME: 'jacbateas',
+                CUOTA_PATH: 'data/cuota.json',
+                BRANCH: 'main'
+            },
+            VALOR_CUOTA: 5000,
+            VALOR_CERTIFICADO: 20000,
+            PAGE_SIZE: 6,
+            INACTIVITY_TIME: 30 * 60 * 1000,
+            ADMIN_TOKEN: 'carlos2601'
+        };
+
+        let appState = {
+            afiliados: [],
+            pagos: [],
+            githubToken: null,
+            accessTokenData: null,
+            usuarioActual: null,
+            fechaActual: new Date(),
+            tablaVisible: false,
+            filtroActual: '',
+            modoBusqueda: false,
+            selectedYear: new Date().getFullYear(),
+            pendingPayment: null,
+            currentPage: 1,
+            totalPages: 1,
+            sincronizando: false,
+            rememberGithubToken: false,
+            rememberAccessToken: false
+        };
+
+        let inactivityTimer;
+        let timerInterval;
+        let remainingSeconds = 30 * 60;
+        let tokenExpirationInterval;
+
+        const dom = {
+            mainApp: document.getElementById('mainApp'),
+            accessTokenModal: document.getElementById('accessTokenModal'),
+            accessTokenInput: document.getElementById('accessTokenInput'),
+            validateAccessTokenBtn: document.getElementById('validateAccessTokenBtn'),
+            accessTokenError: document.getElementById('accessTokenError'),
+            rememberAccessTokenCheckbox: document.getElementById('rememberAccessTokenCheckbox'),
+            githubTokenModal: document.getElementById('githubTokenModal'),
+            githubTokenInput: document.getElementById('githubTokenInput'),
+            validateGithubTokenBtn: document.getElementById('validateGithubTokenBtn'),
+            githubTokenError: document.getElementById('githubTokenError'),
+            rememberGithubTokenCheckbox: document.getElementById('rememberGithubTokenCheckbox'),
+            tableContainer: document.getElementById('tableContainer'),
+            tableBody: document.getElementById('tableBody'),
+            alertMessage: document.getElementById('alertMessage'),
+            searchInput: document.getElementById('searchInput'),
+            toggleTableBtn: document.getElementById('toggleTableBtn'),
+            paymentsTodayBtn: document.getElementById('paymentsTodayBtn'),
+            paymentsMonthBtn: document.getElementById('paymentsMonthBtn'),
+            paymentsYearBtn: document.getElementById('paymentsYearBtn'),
+            paymentsAllBtn: document.getElementById('paymentsAllBtn'),
+            certificatesReportBtn: document.getElementById('certificatesReportBtn'),
+            yearSelect: document.getElementById('yearSelect'),
+            añoActualDisplay: document.getElementById('añoActualDisplay'),
+            totalAfiliados: document.getElementById('totalAfiliados'),
+            usuariosAlDia: document.getElementById('usuariosAlDia'),
+            mesesPagados: document.getElementById('mesesPagados'),
+            totalRecaudado: document.getElementById('totalRecaudado'),
+            totalCertificados: document.getElementById('totalCertificados'),
+            recaudadoCertificados: document.getElementById('recaudadoCertificados'),
+            deudaTotal: document.getElementById('deudaTotal'),
+            recaudadoCuotas: document.getElementById('recaudadoCuotas'),
+            fechaActualDisplay: document.getElementById('fechaActualDisplay'),
+            modal: document.getElementById('detailModal'),
+            closeModalBtn: document.getElementById('closeModalBtn'),
+            printDetailBtn: document.getElementById('printDetailBtn'),
+            modalNombre: document.getElementById('modalNombre'),
+            modalContent: document.getElementById('modalContent'),
+            reportModal: document.getElementById('reportModal'),
+            closeReportModalBtn: document.getElementById('closeReportModalBtn'),
+            printReportBtn: document.getElementById('printReportBtn'),
+            reportTitle: document.getElementById('reportTitle'),
+            reportContent: document.getElementById('reportContent'),
+            receiptModal: document.getElementById('receiptModal'),
+            closeReceiptBtn: document.getElementById('closeReceiptBtn'),
+            cancelReceiptBtn: document.getElementById('cancelReceiptBtn'),
+            saveReceiptBtn: document.getElementById('saveReceiptBtn'),
+            receiptInfo: document.getElementById('receiptInfo'),
+            receiptNumber: document.getElementById('receiptNumber'),
+            nextReceiptNumber: document.getElementById('nextReceiptNumber'),
+            monthsChecklist: document.getElementById('monthsChecklist'),
+            includeCertificateCheckbox: document.getElementById('includeCertificateCheckbox'),
+            totalAmountDisplay: document.getElementById('totalAmountDisplay'),
+            paginationContainer: document.getElementById('paginationContainer'),
+            prevPageBtn: document.getElementById('prevPageBtn'),
+            nextPageBtn: document.getElementById('nextPageBtn'),
+            pageNumbers: document.getElementById('pageNumbers'),
+            pageInput: document.getElementById('pageInput'),
+            goToPageBtn: document.getElementById('goToPageBtn'),
+            sessionTimer: document.getElementById('sessionTimer'),
+            timerDisplay: document.getElementById('timerDisplay'),
+            accessTokenTimer: document.getElementById('accessTokenTimer'),
+            tokenTimerDisplay: document.getElementById('tokenTimerDisplay'),
+            sessionExpiredModal: document.getElementById('sessionExpiredModal'),
+            tokenExpiredModal: document.getElementById('tokenExpiredModal'),
+            redirectToLoginBtn: document.getElementById('redirectToLoginBtn'),
+            redirectToLoginTokenBtn: document.getElementById('redirectToLoginTokenBtn'),
+            changeTokenBtn: document.getElementById('changeTokenBtn')
+        };
+
+        // ============================================================
+        // FUNCIÓN PARA OBTENER EL ÚLTIMO RECIBO DEL AFILIADO
+        // ============================================================
+        function obtenerUltimoRecibo(cedula) {
+            const todosPagos = obtenerTodosLosPagos();
+            const pagosAfiliado = todosPagos.filter(p => p.cedula === cedula);
+            if (pagosAfiliado.length === 0) return '—';
+
+            // Ordenar por fecha (más reciente primero)
+            pagosAfiliado.sort((a, b) => b.fechaObj - a.fechaObj);
+            const ultimoRecibo = pagosAfiliado[0].recibo;
+            return ultimoRecibo !== 'N/A' ? ultimoRecibo : '—';
+        }
+
+        // ============================================================
+        // FUNCIÓN DE VALIDACIÓN DE TOKEN DE ACCESO (con token admin)
+        // ============================================================
+        function validarTokenAcceso(tokenIngresado) {
+            if (tokenIngresado === CONFIG.ADMIN_TOKEN) {
+                return { valido: true, data: { token: tokenIngresado, fechaExpiracion: new Date('2099-12-31'), esAdmin: true } };
+            }
+
+            const tokens = JSON.parse(localStorage.getItem('tokens_jacbateas') || '[]');
+            const ahora = new Date();
+
+            const tokenEncontrado = tokens.find(t => {
+                if (t.token === tokenIngresado) {
+                    const fechaInicio = new Date(t.fechaInicio);
+                    const fechaExpiracion = new Date(t.fechaExpiracion);
+                    return fechaInicio <= ahora && fechaExpiracion > ahora;
+                }
+                return false;
+            });
+
+            if (tokenEncontrado) {
+                return { valido: true, data: tokenEncontrado };
+            }
+            return { valido: false };
+        }
+
+        // ============================================================
+        // PROCESAR VALIDACIÓN DEL TOKEN DE ACCESO
+        // ============================================================
+        async function procesarValidacionAccessToken() {
+            const tokenAcceso = dom.accessTokenInput.value.trim();
+            const usuarioActualObj = JSON.parse(sessionStorage.getItem('usuario_actual') || '{}');
+            const usuario = usuarioActualObj.usuario;
+
+            if (!tokenAcceso) {
+                dom.accessTokenError.style.display = 'block';
+                dom.accessTokenError.textContent = '❌ Debes ingresar un token de acceso';
+                return;
+            }
+
+            const validacion = validarTokenAcceso(tokenAcceso);
+
+            if (validacion.valido) {
+                appState.accessTokenData = validacion.data;
+                appState.rememberAccessToken = dom.rememberAccessTokenCheckbox.checked;
+
+                if (appState.rememberAccessToken) {
+                    localStorage.setItem('jac_access_token', tokenAcceso);
+                }
+                iniciarMonitorTokenAcceso(validacion.data.fechaExpiracion);
+                dom.accessTokenModal.style.display = 'none';
+
+                const githubTokenGuardado = localStorage.getItem('github_token');
+                if (githubTokenGuardado) {
+                    const esValido = await validarTokenGitHub(githubTokenGuardado);
+                    if (esValido) {
+                        await cargarDatosConGithubToken(githubTokenGuardado);
+                        return;
+                    } else {
+                        localStorage.removeItem('github_token');
+                    }
+                }
+
+                dom.githubTokenModal.style.display = 'flex';
+                dom.githubTokenInput.focus();
+            } else {
+                dom.accessTokenError.style.display = 'block';
+                dom.accessTokenError.textContent = validacion.mensaje || '❌ Token inválido o expirado';
+            }
+        }
+
+        // ============================================================
+        // CAMBIAR TOKEN
+        // ============================================================
+        function cambiarToken() {
+            localStorage.removeItem('jac_access_token');
+            localStorage.removeItem('github_token');
+            sessionStorage.clear();
+
+            dom.mainApp.style.display = 'none';
+            dom.accessTokenModal.style.display = 'flex';
+            dom.accessTokenInput.value = '';
+            dom.accessTokenError.style.display = 'none';
+
+            if (tokenExpirationInterval) clearInterval(tokenExpirationInterval);
+            if (timerInterval) clearInterval(timerInterval);
+            if (inactivityTimer) clearTimeout(inactivityTimer);
+
+            mostrarAlerta('🔑 Puedes ingresar un nuevo token de acceso', 'info');
+        }
+
+        // ============================================================
+        // FUNCIONES DE INACTIVIDAD
+        // ============================================================
+        function limpiarSesionTemporal() {
+            sessionStorage.clear();
+            clearTimeout(inactivityTimer);
+            clearInterval(timerInterval);
+            if (tokenExpirationInterval) clearInterval(tokenExpirationInterval);
+        }
+
+        function cerrarSesionTemporal() {
+            limpiarSesionTemporal();
+            window.location.href = 'index.html';
+        }
+
+        function cerrarSesionCompleta() {
+            sessionStorage.clear();
+            localStorage.removeItem('github_token');
+            localStorage.removeItem('jac_access_token');
+            clearTimeout(inactivityTimer);
+            clearInterval(timerInterval);
+            if (tokenExpirationInterval) clearInterval(tokenExpirationInterval);
+            window.location.href = 'index.html';
+        }
+
+        function resetInactivityTimer() {
+            clearTimeout(inactivityTimer);
+            inactivityTimer = setTimeout(() => {
+                limpiarSesionTemporal();
+                dom.sessionExpiredModal.style.display = 'flex';
+            }, CONFIG.INACTIVITY_TIME);
+            remainingSeconds = CONFIG.INACTIVITY_TIME / 1000;
+            updateTimerDisplay();
+            clearInterval(timerInterval);
+            timerInterval = setInterval(updateTimerDisplay, 1000);
+            if (dom.sessionTimer) {
+                dom.sessionTimer.classList.remove('timer-warning');
+            }
+        }
+
+        function updateTimerDisplay() {
+            if (remainingSeconds <= 0) {
+                clearInterval(timerInterval);
+                return;
+            }
+            remainingSeconds--;
+            const minutes = Math.floor(remainingSeconds / 60);
+            const seconds = remainingSeconds % 60;
+            if (dom.timerDisplay) {
+                dom.timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+            if (remainingSeconds < 60) {
+                dom.sessionTimer.classList.add('timer-warning');
+            }
+        }
+
+        function iniciarMonitorTokenAcceso(fechaExpiracion) {
+            if (tokenExpirationInterval) clearInterval(tokenExpirationInterval);
+
+            const fechaExp = new Date(fechaExpiracion);
+            const esAdmin = fechaExp.getFullYear() === 2099;
+
+            const actualizarTimer = () => {
+                const ahora = new Date();
+                const diffMs = fechaExp - ahora;
+
+                if (diffMs <= 0 && !esAdmin) {
+                    clearInterval(tokenExpirationInterval);
+                    localStorage.removeItem('github_token');
+                    localStorage.removeItem('jac_access_token');
+                    sessionStorage.clear();
+                    dom.tokenExpiredModal.style.display = 'flex';
+                    return;
+                }
+
+                if (esAdmin) {
+                    dom.tokenTimerDisplay.textContent = '∞ Admin';
+                    dom.accessTokenTimer.classList.remove('warning');
+                    return;
+                }
+
+                const diffSegundos = Math.floor(diffMs / 1000);
+                const dias = Math.floor(diffSegundos / 86400);
+                const horas = Math.floor((diffSegundos % 86400) / 3600);
+                const minutos = Math.floor((diffSegundos % 3600) / 60);
+
+                let displayText = '';
+                if (dias > 0) {
+                    displayText = `${dias}d ${horas}h`;
+                    dom.accessTokenTimer.classList.remove('warning');
+                } else if (horas > 0) {
+                    displayText = `${horas}h ${minutos}m`;
+                    if (horas < 1) dom.accessTokenTimer.classList.add('warning');
+                    else dom.accessTokenTimer.classList.remove('warning');
+                } else {
+                    displayText = `${minutos}m`;
+                    if (minutos < 30) dom.accessTokenTimer.classList.add('warning');
+                    else dom.accessTokenTimer.classList.remove('warning');
+                }
+
+                dom.tokenTimerDisplay.textContent = displayText;
+            };
+
+            actualizarTimer();
+            if (!esAdmin) {
+                tokenExpirationInterval = setInterval(actualizarTimer, 60000);
+            }
+        }
+
+        function initActivityDetection() {
+            const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
+            events.forEach(event => {
+                document.addEventListener(event, resetInactivityTimer);
+            });
+            resetInactivityTimer();
+        }
+
+        // ============================================================
+        // FUNCIONES DE GITHUB
+        // ============================================================
+        async function validarTokenGitHub(token) {
+            try {
+                const url = `https://api.github.com/repos/${CONFIG.DESTINATION.REPO_OWNER}/${CONFIG.DESTINATION.REPO_NAME}/contents/${CONFIG.DESTINATION.CUOTA_PATH}`;
+                const res = await fetch(url, { headers: { 'Authorization': `token ${token}` } });
+                return res.status === 200 || res.status === 404;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function cargarAfiliados() {
+            const url = `https://raw.githubusercontent.com/${CONFIG.SOURCE.REPO_OWNER}/${CONFIG.SOURCE.REPO_NAME}/refs/heads/${CONFIG.SOURCE.BRANCH}/${CONFIG.SOURCE.AFILIADOS_PATH}`;
+            const res = await fetch(url);
+            if (!res.ok) throw new Error('No se pudo cargar afiliados');
+            return await res.json();
+        }
+
+        async function cargarPagos() {
+            const url = `https://raw.githubusercontent.com/${CONFIG.DESTINATION.REPO_OWNER}/${CONFIG.DESTINATION.REPO_NAME}/refs/heads/${CONFIG.DESTINATION.BRANCH}/${CONFIG.DESTINATION.CUOTA_PATH}`;
+            try {
+                const res = await fetch(url);
+                if (res.status === 404) return [];
+                return (await res.json()).pagos || [];
+            } catch {
+                return [];
+            }
+        }
+
+        async function guardarPagosEnGitHub() {
+            try {
+                const content = {
+                    ultima_actualizacion: new Date().toISOString(),
+                    valor_cuota: CONFIG.VALOR_CUOTA,
+                    pagos: appState.pagos
+                };
+                const url = `https://api.github.com/repos/${CONFIG.DESTINATION.REPO_OWNER}/${CONFIG.DESTINATION.REPO_NAME}/contents/${CONFIG.DESTINATION.CUOTA_PATH}`;
+                let sha = null;
+                try {
+                    const shaRes = await fetch(url, { headers: { 'Authorization': `token ${appState.githubToken}` } });
+                    if (shaRes.ok) {
+                        const shaData = await shaRes.json();
+                        sha = shaData.sha;
+                    }
+                } catch (e) { }
+
+                const res = await fetch(url, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `token ${appState.githubToken}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: `Pago - ${new Date().toLocaleDateString()}`,
+                        content: btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2)))),
+                        sha,
+                        branch: CONFIG.DESTINATION.BRANCH
+                    })
+                });
+
+                if (!res.ok) throw new Error('Error al guardar');
+                return true;
+            } catch (e) {
+                throw new Error(e.message);
+            }
+        }
+
+        async function cargarDatosConGithubToken(token) {
+            appState.githubToken = token;
+            try {
+                mostrarAlerta('📥 Cargando afiliados...', 'info');
+                appState.afiliados = await cargarAfiliados();
+                mostrarAlerta('📥 Cargando pagos desde GitHub...', 'info');
+                appState.pagos = await cargarPagos();
+                calcularEstadisticas();
+                actualizarSiguienteRecibo();
+                dom.githubTokenModal.style.display = 'none';
+                dom.mainApp.style.display = 'block';
+                appState.tablaVisible = true;
+                dom.tableContainer.style.display = 'block';
+                dom.toggleTableBtn.innerHTML = '🕵️ Ocultar tabla';
+                appState.modoBusqueda = false;
+                appState.filtroActual = '';
+                dom.searchInput.value = '';
+                appState.currentPage = 1;
+                renderizarTabla();
+                mostrarAlerta(`✅ ${appState.afiliados.length} afiliados cargados`, 'success');
+                initActivityDetection();
+            } catch (e) {
+                mostrarAlerta('Error al cargar datos: ' + e.message, 'error');
+            }
+        }
+
+        // ============================================================
+        // FUNCIONES DE UTILIDAD
+        // ============================================================
+        function parseFecha(fechaStr) {
+            if (!fechaStr) return new Date();
+            const partes = fechaStr.split('/');
+            return new Date(parseInt(partes[2]), parseInt(partes[1]) - 1, parseInt(partes[0]));
+        }
+
+        function formatearFecha(date) {
+            return date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+
+        function formatearHora(date) {
+            return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        }
+
+        function extraerPagosDeString(str, año) {
+            if (!str) return [];
+            return str.split(';').filter(p => p.trim()).map(p => {
+                const partes = p.trim().split('_');
+                return {
+                    mes: partes[0],
+                    año: parseInt(partes[1]),
+                    valor: parseInt(partes[2]),
+                    fecha: partes[3],
+                    hora: partes[4] || '00:00:00',
+                    recibo: partes[5] || 'N/A'
+                };
+            }).filter(p => p.año === año);
+        }
+
+        function extraerCertificadosDeString(str) {
+            if (!str) return [];
+            return str.split(';').filter(c => c.trim()).map(c => {
+                const partes = c.trim().split('_');
+                return {
+                    mes: partes[0],
+                    año: parseInt(partes[1]),
+                    valor: parseInt(partes[2]),
+                    fecha: partes[3],
+                    hora: partes[4] || '00:00:00',
+                    recibo: partes[5] || 'N/A'
+                };
+            });
+        }
+
+        function obtenerTodosLosPagos() {
+            const pagos = [];
+            appState.pagos.forEach(reg => {
+                const afiliado = appState.afiliados.find(a => a.cedula === reg.cedula);
+                const nombre = afiliado ? afiliado.nombre : reg.nombre;
+
+                for (let año = 2024; año <= appState.fechaActual.getFullYear(); año++) {
+                    const campo = `fecha_pago_año_${año}`;
+                    const pagosAño = extraerPagosDeString(reg[campo], año);
+                    pagosAño.forEach(p => {
+                        pagos.push({
+                            cedula: reg.cedula,
+                            nombre,
+                            tipo: 'cuota',
+                            ...p,
+                            fechaObj: new Date(p.fecha.split('/')[2], p.fecha.split('/')[1] - 1, p.fecha.split('/')[0])
+                        });
+                    });
+                }
+
+                if (reg.certificado) {
+                    const certificados = extraerCertificadosDeString(reg.certificado);
+                    certificados.forEach(c => {
+                        pagos.push({
+                            cedula: reg.cedula,
+                            nombre,
+                            tipo: 'certificado',
+                            mes: c.mes,
+                            año: c.año,
+                            valor: c.valor,
+                            fecha: c.fecha,
+                            hora: c.hora,
+                            recibo: c.recibo,
+                            fechaObj: new Date(c.fecha.split('/')[2], c.fecha.split('/')[1] - 1, c.fecha.split('/')[0])
+                        });
+                    });
+                }
+            });
+            return pagos;
+        }
+
+        function mesEstaPagado(cedula, año, mes) {
+            const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+            const registro = appState.pagos.find(p => p.cedula === cedula);
+            if (!registro) return false;
+            const pagosStr = registro[`fecha_pago_año_${año}`] || '';
+            return pagosStr.split(';').some(p => p.trim().startsWith(`${meses[mes]}_${año}`));
+        }
+
+        function esMesCondonado(año, mes) {
+            if (año === 2024) return true;
+            if (año === 2025 && mes >= 0 && mes <= 10) return true;
+            return false;
+        }
+
+        function obtenerEstadoMes(cedula, año, mes, fechaAfiliacion) {
+            const afiliacion = parseFecha(fechaAfiliacion);
+            const hoy = appState.fechaActual;
+
+            if (año < afiliacion.getFullYear() || (año === afiliacion.getFullYear() && mes < afiliacion.getMonth())) {
+                return 'no-visible';
+            }
+
+            if (mesEstaPagado(cedula, año, mes)) {
+                return 'paid';
+            }
+
+            if (año > hoy.getFullYear() || (año === hoy.getFullYear() && mes > hoy.getMonth())) {
+                return 'future';
+            }
+
+            if (esMesCondonado(año, mes)) {
+                return 'condoned';
+            }
+
+            return 'debt';
+        }
+
+        function calcularMesesDeuda(cedula, fechaAfiliacion) {
+            const afiliacion = parseFecha(fechaAfiliacion);
+            const hoy = appState.fechaActual;
+            const mesesDeuda = [];
+
+            for (let año = afiliacion.getFullYear(); año <= hoy.getFullYear(); año++) {
+                const mesInicio = (año === afiliacion.getFullYear()) ? afiliacion.getMonth() : 0;
+                const mesFin = (año === hoy.getFullYear()) ? hoy.getMonth() : 11;
+
+                for (let mes = mesInicio; mes <= mesFin; mes++) {
+                    if (!mesEstaPagado(cedula, año, mes) && !esMesCondonado(año, mes)) {
+                        mesesDeuda.push({ año, mes });
+                    }
+                }
+            }
+            return mesesDeuda;
+        }
+
+        function calcularInfoDetalle(cedula, fechaAfiliacion) {
+            const afiliacion = parseFecha(fechaAfiliacion);
+            const hoy = appState.fechaActual;
+            let mesesPagados = 0;
+            let mesesCondonados = 0;
+            let mesesDeuda = 0;
+            let valorPagado = 0;
+
+            for (let año = afiliacion.getFullYear(); año <= hoy.getFullYear(); año++) {
+                const mesInicio = (año === afiliacion.getFullYear()) ? afiliacion.getMonth() : 0;
+                const mesFin = (año === hoy.getFullYear()) ? hoy.getMonth() : 11;
+
+                for (let mes = mesInicio; mes <= mesFin; mes++) {
+                    if (mesEstaPagado(cedula, año, mes)) {
+                        mesesPagados++;
+                        valorPagado += CONFIG.VALOR_CUOTA;
+                    } else if (esMesCondonado(año, mes)) {
+                        mesesCondonados++;
+                    } else {
+                        mesesDeuda++;
+                    }
+                }
+            }
+
+            return {
+                mesesPagados,
+                mesesCondonados,
+                mesesDeuda,
+                valorPagado,
+                valorDebe: mesesDeuda * CONFIG.VALOR_CUOTA
+            };
+        }
+
+        function actualizarSiguienteRecibo() {
+            const todosPagos = obtenerTodosLosPagos();
+            let maxRecibo = 0;
+
+            todosPagos.forEach(p => {
+                if (p.recibo && p.recibo !== 'N/A') {
+                    const num = parseInt(p.recibo);
+                    if (!isNaN(num) && num > maxRecibo) {
+                        maxRecibo = num;
+                    }
+                }
+            });
+
+            const siguiente = (maxRecibo + 1).toString().padStart(5, '0');
+            dom.nextReceiptNumber.textContent = siguiente;
+            return siguiente;
+        }
+
+        function obtenerAfiliadosConPagos() {
+            const todosPagos = obtenerTodosLosPagos();
+            const ultimoReciboPorCedula = {};
+
+            todosPagos.forEach(pago => {
+                const cedula = pago.cedula;
+                const numRecibo = parseInt(pago.recibo) || 0;
+                if (!ultimoReciboPorCedula[cedula] || numRecibo > ultimoReciboPorCedula[cedula]) {
+                    ultimoReciboPorCedula[cedula] = numRecibo;
+                }
+            });
+
+            const cedulasQueHanPagado = Object.keys(ultimoReciboPorCedula);
+            let afiliadosConPagos = appState.afiliados.filter(af => cedulasQueHanPagado.includes(af.cedula));
+
+            afiliadosConPagos.sort((a, b) => {
+                const reciboA = ultimoReciboPorCedula[a.cedula] || 0;
+                const reciboB = ultimoReciboPorCedula[b.cedula] || 0;
+                return reciboB - reciboA;
+            });
+
+            return afiliadosConPagos;
+        }
+
+        function obtenerAfiliadosParaMostrar() {
+            const filtro = appState.filtroActual.trim();
+
+            if (filtro !== '') {
+                appState.modoBusqueda = true;
+                let afiliadoPorCedula = appState.afiliados.find(af => af.cedula === filtro);
+                if (afiliadoPorCedula) {
+                    return [afiliadoPorCedula];
+                }
+
+                const todosPagos = obtenerTodosLosPagos();
+                const pagosConRecibo = todosPagos.filter(p => p.recibo && p.recibo.toLowerCase().includes(filtro.toLowerCase()));
+
+                if (pagosConRecibo.length > 0) {
+                    const cedulasUnicas = [...new Set(pagosConRecibo.map(p => p.cedula))];
+                    return appState.afiliados.filter(af => cedulasUnicas.includes(af.cedula));
+                }
+                return [];
+            } else {
+                appState.modoBusqueda = false;
+                return obtenerAfiliadosConPagos();
+            }
+        }
+
+        function calcularEstadisticas() {
+            const totalAfiliados = appState.afiliados.length;
+            let usuariosAlDia = 0;
+            appState.afiliados.forEach(af => {
+                if (calcularMesesDeuda(af.cedula, af.fecha).length === 0) usuariosAlDia++;
+            });
+
+            const todosPagos = obtenerTodosLosPagos();
+            const pagosCuota = todosPagos.filter(p => p.tipo === 'cuota');
+            const pagosCertificado = todosPagos.filter(p => p.tipo === 'certificado');
+
+            const mesesPagados = pagosCuota.length;
+            const totalCertificados = pagosCertificado.length;
+            const totalRecaudadoCuotas = pagosCuota.reduce((sum, p) => sum + p.valor, 0);
+            const totalRecaudadoCertificados = pagosCertificado.reduce((sum, p) => sum + p.valor, 0);
+            const totalRecaudadoGeneral = totalRecaudadoCuotas + totalRecaudadoCertificados;
+
+            let deudaTotal = 0;
+            appState.afiliados.forEach(af => {
+                deudaTotal += calcularMesesDeuda(af.cedula, af.fecha).length * CONFIG.VALOR_CUOTA;
+            });
+
+            dom.totalAfiliados.textContent = totalAfiliados;
+            dom.usuariosAlDia.textContent = usuariosAlDia;
+            dom.mesesPagados.textContent = mesesPagados;
+            dom.totalCertificados.textContent = totalCertificados;
+            dom.recaudadoCuotas.textContent = `$${totalRecaudadoCuotas.toLocaleString()}`;
+            dom.recaudadoCertificados.textContent = `$${totalRecaudadoCertificados.toLocaleString()}`;
+            dom.totalRecaudado.textContent = `$${totalRecaudadoGeneral.toLocaleString()}`;
+            dom.deudaTotal.textContent = `$${deudaTotal.toLocaleString()}`;
+        }
+
+        function getPaginatedData(data, page) {
+            const start = (page - 1) * CONFIG.PAGE_SIZE;
+            const end = start + CONFIG.PAGE_SIZE;
+            return {
+                data: data.slice(start, end),
+                totalPages: Math.max(1, Math.ceil(data.length / CONFIG.PAGE_SIZE)),
+                currentPage: page,
+                total: data.length
+            };
+        }
+
+        function renderPagination(totalPages, currentPage) {
+            if (!dom.pageNumbers) return;
+            let html = '';
+            const maxVisible = 5;
+            let start = Math.max(1, currentPage - 2);
+            let end = Math.min(totalPages, start + maxVisible - 1);
+
+            if (end - start + 1 < maxVisible) {
+                start = Math.max(1, end - maxVisible + 1);
+            }
+
+            if (start > 1) {
+                html += `<button class="page-btn" data-page="1">1</button>`;
+                if (start > 2) html += `<span style="padding: 0 6px; color: #6a8b6a;">…</span>`;
+            }
+
+            for (let i = start; i <= end; i++) {
+                html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+            }
+
+            if (end < totalPages) {
+                if (end < totalPages - 1) html += `<span style="padding: 0 6px; color: #6a8b6a;">…</span>`;
+                html += `<button class="page-btn" data-page="${totalPages}">${totalPages}</button>`;
+            }
+
+            dom.pageNumbers.innerHTML = html;
+            if (dom.pageInput) dom.pageInput.value = currentPage;
+            if (dom.prevPageBtn) dom.prevPageBtn.disabled = currentPage === 1;
+            if (dom.nextPageBtn) dom.nextPageBtn.disabled = currentPage === totalPages;
+
+            document.querySelectorAll('.page-btn[data-page]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const page = parseInt(e.target.dataset.page);
+                    if (page !== appState.currentPage) {
+                        appState.currentPage = page;
+                        renderizarTabla();
+                    }
+                });
+            });
+        }
+
+        function renderizarTabla() {
+            if (!appState.afiliados.length || !appState.tablaVisible) return;
+
+            const añoSeleccionado = appState.selectedYear;
+            const mesesNombres = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+            const mesesCompletos = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+            let afiliadosAMostrar = obtenerAfiliadosParaMostrar();
+            const paginated = getPaginatedData(afiliadosAMostrar, appState.currentPage);
+            let afiliadosPagina = paginated.data;
+            appState.totalPages = paginated.totalPages;
+            const totalAfiliadosEnPagina = afiliadosPagina.length;
+
+            if (appState.currentPage > appState.totalPages && appState.totalPages > 0) {
+                appState.currentPage = 1;
+                return renderizarTabla();
+            }
+
+            dom.añoActualDisplay.textContent = añoSeleccionado;
+
+            if (dom.paginationContainer) {
+                dom.paginationContainer.style.display = appState.modoBusqueda ? 'none' : 'flex';
+            }
+
+            if (appState.modoBusqueda) {
+                renderPagination(1, 1);
+            } else {
+                renderPagination(appState.totalPages, appState.currentPage);
+            }
+
+            let html = '';
+
+            afiliadosPagina.forEach(afiliado => {
+                const mesesDeuda = calcularMesesDeuda(afiliado.cedula, afiliado.fecha);
+                const deudaTotal = mesesDeuda.length * CONFIG.VALOR_CUOTA;
+                const registro = appState.pagos.find(p => p.cedula === afiliado.cedula);
+                const tieneCertificado = registro && registro.certificado ? '📜' : '';
+                const ultimoRecibo = obtenerUltimoRecibo(afiliado.cedula);
+
+                html += `<tr>`;
+                html += `<td style="font-weight: 600; color: #1a4a2a;">${afiliado.cedula}<\/td>`;
+                html += `<td style="text-align: left;">${afiliado.nombre}<\/td>`;
+                html += `<td><span class="badge">${afiliado.fecha}<\/span><\/td>`;
+
+                // Columna de Deuda con botones
+                if (appState.modoBusqueda) {
+                    html += `<td><div class="debt-cell"><span style="font-weight: 900; color: #dd0f0f;">$${deudaTotal.toLocaleString()}</span>`;
+                    if (deudaTotal > 0) {
+                        html += `<button class="btn-multiple-pagos" onclick="window.abrirPagoMultipleDesdeBusqueda('${afiliado.cedula}', '${afiliado.nombre.replace(/'/g, "\\'")}')">💰 Pagar</button>`;
+                    }
+                    html += `<button class="btn-certificate" onclick="window.abrirPagoCertificado('${afiliado.cedula}', '${afiliado.nombre.replace(/'/g, "\\'")}')">📜 Certificado</button>`;
+                    html += `</div><\/td>`;
+                } else {
+                    html += `<td><span style="font-weight: 900; color: ${deudaTotal > 0 ? '#dd0f0f' : '#5ab05a'};">$${deudaTotal.toLocaleString()}</span><\/td>`;
+                }
+
+                html += `<td style="font-size: 1.2rem;">${tieneCertificado}<\/td>`;
+                html += `<td><button class="btn-detail" onclick="window.verDetalle('${afiliado.cedula}')">Ver<\/button><\/td>`;
+                html += `<td><span class="recibo-cell">${ultimoRecibo}</span><\/td>`;
+
+                for (let mes = 0; mes < 12; mes++) {
+                    const estado = obtenerEstadoMes(afiliado.cedula, añoSeleccionado, mes, afiliado.fecha);
+
+                    if (estado === 'no-visible') {
+                        html += `<td><div style="width: 26px; height: 26px;"><\/div><\/td>`;
+                    } else {
+                        const dataAttrs = {
+                            'data-cedula': afiliado.cedula,
+                            'data-nombre': afiliado.nombre,
+                            'data-año': añoSeleccionado,
+                            'data-mes': mes,
+                            'data-mesnombre': mesesNombres[mes],
+                            'data-mescompleto': mesesCompletos[mes]
+                        };
+                        const attrsString = Object.entries(dataAttrs).map(([key, value]) => `${key}="${value}"`).join(' ');
+
+                        if (estado === 'debt') {
+                            html += `<td><div class="month-checkbox debt" ${attrsString} onclick="window.handleMonthClick(this)"><\/div><\/td>`;
+                        } else if (estado === 'condoned') {
+                            html += `<td><div class="month-checkbox condoned"><\/div><\/td>`;
+                        } else if (estado === 'paid') {
+                            html += `<td><div class="month-checkbox paid"><\/div><\/td>`;
+                        } else if (estado === 'future') {
+                            html += `<td><div class="month-checkbox future"><\/div><\/td>`;
+                        } else {
+                            html += `<td><div style="width: 26px; height: 26px;"><\/div><\/td>`;
+                        }
+                    }
+                }
+                html += `<\/tr>`;
+            });
+
+            if (!appState.modoBusqueda) {
+                const filasFaltantes = CONFIG.PAGE_SIZE - totalAfiliadosEnPagina;
+                for (let i = 0; i < filasFaltantes; i++) {
+                    html += `<tr style="opacity: 0.7; background-color: #f5f5f5;">
+                        <td style="color: #aaa;">&nbsp;<\/td>
+                        <td style="color: #aaa; text-align: left;">&nbsp;<\/td>
+                        <td><span class="badge" style="background: #ddd; color: #666;">&nbsp;<\/span><\/td>
+                        <td><span style="color: #aaa;">&nbsp;<\/span><\/td>
+                        <td>&nbsp;<\/td>
+                        <td><button class="btn-detail" style="opacity: 0.3; background: #ddd;" disabled>&nbsp;<\/button><\/td>
+                        <td><span class="recibo-cell" style="background: #ddd;">&nbsp;<\/span><\/td>`;
+                    for (let mes = 0; mes < 12; mes++) {
+                        html += `<td><div style="width: 26px; height: 26px; background: #e0e0e0; border-radius: 4px;"><\/div><\/td>`;
+                    }
+                    html += `<\/tr>`;
+                }
+            }
+
+            if (afiliadosPagina.length === 0 && appState.modoBusqueda) {
+                html = `<tr><td colspan="19" style="padding: 40px; text-align: center; color: #6a8b6a;">
+                    ❌ No se encontraron resultados para "${appState.filtroActual}"<br>
+                    <span style="font-size: 0.8rem; margin-top: 10px; display: block;">
+                        🔍 Busca por cédula exacta o número de recibo
+                    </span>
+                <\/td><\/tr>`;
+            } else if (afiliadosPagina.length === 0 && !appState.modoBusqueda) {
+                html = `<tr><td colspan="19" style="padding: 40px; text-align: center; color: #6a8b6a;">
+                    📭 No hay pagos registrados aún
+                <\/td><\/tr>`;
+            }
+
+            dom.tableBody.innerHTML = html;
+        }
+
+        // Función para abrir pago de certificado exclusivo
+        window.abrirPagoCertificado = function (cedula, nombre) {
+            resetInactivityTimer();
+            const afiliado = appState.afiliados.find(a => a.cedula === cedula);
+            if (!afiliado) return;
+
+            abrirModalPagosMultiples(cedula, nombre, [], true);
+        };
+
+        // Función para abrir pago múltiple desde búsqueda
+        window.abrirPagoMultipleDesdeBusqueda = function (cedula, nombre) {
+            resetInactivityTimer();
+            const afiliado = appState.afiliados.find(a => a.cedula === cedula);
+            if (!afiliado) return;
+            const mesesDeuda = calcularMesesDeuda(cedula, afiliado.fecha);
+            if (mesesDeuda.length === 0) {
+                mostrarAlerta('✅ Este afiliado no tiene meses pendientes', 'success');
+                return;
+            }
+            abrirModalPagosMultiples(cedula, nombre, mesesDeuda, false);
+        };
+
+        // Función para abrir modal con pagos múltiples
+        function abrirModalPagosMultiples(cedula, nombre, mesesDeuda, soloCertificado = false) {
+            appState.pendingPayment = {
+                cedula: cedula,
+                nombre: nombre,
+                mesesSeleccionados: [],
+                incluirCertificado: false
+            };
+
+            const mesesNombres = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+            let checklistHtml = '';
+            if (soloCertificado) {
+                checklistHtml = '<div style="text-align: center; padding: 20px; color: #b68b40;">💰 Para pagar solo el certificado, marca la opción de abajo</div>';
+            } else if (mesesDeuda.length > 0) {
+                mesesDeuda.forEach(({ año, mes }) => {
+                    checklistHtml += `
+                <div class="month-check-item" data-año="${año}" data-mes="${mes}">
+                    <input type="checkbox" class="month-checkbox-item" value="${mesesNombres[mes]}_${año}" data-año="${año}" data-mes="${mes}">
+                    <span class="month-name">${mesesNombres[mes]} ${año}</span>
+                    <span class="month-value">$${CONFIG.VALOR_CUOTA.toLocaleString()}</span>
+                </div>
+            `;
+                });
+            } else {
+                checklistHtml = '<div style="text-align: center; padding: 20px; color: #5ab05a;">✅ No hay meses pendientes de pago</div>';
+            }
+
+            dom.monthsChecklist.innerHTML = checklistHtml;
+            dom.receiptInfo.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: 700; color: #1a4a2a;">${nombre}</span>
+            <span style="background: #e0f0e0; padding: 4px 14px; border-radius: 100px; font-size: 0.7rem; font-weight: 600;">${cedula}</span>
+        </div>
+    `;
+
+            dom.includeCertificateCheckbox.checked = false;
+            dom.receiptNumber.value = dom.nextReceiptNumber.textContent;
+
+            // Establecer la fecha actual por defecto en el campo de fecha
+            const hoy = new Date();
+            const fechaActualStr = hoy.toISOString().split('T')[0];
+            const fechaInput = document.getElementById('paymentDate');
+            if (fechaInput) {
+                fechaInput.value = fechaActualStr;
+            }
+
+            const actualizarTotal = () => {
+                let total = 0;
+                if (!soloCertificado) {
+                    document.querySelectorAll('.month-checkbox-item:checked').forEach(cb => {
+                        total += CONFIG.VALOR_CUOTA;
+                    });
+                }
+                if (dom.includeCertificateCheckbox.checked) {
+                    total += CONFIG.VALOR_CERTIFICADO;
+                }
+                dom.totalAmountDisplay.textContent = `Total: $${total.toLocaleString()}`;
+            };
+
+            document.querySelectorAll('.month-checkbox-item').forEach(cb => {
+                cb.addEventListener('change', actualizarTotal);
+            });
+
+            dom.includeCertificateCheckbox.addEventListener('change', actualizarTotal);
+
+            document.querySelectorAll('.month-check-item').forEach(item => {
+                const checkbox = item.querySelector('.month-checkbox-item');
+                item.addEventListener('click', (e) => {
+                    if (e.target !== checkbox) {
+                        checkbox.checked = !checkbox.checked;
+                        actualizarTotal();
+                    }
+                });
+            });
+
+            actualizarTotal();
+            dom.receiptModal.style.display = 'flex';
+        }
+
+        window.handleMonthClick = function (element) {
+            resetInactivityTimer();
+            if (!element.classList.contains('debt')) return;
+            if (!element.dataset.cedula || !element.dataset.nombre) {
+                mostrarAlerta('Error: Datos incompletos', 'error');
+                return;
+            }
+
+            const cedula = element.dataset.cedula;
+            const nombre = element.dataset.nombre;
+            const afiliado = appState.afiliados.find(a => a.cedula === cedula);
+            const mesesDeuda = calcularMesesDeuda(cedula, afiliado.fecha);
+
+            if (mesesDeuda.length === 0) {
+                mostrarAlerta('✅ Este afiliado no tiene meses pendientes', 'success');
+                return;
+            }
+
+            abrirModalPagosMultiples(cedula, nombre, mesesDeuda, false);
+        };
+
+        async function guardarPagoMultiple() {
+            resetInactivityTimer();
+            if (!appState.pendingPayment) return mostrarAlerta('❌ No hay pago pendiente', 'error');
+
+            const recibo = dom.receiptNumber.value.trim();
+            if (!recibo) return mostrarAlerta('❌ Número de recibo obligatorio', 'error');
+            if (!/^\d{5}$/.test(recibo)) {
+                return mostrarAlerta('❌ El recibo debe tener 5 dígitos (ej: 00001)', 'error');
+            }
+
+            // Obtener la fecha seleccionada por el usuario
+            const fechaSeleccionada = document.getElementById('paymentDate').value;
+            let fechaPagoReal, fechaFormateada, horaFormateada;
+
+            if (fechaSeleccionada) {
+                // Usar la fecha seleccionada por el usuario
+                const partes = fechaSeleccionada.split('-');
+                fechaPagoReal = new Date(parseInt(partes[0]), parseInt(partes[1]) - 1, parseInt(partes[2]));
+                fechaFormateada = `${partes[2]}/${partes[1]}/${partes[0]}`;
+                // Hora actual del registro en el sistema
+                const ahora = new Date();
+                horaFormateada = formatearHora(ahora);
+            } else {
+                // Fallback: usar fecha y hora actual
+                const ahora = new Date();
+                fechaPagoReal = ahora;
+                fechaFormateada = formatearFecha(ahora);
+                horaFormateada = formatearHora(ahora);
+            }
+
+            const mesesSeleccionados = [];
+            document.querySelectorAll('.month-checkbox-item:checked').forEach(cb => {
+                mesesSeleccionados.push({
+                    año: parseInt(cb.dataset.año),
+                    mes: parseInt(cb.dataset.mes),
+                    nombreMes: cb.value.split('_')[0]
+                });
+            });
+
+            const incluirCertificado = dom.includeCertificateCheckbox.checked;
+
+            if (mesesSeleccionados.length === 0 && !incluirCertificado) {
+                return mostrarAlerta('❌ Debes seleccionar al menos un mes o un certificado', 'error');
+            }
+
+            const ahoraRegistro = new Date();
+            const fechaRegistro = formatearFecha(ahoraRegistro);
+            const horaRegistro = formatearHora(ahoraRegistro);
+
+            const todosPagos = obtenerTodosLosPagos();
+            const pagosConEsteRecibo = todosPagos.filter(p => p.recibo === recibo);
+
+            if (pagosConEsteRecibo.length > 0) {
+                const esOtroUsuario = pagosConEsteRecibo.some(p => p.cedula !== appState.pendingPayment.cedula);
+                if (esOtroUsuario) {
+                    return mostrarAlerta(`❌ Recibo ${recibo} ya fue usado por otro afiliado`, 'error');
+                }
+
+                let fechaMasAntigua = null;
+                pagosConEsteRecibo.forEach(p => {
+                    if (p.cedula === appState.pendingPayment.cedula) {
+                        const [dia, mes, año] = p.fecha.split('/').map(Number);
+                        let fechaPago;
+                        if (p.hora) {
+                            const [horaP, minP, segP] = p.hora.split(':').map(Number);
+                            fechaPago = new Date(año, mes - 1, dia, horaP, minP, segP);
+                        } else {
+                            fechaPago = new Date(año, mes - 1, dia, 0, 0, 0);
+                        }
+                        if (!fechaMasAntigua || fechaPago < fechaMasAntigua) {
+                            fechaMasAntigua = fechaPago;
+                        }
+                    }
+                });
+
+                if (fechaMasAntigua) {
+                    const diferenciaMinutos = (ahoraRegistro - fechaMasAntigua) / (1000 * 60);
+                    if (diferenciaMinutos > 30) {
+                        const minutos = Math.floor(diferenciaMinutos % 60);
+                        return mostrarAlerta(`❌ Recibo ${recibo} expiró (hace ${minutos}min). Máximo 30 minutos para usar el mismo recibo.`, 'error');
+                    }
+                }
+            }
+
+            if (!appState.githubToken) return mostrarAlerta('❌ Token de GitHub no disponible', 'error');
+
+            const saveBtn = dom.saveReceiptBtn;
+            const originalText = saveBtn.innerHTML;
+
+            try {
+                saveBtn.innerHTML = '<span class="loading">⌛</span> Guardando';
+                saveBtn.disabled = true;
+
+                let registro = appState.pagos.find(p => p.cedula === appState.pendingPayment.cedula);
+                if (!registro) {
+                    registro = { cedula: appState.pendingPayment.cedula, nombre: appState.pendingPayment.nombre };
+                    appState.pagos.push(registro);
+                }
+
+                const mesesNombres = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+
+                for (const mesItem of mesesSeleccionados) {
+                    const campo = `fecha_pago_año_${mesItem.año}`;
+                    // Usar FECHA REAL (seleccionada por usuario) y HORA DE REGISTRO (actual)
+                    const pagoStr = `${mesesNombres[mesItem.mes]}_${mesItem.año}_${CONFIG.VALOR_CUOTA}_${fechaFormateada}_${horaRegistro}_${recibo}`;
+                    registro[campo] = registro[campo] ? `${registro[campo]}; ${pagoStr}` : pagoStr;
+                }
+
+                if (incluirCertificado) {
+                    const mesActual = mesesNombres[appState.fechaActual.getMonth()];
+                    const añoActual = appState.fechaActual.getFullYear();
+                    // Usar FECHA REAL (seleccionada por usuario) y HORA DE REGISTRO (actual)
+                    const certificadoStr = `${mesActual}_${añoActual}_${CONFIG.VALOR_CERTIFICADO}_${fechaFormateada}_${horaRegistro}_${recibo}`;
+                    registro.certificado = registro.certificado ? `${registro.certificado}; ${certificadoStr}` : certificadoStr;
+                }
+
+                await guardarPagosEnGitHub();
+                calcularEstadisticas();
+                actualizarSiguienteRecibo();
+                renderizarTabla();
+
+                let mensaje = `✅ Pago registrado - Recibo: ${recibo}\n`;
+                mensaje += `📅 Fecha de pago: ${fechaFormateada}\n`;
+                mensaje += `🕐 Registrado: ${horaRegistro}\n`;
+                if (mesesSeleccionados.length > 0) mensaje += `💰 ${mesesSeleccionados.length} cuota(s) pagada(s)\n`;
+                if (incluirCertificado) mensaje += `📜 Certificado incluido`;
+                mostrarAlerta(mensaje, 'success');
+
+                dom.receiptModal.style.display = 'none';
+                appState.pendingPayment = null;
+            } catch (e) {
+                mostrarAlerta('Error al guardar: ' + e.message, 'error');
+            } finally {
+                saveBtn.innerHTML = originalText;
+                saveBtn.disabled = false;
+            }
+        }
+
+        window.verDetalle = function (cedula) {
+            resetInactivityTimer();
+            const afiliado = appState.afiliados.find(a => a.cedula === cedula);
+            if (!afiliado) return;
+
+            dom.modalNombre.textContent = `📋 ${afiliado.nombre}`;
+            const registro = appState.pagos.find(p => p.cedula === cedula) || {};
+            const info = calcularInfoDetalle(cedula, afiliado.fecha);
+            const mesesDeuda = calcularMesesDeuda(cedula, afiliado.fecha);
+
+            let html = `<div style="background: #f0f8f0; padding: 16px; border-radius: 14px; margin-bottom: 16px; border-left: 0px solid #2a7a4a;">
+                <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; text-align: center;">
+                    <div><div style="font-size: 0.65rem; color: #4a6b4a; text-transform: uppercase; margin-bottom: 4px;">Meses Pagados</div><div style="font-size: 1.3rem; font-weight: 700; color: #1a7a3a;">${info.mesesPagados}</div></div>
+                    <div><div style="font-size: 0.65rem; color: #4a6b4a; text-transform: uppercase; margin-bottom: 4px;">Meses Condonados</div><div style="font-size: 1.3rem; font-weight: 700; color: #ffd966;">${info.mesesCondonados}</div></div>
+                    <div><div style="font-size: 0.65rem; color: #4a6b4a; text-transform: uppercase; margin-bottom: 4px;">Meses Debe</div><div style="font-size: 1.3rem; font-weight: 700; color: #c04040;">${info.mesesDeuda}</div></div>
+                    <div><div style="font-size: 0.65rem; color: #4a6b4a; text-transform: uppercase; margin-bottom: 4px;">Valor Pagado</div><div style="font-size: 1.3rem; font-weight: 700; color: #1a7a3a;">$${info.valorPagado.toLocaleString()}</div></div>
+                    <div><div style="font-size: 0.65rem; color: #4a6b4a; text-transform: uppercase; margin-bottom: 4px;">Valor Debe</div><div style="font-size: 1.3rem; font-weight: 700; color: #c04040;">$${info.valorDebe.toLocaleString()}</div></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px solid #d0e0d0;">
+                    <span style="font-weight: 600; color: #1a4a2a;">Cédula:</span>
+                    <span style="font-weight: 600;">${afiliado.cedula}</span>
+                    <span style="font-weight: 600; color: #1a4a2a;">Afiliación:</span>
+                    <span style="background: #e0f0e0; padding: 4px 14px; border-radius: 100px;">${afiliado.fecha}</span>
+                </div>
+            </div>`;
+
+            // Botones de acción en el detalle
+            html += `<div style="margin-bottom: 16px; text-align: center; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">`;
+            if (mesesDeuda.length > 0) {
+                html += `<button onclick="window.abrirPagoMultipleDesdeDetalle('${afiliado.cedula}', '${afiliado.nombre.replace(/'/g, "\\'")}')" class="btn btn-primary" style="background: #1a4a2a; padding: 8px 20px;">
+                    💰 Pagar ${mesesDeuda.length} mes(es) pendiente(s)
+                </button>`;
+            }
+            html += `<button onclick="window.abrirPagoCertificadoDesdeDetalle('${afiliado.cedula}', '${afiliado.nombre.replace(/'/g, "\\'")}')" class="btn btn-warning" style="background: #b68b40; padding: 8px 20px;">
+                📜 Pagar Certificado
+            </button>`;
+            html += `</div>`;
+
+            const mesesNombres = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+            const afiliacion = parseFecha(afiliado.fecha);
+            const hoy = appState.fechaActual;
+            const mesesCondonadosLista = [];
+
+            for (let año = afiliacion.getFullYear(); año <= hoy.getFullYear(); año++) {
+                const mesInicio = (año === afiliacion.getFullYear()) ? afiliacion.getMonth() : 0;
+                const mesFin = (año === hoy.getFullYear()) ? hoy.getMonth() : 11;
+                for (let mes = mesInicio; mes <= mesFin; mes++) {
+                    if (esMesCondonado(año, mes) && !mesEstaPagado(cedula, año, mes)) {
+                        mesesCondonadosLista.push({ año, mes });
+                    }
+                }
+            }
+
+            if (mesesCondonadosLista.length > 0) {
+                html += `<h4 style="margin: 20px 0 12px; font-weight: 700; color: #ffd966;">✨ Meses condonados (valor $0)</h4>`;
+                html += `<div style="background: #fff9e6; border: 1px solid #ffd966; border-radius: 14px; padding: 16px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 2px;">`;
+                mesesCondonadosLista.forEach(({ año, mes }) => {
+                    html += `<span style="background: #ffd966; color: #1a4a2a; padding: 6px 14px; border-radius: 100px; font-weight: 600; font-size: 0.75rem;">${mesesNombres[mes]} ${año}</span>`;
+                });
+                html += `</div>`;
+            }
+
+            html += `<h4 style="margin-bottom: 14px; font-weight: 700; color: #1a4a2a;">💰 Historial de pagos</h4>`;
+            let hayPagos = false;
+            const años = [];
+            for (let año = parseFecha(afiliado.fecha).getFullYear(); año <= appState.fechaActual.getFullYear(); año++) años.push(año);
+            años.sort((a, b) => b - a).forEach(año => {
+                const pagos = extraerPagosDeString(registro[`fecha_pago_año_${año}`], año);
+                if (pagos.length) {
+                    hayPagos = true;
+                    html += `<div style="background: white; border: 1px solid #d8ecd8; border-radius: 14px; padding: 14px; margin-bottom: 14px;">`;
+                    html += `<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <span style="font-weight: 700; color: #1a4a2a;">📆 ${año}</span>
+                        <span style="background: #e0f0e0; padding: 4px 12px; border-radius: 100px; font-size: 0.65rem; font-weight: 600;">${pagos.length} cuotas</span>
+                    </div>`;
+                    pagos.forEach(p => {
+                        html += `<div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #e0f0e0;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="text-transform: capitalize; font-weight: 600;">${p.mes}</span>
+                                <span style="color: #4a6b4a;">${p.año}</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <span style="font-weight: 700; color: #1a7a3a;">$${p.valor.toLocaleString()}</span>
+                                <span style="color: #4a6b4a; background: #f0f8f0; padding: 4px 10px; border-radius: 100px; font-size: 0.6rem;">${p.fecha}</span>
+                                <span style="background: #1a4a2a; color: white; padding: 4px 10px; border-radius: 100px; font-size: 0.6rem;">${p.recibo}</span>
+                            </div>
+                        </div>`;
+                    });
+                    html += `</div>`;
+                }
+            });
+
+            if (registro.certificado) {
+                const certificados = extraerCertificadosDeString(registro.certificado);
+                if (certificados.length) {
+                    hayPagos = true;
+                    html += `<h4 style="margin: 20px 0 12px; font-weight: 700; color: #b68b40;">📜 Certificados emitidos</h4>`;
+                    html += `<div style="background: #fff9e6; border: 1px solid #ffd966; border-radius: 14px; padding: 14px; margin-bottom: 16px;">`;
+                    certificados.forEach(c => {
+                        html += `<div style="display: flex; justify-content: space-between; align-items: center; padding: 2px 0; border-bottom: 1px solid #ffd966;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="text-transform: capitalize; font-weight: 600;">${c.mes} ${c.año}</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <span style="font-weight: 700; color: #b68b40;">$${c.valor.toLocaleString()}</span>
+                                <span style="color: #4a6b4a; background: #f0f8f0; padding: 4px 10px; border-radius: 100px; font-size: 0.6rem;">${c.fecha} ${c.hora}</span>
+                                <span style="background: #b68b40; color: white; padding: 4px 10px; border-radius: 100px; font-size: 0.6rem;">${c.recibo}</span>
+                            </div>
+                        </div>`;
+                    });
+                    html += `</div>`;
+                }
+            }
+
+            if (!hayPagos) {
+                html += `<div style="padding: 8px; text-align: center; background: #f0f8f0; border-radius: 14px; color: #4a6b4a;">No hay pagos registrados</div>`;
+            }
+
+            if (mesesDeuda.length) {
+                html += `<h4 style="color: #c04040; margin: 20px 0 12px; font-weight: 700;">⚠️ Deuda pendiente</h4>`;
+                html += `<div style="background: #fff0f0; padding: 16px; border-radius: 14px; border: 1px solid #e0b0b0;">`;
+                mesesDeuda.forEach(({ año, mes }) => {
+                    html += `<div style="display: flex; justify-content: space-between; align-items: center; padding: 2px 0; border-bottom: 1px solid #ffd0d0;">
+                        <span style="text-transform: capitalize; font-weight: 600; color: #a04040;">${mesesNombres[mes]} ${año}</span>
+                        <span style="font-weight: 700; color: #c04040;">$${CONFIG.VALOR_CUOTA.toLocaleString()}</span>
+                    </div>`;
+                });
+                html += `<div style="margin-top: 12px; padding-top: 10px; display: flex; justify-content: space-between; align-items: center; font-weight: 700;">
+                    <span style="color: #a04040;">Total deuda:</span>
+                    <span style="color: #c04040; font-size: 1rem;">$${(mesesDeuda.length * CONFIG.VALOR_CUOTA).toLocaleString()}</span>
+                </div>`;
+                html += `</div>`;
+            } else {
+                html += `<div style="background: #e4ffe4; padding: 20px; border-radius: 14px; text-align: center; margin-top: 20px; border: 1px solid #a0d0a0;">
+                    <span style="color: #1a7a3a; font-weight: 700;">✓ Al día - No tiene deudas</span>
+                </div>`;
+            }
+
+            dom.modalContent.innerHTML = html;
+            dom.modal.style.display = 'flex';
+        };
+
+        // Función para abrir pago de certificado desde detalle
+        window.abrirPagoCertificadoDesdeDetalle = function (cedula, nombre) {
+            resetInactivityTimer();
+            dom.modal.style.display = 'none';
+            abrirModalPagosMultiples(cedula, nombre, [], true);
+        };
+
+        // Función para abrir pago múltiple desde el detalle
+        window.abrirPagoMultipleDesdeDetalle = function (cedula, nombre) {
+            resetInactivityTimer();
+            const afiliado = appState.afiliados.find(a => a.cedula === cedula);
+            if (!afiliado) return;
+            const mesesDeuda = calcularMesesDeuda(cedula, afiliado.fecha);
+            if (mesesDeuda.length === 0) {
+                mostrarAlerta('✅ Este afiliado no tiene meses pendientes', 'success');
+                return;
+            }
+            dom.modal.style.display = 'none';
+            abrirModalPagosMultiples(cedula, nombre, mesesDeuda, false);
+        };
+
+        function generarReporteCompacto(titulo, filtroFn) {
+            resetInactivityTimer();
+            const todosLosPagos = obtenerTodosLosPagos();
+            let pagosFiltrados = todosLosPagos;
+            if (filtroFn) pagosFiltrados = todosLosPagos.filter(filtroFn);
+
+            const usuarios = {};
+            pagosFiltrados.forEach(p => {
+                if (!usuarios[p.cedula]) {
+                    usuarios[p.cedula] = { cedula: p.cedula, nombre: p.nombre, items: [], total: 0 };
+                }
+                const tipoIcon = p.tipo === 'cuota' ? '💰' : '📜';
+                usuarios[p.cedula].items.push({
+                    tipo: p.tipo, icon: tipoIcon,
+                    mes: p.mes ? p.mes.charAt(0).toUpperCase() + p.mes.slice(1, 3) : 'Cert',
+                    año: p.año, fecha: p.fecha, hora: p.hora || '', valor: p.valor, recibo: p.recibo
+                });
+                usuarios[p.cedula].total += p.valor;
+            });
+
+            let html = `<table style="width: 100%; border-collapse: collapse; font-size: 0.7rem; table-layout: fixed;">
+                <colgroup><col style="width: 12%"><col style="width: 25%"><col style="width: 38%"><col style="width: 25%"></colgroup>
+                <thead><tr style="background: #1a4a2a; color: white;">
+                    <th style="padding: 10px; text-align: center;">Cédula</th>
+                    <th style="padding: 10px; text-align: left;">Nombre</th>
+                    <th style="padding: 10px; text-align: left;">Detalle</th>
+                    <th style="padding: 10px; text-align: right;">Total</th>
+                    </tr></thead><tbody>`;
+
+            if (Object.keys(usuarios).length === 0) {
+                html += `<tr><td colspan="4" style="padding: 40px; text-align: center; color: #6a8b6a;">No hay registros para este período</td></tr>`;
+            } else {
+                Object.values(usuarios).sort((a, b) => a.nombre.localeCompare(b.nombre)).forEach(u => {
+                    html += `<tr style="border-bottom: 1px solid #d8ecd8;">`;
+                    html += `<td style="padding: 8px; font-weight: 600; text-align: center;">${u.cedula}</td>`;
+                    html += `<td style="padding: 8px; text-align: left;">${u.nombre}</td>`;
+                    html += `<td style="padding: 8px; text-align: left;">`;
+                    u.items.sort((a, b) => b.año - a.año || a.mes.localeCompare(b.mes)).forEach(item => {
+                        let detalle = item.tipo === 'cuota' ? `${item.icon} ${item.mes} ${item.año}` : `${item.icon} Certificado ${item.mes} ${item.año}`;
+                        html += `<span class="month-badge" style="display: inline-block; margin: 2px; background: ${item.tipo === 'cuota' ? '#e0f0e0' : '#fff3cd'}; white-space: nowrap;" title="Recibo: ${item.recibo} - Fecha: ${item.fecha}">${detalle}</span> `;
+                    });
+                    html += `</td><td style="padding: 8px; text-align: right; font-weight: 700; color: #1a7a3a;">$${u.total.toLocaleString()}</td></tr>`;
+                });
+                const total = Object.values(usuarios).reduce((s, u) => s + u.total, 0);
+                html += `<tr style="background: #e0f0e0; font-weight: 700;">
+                    <td colspan="3" style="padding: 10px; text-align: right;">Total general:</td>
+                    <td style="padding: 10px; text-align: right; color: #1a4a2a;">$${total.toLocaleString()}</td>
+                    </tr>`;
+            }
+            html += `</tbody></table>`;
+            dom.reportTitle.textContent = titulo;
+            dom.reportContent.innerHTML = html;
+            dom.reportModal.style.display = 'flex';
+        }
+
+        function generarReporteCertificados() {
+            resetInactivityTimer();
+            const todosPagos = obtenerTodosLosPagos();
+            const certificados = todosPagos.filter(p => p.tipo === 'certificado');
+
+            let html = `<table style="width: 100%; border-collapse: collapse; font-size: 0.7rem;">
+                <thead><tr style="background: #b68b40; color: white;">
+                    <th style="padding: 10px;">Recibo</th><th style="padding: 10px;">Cédula</th>
+                    <th style="padding: 10px;">Nombre</th><th style="padding: 10px;">Fecha</th>
+                    <th style="padding: 10px;">Hora</th><th style="padding: 10px;">Valor</th>
+                    </tr></thead><tbody>`;
+
+            if (certificados.length === 0) {
+                html += `<tr><td colspan="6" style="padding: 40px; text-align: center;">No hay certificados emitidos</td></tr>`;
+            } else {
+                certificados.sort((a, b) => b.fechaObj - a.fechaObj).forEach(c => {
+                    html += `<tr style="border-bottom: 1px solid #ffd966;">
+                        <td style="padding: 8px; text-align: center; font-weight: 600;">${c.recibo}</td>
+                        <td style="padding: 8px; text-align: center;">${c.cedula}</td>
+                        <td style="padding: 8px;">${c.nombre}</td>
+                        <td style="padding: 8px; text-align: center;">${c.fecha}</td>
+                        <td style="padding: 8px; text-align: center;">${c.hora}</td>
+                        <td style="padding: 8px; text-align: right; font-weight: 700; color: #b68b40;">$${c.valor.toLocaleString()}</td>
+                        </tr>`;
+                });
+                const total = certificados.reduce((s, c) => s + c.valor, 0);
+                html += `<tr style="background: #fff3cd; font-weight: 700;">
+                    <td colspan="5" style="padding: 10px; text-align: right;">Total certificados:</td>
+                    <td style="padding: 10px; text-align: right;">$${total.toLocaleString()}</td>
+                    </tr>`;
+            }
+            html += `</tbody></table>`;
+            dom.reportTitle.textContent = '📜 Certificados emitidos';
+            dom.reportContent.innerHTML = html;
+            dom.reportModal.style.display = 'flex';
+        }
+
+        function mostrarAlerta(msg, tipo = 'error') {
+            dom.alertMessage.textContent = msg;
+            dom.alertMessage.className = `alert show alert-${tipo}`;
+            setTimeout(() => dom.alertMessage.classList.remove('show'), 4000);
+        }
+
+        // ============================================================
+        // PROCESAR VALIDACIÓN DE TOKEN DE GITHUB
+        // ============================================================
+        async function procesarValidacionGithubToken() {
+            const githubToken = dom.githubTokenInput.value.trim();
+            if (!githubToken) {
+                dom.githubTokenError.style.display = 'block';
+                dom.githubTokenError.textContent = '❌ Debes ingresar un token de GitHub';
+                return;
+            }
+
+            dom.validateGithubTokenBtn.disabled = true;
+            dom.validateGithubTokenBtn.innerHTML = '<span class="loading">⌛</span> Validando...';
+
+            const esValido = await validarTokenGitHub(githubToken);
+
+            if (esValido) {
+                appState.rememberGithubToken = dom.rememberGithubTokenCheckbox.checked;
+                if (appState.rememberGithubToken) {
+                    localStorage.setItem('github_token', githubToken);
+                } else {
+                    localStorage.removeItem('github_token');
+                }
+                await cargarDatosConGithubToken(githubToken);
+            } else {
+                dom.githubTokenError.style.display = 'block';
+                dom.githubTokenError.textContent = '❌ Token de GitHub inválido. Intenta nuevamente.';
+                dom.validateGithubTokenBtn.disabled = false;
+                dom.validateGithubTokenBtn.innerHTML = 'Validar y continuar';
+            }
+        }
+
+        // ============================================================
+        // INICIALIZACIÓN
+        // ============================================================
+        async function inicializar() {
+            const añoActual = appState.fechaActual.getFullYear();
+            for (let i = 2024; i <= añoActual; i++) {
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.textContent = i;
+                dom.yearSelect.appendChild(opt);
+            }
+            dom.yearSelect.value = añoActual;
+            dom.fechaActualDisplay.textContent = formatearFecha(appState.fechaActual);
+
+            dom.validateAccessTokenBtn.addEventListener('click', procesarValidacionAccessToken);
+            dom.validateGithubTokenBtn.addEventListener('click', procesarValidacionGithubToken);
+            dom.changeTokenBtn.addEventListener('click', cambiarToken);
+
+            dom.accessTokenInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') procesarValidacionAccessToken();
+            });
+            dom.githubTokenInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') procesarValidacionGithubToken();
+            });
+
+            const tokenGuardado = localStorage.getItem('jac_access_token');
+
+            if (tokenGuardado) {
+                const validacion = validarTokenAcceso(tokenGuardado);
+
+                if (validacion.valido) {
+                    appState.accessTokenData = validacion.data;
+                    iniciarMonitorTokenAcceso(validacion.data.fechaExpiracion);
+                    dom.accessTokenModal.style.display = 'none';
+
+                    const githubToken = localStorage.getItem('github_token');
+                    if (githubToken) {
+                        const valido = await validarTokenGitHub(githubToken);
+                        if (valido) {
+                            await cargarDatosConGithubToken(githubToken);
+                            return;
+                        }
+                    }
+
+                    dom.githubTokenModal.style.display = 'flex';
+                    dom.githubTokenInput.focus();
+                    return;
+                } else {
+                    localStorage.removeItem('jac_access_token');
+                }
+            }
+
+            dom.accessTokenModal.style.display = 'flex';
+            dom.accessTokenInput.focus();
+        }
+
+        // ============================================================
+        // EVENTOS DEL PANEL
+        // ============================================================
+        function inicializarEventosPanel() {
+            dom.searchInput.addEventListener('input', (e) => {
+                resetInactivityTimer();
+                appState.filtroActual = e.target.value;
+                appState.currentPage = 1;
+                if (appState.tablaVisible) renderizarTabla();
+            });
+
+            const logoutTempBtn = document.getElementById('logoutTempBtn');
+            const logoutTempConfirmModal = document.getElementById('logoutTempConfirmModal');
+            const closeLogoutTempModalBtn = document.getElementById('closeLogoutTempModalBtn');
+            const confirmLogoutTempBtn = document.getElementById('confirmLogoutTempBtn');
+            const cancelLogoutTempBtn = document.getElementById('cancelLogoutTempBtn');
+
+            if (logoutTempBtn) {
+                logoutTempBtn.addEventListener('click', () => {
+                    resetInactivityTimer();
+                    logoutTempConfirmModal.style.display = 'flex';
+                });
+            }
+            if (closeLogoutTempModalBtn) closeLogoutTempModalBtn.addEventListener('click', () => logoutTempConfirmModal.style.display = 'none');
+            if (cancelLogoutTempBtn) cancelLogoutTempBtn.addEventListener('click', () => logoutTempConfirmModal.style.display = 'none');
+            if (confirmLogoutTempBtn) confirmLogoutTempBtn.addEventListener('click', () => cerrarSesionTemporal());
+
+            const logoutFullBtn = document.getElementById('logoutFullBtn');
+            const logoutFullConfirmModal = document.getElementById('logoutFullConfirmModal');
+            const closeLogoutFullModalBtn = document.getElementById('closeLogoutFullModalBtn');
+            const confirmLogoutFullBtn = document.getElementById('confirmLogoutFullBtn');
+            const cancelLogoutFullBtn = document.getElementById('cancelLogoutFullBtn');
+
+            if (logoutFullBtn) {
+                logoutFullBtn.addEventListener('click', () => {
+                    resetInactivityTimer();
+                    logoutFullConfirmModal.style.display = 'flex';
+                });
+            }
+            if (closeLogoutFullModalBtn) closeLogoutFullModalBtn.addEventListener('click', () => logoutFullConfirmModal.style.display = 'none');
+            if (cancelLogoutFullBtn) cancelLogoutFullBtn.addEventListener('click', () => logoutFullConfirmModal.style.display = 'none');
+            if (confirmLogoutFullBtn) confirmLogoutFullBtn.addEventListener('click', () => cerrarSesionCompleta());
+
+            dom.redirectToLoginBtn.addEventListener('click', () => window.location.href = 'index.html');
+            dom.redirectToLoginTokenBtn.addEventListener('click', () => window.location.href = 'index.html');
+
+            window.addEventListener('click', (e) => {
+                if (e.target === logoutTempConfirmModal) logoutTempConfirmModal.style.display = 'none';
+                if (e.target === logoutFullConfirmModal) logoutFullConfirmModal.style.display = 'none';
+                if (e.target === dom.sessionExpiredModal) window.location.href = 'index.html';
+                if (e.target === dom.tokenExpiredModal) window.location.href = 'index.html';
+            });
+
+            dom.toggleTableBtn.addEventListener('click', () => {
+                resetInactivityTimer();
+                appState.tablaVisible = !appState.tablaVisible;
+                dom.tableContainer.style.display = appState.tablaVisible ? 'block' : 'none';
+                dom.toggleTableBtn.innerHTML = appState.tablaVisible ? '🕵️ Ocultar tabla' : '📋 Mostrar tabla';
+                if (appState.tablaVisible) {
+                    appState.currentPage = 1;
+                    renderizarTabla();
+                }
+            });
+
+            dom.yearSelect.addEventListener('change', (e) => {
+                resetInactivityTimer();
+                appState.selectedYear = parseInt(e.target.value);
+                if (appState.tablaVisible) renderizarTabla();
+            });
+
+            dom.prevPageBtn.addEventListener('click', () => {
+                resetInactivityTimer();
+                if (appState.currentPage > 1) { appState.currentPage--; renderizarTabla(); }
+            });
+            dom.nextPageBtn.addEventListener('click', () => {
+                resetInactivityTimer();
+                if (appState.currentPage < appState.totalPages) { appState.currentPage++; renderizarTabla(); }
+            });
+            dom.goToPageBtn.addEventListener('click', () => {
+                resetInactivityTimer();
+                const page = parseInt(dom.pageInput.value);
+                if (page >= 1 && page <= appState.totalPages) { appState.currentPage = page; renderizarTabla(); }
+            });
+
+            dom.closeReceiptBtn.addEventListener('click', () => {
+                resetInactivityTimer();
+                dom.receiptModal.style.display = 'none';
+                appState.pendingPayment = null;
+            });
+            dom.cancelReceiptBtn.addEventListener('click', () => {
+                resetInactivityTimer();
+                dom.receiptModal.style.display = 'none';
+                appState.pendingPayment = null;
+            });
+            dom.saveReceiptBtn.addEventListener('click', guardarPagoMultiple);
+
+            const saveBtn = document.getElementById('savePaymentsBtn');
+            if (saveBtn) {
+                saveBtn.addEventListener('click', async () => {
+                    resetInactivityTimer();
+                    if (appState.sincronizando) { mostrarAlerta('⏳ Ya está sincronizando...', 'info'); return; }
+                    try {
+                        saveBtn.innerHTML = '<span class="loading">⌛</span> Sincronizando';
+                        saveBtn.disabled = true;
+                        await guardarPagosEnGitHub();
+                        mostrarAlerta('✅ Datos sincronizados con GitHub', 'success');
+                    } catch (e) {
+                        mostrarAlerta('Error al sincronizar: ' + e.message, 'error');
+                    } finally {
+                        saveBtn.innerHTML = '💾 Guardar Todo';
+                        saveBtn.disabled = false;
+                    }
+                });
+            }
+
+            dom.paymentsTodayBtn.addEventListener('click', () => {
+                resetInactivityTimer();
+                const hoy = appState.fechaActual;
+                const fechaHoyStr = formatearFecha(hoy);
+                generarReporteCompacto(`Pagos del día ${fechaHoyStr}`, p => p.fecha === fechaHoyStr);
+            });
+            dom.paymentsMonthBtn.addEventListener('click', () => {
+                resetInactivityTimer();
+                const mesActual = appState.fechaActual.getMonth();
+                const añoActual = appState.fechaActual.getFullYear();
+                const nombreMes = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'][mesActual];
+                generarReporteCompacto(`Pagos de ${nombreMes} ${añoActual}`, p => {
+                    const [dia, mes, año] = p.fecha.split('/').map(Number);
+                    return (mes - 1) === mesActual && año === añoActual;
+                });
+            });
+            dom.paymentsYearBtn.addEventListener('click', () => {
+                resetInactivityTimer();
+                const añoActual = appState.fechaActual.getFullYear();
+                generarReporteCompacto(`Pagos del año ${añoActual}`, p => {
+                    const [dia, mes, año] = p.fecha.split('/').map(Number);
+                    return año === añoActual;
+                });
+            });
+            dom.paymentsAllBtn.addEventListener('click', () => {
+                resetInactivityTimer();
+                generarReporteCompacto('Todos los pagos');
+            });
+            dom.certificatesReportBtn.addEventListener('click', () => {
+                resetInactivityTimer();
+                generarReporteCertificados();
+            });
+
+            dom.printReportBtn.addEventListener('click', () => {
+                resetInactivityTimer();
+                const w = window.open('', '_blank');
+                w.document.write(`<html><head><title>${dom.reportTitle.textContent}</title><style>body{font-family:'Inter',Arial;padding:40px;}table{border-collapse:collapse;width:100%;}th{background:#1a4a2a;color:white;padding:10px;}td{padding:8px;border:1px solid #ddd;}</style></head><body><h1 style="color:#1a4a2a;">JAC Bateas - ${dom.reportTitle.textContent}</h1><p>Fecha: ${new Date().toLocaleDateString('es-ES')}</p>${dom.reportContent.innerHTML}</body></html>`);
+                w.document.close();
+                setTimeout(() => w.print(), 300);
+            });
+            dom.printDetailBtn.addEventListener('click', () => {
+                resetInactivityTimer();
+                const w = window.open('', '_blank');
+                w.document.write(`<html><head><title>${dom.modalNombre.textContent}</title><style>body{font-family:'Inter',Arial;padding:40px;}.badge{background:#f0f8f0;padding:4px 14px;border-radius:100px;}</style></head><body><h1 style="color:#1a4a2a;">${dom.modalNombre.textContent}</h1><p>Fecha: ${new Date().toLocaleDateString('es-ES')}</p>${dom.modalContent.innerHTML}</body></html>`);
+                w.document.close();
+                setTimeout(() => w.print(), 300);
+            });
+
+            dom.closeModalBtn.addEventListener('click', () => {
+                resetInactivityTimer();
+                dom.modal.style.display = 'none';
+            });
+            dom.closeReportModalBtn.addEventListener('click', () => {
+                resetInactivityTimer();
+                dom.reportModal.style.display = 'none';
+            });
+
+            window.addEventListener('click', (e) => {
+                if (e.target === dom.modal) dom.modal.style.display = 'none';
+                if (e.target === dom.reportModal) dom.reportModal.style.display = 'none';
+                if (e.target === dom.receiptModal) {
+                    dom.receiptModal.style.display = 'none';
+                    appState.pendingPayment = null;
+                }
+            });
+
+            const toggleAllCardsBtn = document.getElementById('toggleAllCardsBtn');
+            if (toggleAllCardsBtn) {
+                toggleAllCardsBtn.addEventListener('click', () => {
+                    resetInactivityTimer();
+                    const tarjetas = document.querySelectorAll('.stat-card');
+                    let todasVolteadas = true;
+                    tarjetas.forEach(t => { if (!t.classList.contains('flipped')) todasVolteadas = false; });
+                    tarjetas.forEach(t => { if (todasVolteadas) t.classList.remove('flipped'); else t.classList.add('flipped'); });
+                    toggleAllCardsBtn.innerHTML = todasVolteadas ? '<span>👁️</span> Tarjetas' : '<span>🔒</span> Ocultar';
+                });
+            }
+        }
+
+        inicializar();
+        inicializarEventosPanel();
+    </script>
+</body>
+
+</html>
