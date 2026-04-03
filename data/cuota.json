@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-03-30T01:48:35.829Z",
+  "ultima_actualizacion": "2026-04-03T22:59:08.890Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -473,6 +473,13 @@
       "nombre": "PAOLA ANDREA ALVAREZ GASCA",
       "fecha_pago_año_2026": "enero_2026_5000_29/03/2026_20:48:35_00068; febrero_2026_5000_29/03/2026_20:48:35_00068; marzo_2026_5000_29/03/2026_20:48:35_00068",
       "certificado": "marzo_2026_20000_29/03/2026_20:48:35_00068"
+    },
+    {
+      "cedula": "1121856919",
+      "nombre": "ADSURI RODRIGUEZ FUQUEN",
+      "fecha_pago_año_2025": "diciembre_2025_5000_31/03/2026_17:59:08_00082",
+      "fecha_pago_año_2026": "enero_2026_5000_31/03/2026_17:59:08_00082; febrero_2026_5000_31/03/2026_17:59:08_00082; marzo_2026_5000_31/03/2026_17:59:08_00082",
+      "certificado": "abril_2026_20000_31/03/2026_17:59:08_00082"
     }
   ]
 }
