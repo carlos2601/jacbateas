@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
@@ -39,7 +38,6 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -177,22 +175,24 @@
             cursor: pointer;
         }
 
-        /* Buscador */
+        /* Buscador - ESTILOS CORREGIDOS */
         .search-wrapper {
             padding: 16px;
         }
 
         .search-input-wrapper {
             display: flex;
-            gap: 10px;
+            gap: 8px;
+            width: 100%;
         }
 
         .search-input-wrapper input {
             flex: 1;
-            padding: 14px 16px;
+            min-width: 0; /* IMPORTANTE: permite que el input se reduzca */
+            padding: 12px 12px;
             border: 1.5px solid #e0e8e0;
             border-radius: 16px;
-            font-size: 15px;
+            font-size: 14px;
             background: #fafdfa;
         }
 
@@ -204,13 +204,14 @@
         .search-btn {
             background: #1a4a2a;
             border: none;
-            padding: 0 20px;
+            padding: 0 16px;
             border-radius: 16px;
             color: white;
             font-weight: 600;
             cursor: pointer;
             font-size: 14px;
             white-space: nowrap;
+            flex-shrink: 0; /* Evita que el botón se encoja */
         }
 
         .search-hint {
@@ -291,7 +292,6 @@
                 opacity: 0;
                 transform: translateY(10px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -519,9 +519,7 @@
         }
 
         @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
+            to { transform: rotate(360deg); }
         }
 
         /* Alert */
@@ -546,7 +544,6 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -582,290 +579,289 @@
         }
     </style>
 </head>
-
 <body>
 
-    <!-- PANTALLA DE LOGIN -->
-    <div id="loginContainer" class="login-container">
+<!-- PANTALLA DE LOGIN -->
+<div id="loginContainer" class="login-container">
+    <div class="login-icon">🏦</div>
+    <div class="login-title">JAC Bateas</div>
+    <div class="login-subtitle">Consulta de Cuotas · Secretaría</div>
+    
+    <div class="input-group">
+        <label>🔐 Contraseña</label>
+        <input type="password" id="passwordInput" placeholder="Ingrese la contraseña" autofocus>
+    </div>
+    
+    <button class="login-btn" id="loginBtn">Ingresar</button>
+    <div id="loginError" class="error-message">❌ Contraseña incorrecta</div>
+</div>
 
-        <div class="login-title">JAC Bateas</div>
-        <div class="login-subtitle">Consulta de Cuotas · Secretaría</div>
-
-        <div class="input-group">
-            <label>🔐 Contraseña</label>
-            <input type="password" id="passwordInput" placeholder="Ingrese la contraseña" autofocus>
+<!-- APLICACIÓN PRINCIPAL -->
+<div id="appContainer" class="app-container">
+    <!-- Buscador -->
+    <div class="search-card" id="searchCard">
+        <div class="app-header">
+            <div class="header-title">🏦 JAC Bateas</div>
+            <div class="header-subtitle">Consulta de cuotas mensuales</div>
+            <button class="logout-btn" id="logoutBtn">✕ Salir</button>
         </div>
 
-        <button class="login-btn" id="loginBtn">Ingresar</button>
-        <div id="loginError" class="error-message">❌ Contraseña incorrecta</div>
-    </div>
-
-    <!-- APLICACIÓN PRINCIPAL -->
-    <div id="appContainer" class="app-container">
-        <!-- Buscador -->
-        <div class="search-card" id="searchCard">
-            <div class="app-header">
-                <div class="header-title">🏦 JAC Bateas</div>
-                <div class="header-subtitle">Consulta de cuotas mensuales</div>
-                <button class="logout-btn" id="logoutBtn">✕ Salir</button>
+        <div class="search-wrapper">
+            <div class="search-input-wrapper">
+                <input type="text" id="searchInput" placeholder="Cédula, nombre o # recibo..." autocomplete="off">
+                <button class="search-btn" id="searchBtn">Buscar</button>
             </div>
-
-            <div class="search-wrapper">
-                <div class="search-input-wrapper">
-                    <input type="text" id="searchInput" placeholder="Cédula, nombre o # recibo..." autocomplete="off">
-                    <button class="search-btn" id="searchBtn">Buscar</button>
-                </div>
-                <div class="search-hint">
-                    💡 Busca por cédula (ej: 12345), nombre (ej: Carlos) o recibo (ej: 00001)
-                </div>
+            <div class="search-hint">
+                💡 Busca por cédula (ej: 12345), nombre (ej: Carlos) o recibo (ej: 00001)
             </div>
         </div>
-
-        <!-- Contenido de resultados -->
-        <div id="resultsContainer"></div>
     </div>
 
-    <div id="alertToast" class="alert-toast"></div>
+    <!-- Contenido de resultados -->
+    <div id="resultsContainer"></div>
+</div>
 
-    <script>
-        // ============================================================
-        // CONFIGURACIÓN
-        // ============================================================
-        const CONFIG = {
-            PASSWORD: 'Linda0127',
-            VALOR_CUOTA: 5000,
-            SOURCE: {
-                REPO_OWNER: 'carlos2601',
-                REPO_NAME: 'juntadeaccioncomunalbarriobateaspuertogaitanmetalilianalondo-ogallego1010101010101000111010001010010',
-                AFILIADOS_PATH: 'afiliados.json',
-                BRANCH: 'main'
-            },
-            DESTINATION: {
-                REPO_OWNER: 'carlos2601',
-                REPO_NAME: 'jacbateas',
-                CUOTA_PATH: 'data/cuota.json',
-                BRANCH: 'main'
-            }
-        };
+<div id="alertToast" class="alert-toast"></div>
 
-        let appState = {
-            afiliados: [],
-            pagos: [],
-            authenticated: false
-        };
+<script>
+    // ============================================================
+    // CONFIGURACIÓN
+    // ============================================================
+    const CONFIG = {
+        PASSWORD: 'Linda0127',
+        VALOR_CUOTA: 5000,
+        SOURCE: {
+            REPO_OWNER: 'carlos2601',
+            REPO_NAME: 'juntadeaccioncomunalbarriobateaspuertogaitanmetalilianalondo-ogallego1010101010101000111010001010010',
+            AFILIADOS_PATH: 'afiliados.json',
+            BRANCH: 'main'
+        },
+        DESTINATION: {
+            REPO_OWNER: 'carlos2601',
+            REPO_NAME: 'jacbateas',
+            CUOTA_PATH: 'data/cuota.json',
+            BRANCH: 'main'
+        }
+    };
 
-        // ============================================================
-        // FUNCIONES DE CARGA DE DATOS
-        // ============================================================
-        async function cargarAfiliados() {
-            const url = `https://raw.githubusercontent.com/${CONFIG.SOURCE.REPO_OWNER}/${CONFIG.SOURCE.REPO_NAME}/refs/heads/${CONFIG.SOURCE.BRANCH}/${CONFIG.SOURCE.AFILIADOS_PATH}`;
+    let appState = {
+        afiliados: [],
+        pagos: [],
+        authenticated: false
+    };
+
+    // ============================================================
+    // FUNCIONES DE CARGA DE DATOS
+    // ============================================================
+    async function cargarAfiliados() {
+        const url = `https://raw.githubusercontent.com/${CONFIG.SOURCE.REPO_OWNER}/${CONFIG.SOURCE.REPO_NAME}/refs/heads/${CONFIG.SOURCE.BRANCH}/${CONFIG.SOURCE.AFILIADOS_PATH}`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('No se pudo cargar la lista de afiliados');
+        return await res.json();
+    }
+
+    async function cargarPagos() {
+        const url = `https://raw.githubusercontent.com/${CONFIG.DESTINATION.REPO_OWNER}/${CONFIG.DESTINATION.REPO_NAME}/refs/heads/${CONFIG.DESTINATION.BRANCH}/${CONFIG.DESTINATION.CUOTA_PATH}`;
+        try {
             const res = await fetch(url);
-            if (!res.ok) throw new Error('No se pudo cargar la lista de afiliados');
-            return await res.json();
+            if (res.status === 404) return [];
+            const data = await res.json();
+            return data.pagos || [];
+        } catch {
+            return [];
         }
+    }
 
-        async function cargarPagos() {
-            const url = `https://raw.githubusercontent.com/${CONFIG.DESTINATION.REPO_OWNER}/${CONFIG.DESTINATION.REPO_NAME}/refs/heads/${CONFIG.DESTINATION.BRANCH}/${CONFIG.DESTINATION.CUOTA_PATH}`;
-            try {
-                const res = await fetch(url);
-                if (res.status === 404) return [];
-                const data = await res.json();
-                return data.pagos || [];
-            } catch {
-                return [];
-            }
-        }
+    // ============================================================
+    // FUNCIONES DE UTILIDAD - SOLO CUOTAS
+    // ============================================================
+    function parseFecha(fechaStr) {
+        if (!fechaStr) return new Date();
+        const partes = fechaStr.split('/');
+        return new Date(parseInt(partes[2]), parseInt(partes[1]) - 1, parseInt(partes[0]));
+    }
 
-        // ============================================================
-        // FUNCIONES DE UTILIDAD - SOLO CUOTAS
-        // ============================================================
-        function parseFecha(fechaStr) {
-            if (!fechaStr) return new Date();
-            const partes = fechaStr.split('/');
-            return new Date(parseInt(partes[2]), parseInt(partes[1]) - 1, parseInt(partes[0]));
-        }
-
-        function extraerPagosDeString(str, año) {
-            if (!str) return [];
-            return str.split(';').filter(p => p.trim()).map(p => {
-                const partes = p.trim().split('_');
-                return {
-                    mes: partes[0],
-                    año: parseInt(partes[1]),
-                    valor: parseInt(partes[2]),
-                    fecha: partes[3],
-                    hora: partes[4] || '00:00:00',
-                    recibo: partes[5] || 'N/A'
-                };
-            }).filter(p => p.año === año);
-        }
-
-        function obtenerTodosLosPagosCuotas() {
-            const pagos = [];
-            appState.pagos.forEach(reg => {
-                const afiliado = appState.afiliados.find(a => a.cedula === reg.cedula);
-                const nombre = afiliado ? afiliado.nombre : reg.nombre;
-                const fechaActual = new Date();
-
-                for (let año = 2024; año <= fechaActual.getFullYear(); año++) {
-                    const campo = `fecha_pago_año_${año}`;
-                    const pagosAño = extraerPagosDeString(reg[campo], año);
-                    pagosAño.forEach(p => {
-                        pagos.push({
-                            cedula: reg.cedula,
-                            nombre,
-                            ...p,
-                            fechaObj: new Date(p.fecha.split('/')[2], p.fecha.split('/')[1] - 1, p.fecha.split('/')[0])
-                        });
-                    });
-                }
-            });
-            return pagos;
-        }
-
-        function obtenerPagosCuotaPorAfiliado(cedula) {
-            const todosPagos = obtenerTodosLosPagosCuotas();
-            return todosPagos.filter(p => p.cedula === cedula).sort((a, b) => b.fechaObj - a.fechaObj);
-        }
-
-        function mesEstaPagado(cedula, año, mes) {
-            const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-            const registro = appState.pagos.find(p => p.cedula === cedula);
-            if (!registro) return false;
-            const pagosStr = registro[`fecha_pago_año_${año}`] || '';
-            return pagosStr.split(';').some(p => p.trim().startsWith(`${meses[mes]}_${año}`));
-        }
-
-        function esMesCondonado(año, mes) {
-            if (año === 2024) return true;
-            if (año === 2025 && mes >= 0 && mes <= 10) return true;
-            return false;
-        }
-
-        function esMesFuturo(año, mes) {
-            const hoy = new Date();
-            if (año > hoy.getFullYear()) return true;
-            if (año === hoy.getFullYear() && mes > hoy.getMonth()) return true;
-            return false;
-        }
-
-        function obtenerMesesDetallados(cedula, fechaAfiliacion) {
-            const afiliacion = parseFecha(fechaAfiliacion);
-            const hoy = new Date();
-            const meses = [];
-            const mesesNombres = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-
-            for (let año = afiliacion.getFullYear(); año <= hoy.getFullYear(); año++) {
-                const mesInicio = (año === afiliacion.getFullYear()) ? afiliacion.getMonth() : 0;
-                const mesFin = (año === hoy.getFullYear()) ? hoy.getMonth() : 11;
-
-                for (let mes = mesInicio; mes <= mesFin; mes++) {
-                    const pagado = mesEstaPagado(cedula, año, mes);
-                    const condonado = esMesCondonado(año, mes);
-                    const futuro = esMesFuturo(año, mes);
-
-                    let estado = 'pendiente';
-                    if (pagado) estado = 'pagado';
-                    else if (condonado) estado = 'condonado';
-                    else if (futuro) estado = 'futuro';
-                    else estado = 'deuda';
-
-                    meses.push({
-                        año,
-                        mes,
-                        nombre: mesesNombres[mes],
-                        estado,
-                        valor: CONFIG.VALOR_CUOTA
-                    });
-                }
-            }
-            return meses;
-        }
-
-        function calcularResumen(cedula, fechaAfiliacion) {
-            const meses = obtenerMesesDetallados(cedula, fechaAfiliacion);
-            const deuda = meses.filter(m => m.estado === 'deuda').length * CONFIG.VALOR_CUOTA;
-            const pagado = meses.filter(m => m.estado === 'pagado').length * CONFIG.VALOR_CUOTA;
-            const condonado = meses.filter(m => m.estado === 'condonado').length;
-            const pendientes = meses.filter(m => m.estado === 'deuda').length;
-
+    function extraerPagosDeString(str, año) {
+        if (!str) return [];
+        return str.split(';').filter(p => p.trim()).map(p => {
+            const partes = p.trim().split('_');
             return {
-                deudaTotal: deuda,
-                pagadoTotal: pagado,
-                mesesPagados: meses.filter(m => m.estado === 'pagado').length,
-                mesesCondonados: condonado,
-                mesesDeuda: pendientes
+                mes: partes[0],
+                año: parseInt(partes[1]),
+                valor: parseInt(partes[2]),
+                fecha: partes[3],
+                hora: partes[4] || '00:00:00',
+                recibo: partes[5] || 'N/A'
             };
-        }
+        }).filter(p => p.año === año);
+    }
 
-        function obtenerUltimoRecibo(cedula) {
-            const pagos = obtenerPagosCuotaPorAfiliado(cedula);
-            if (pagos.length === 0) return '—';
-            return pagos[0].recibo !== 'N/A' ? pagos[0].recibo : '—';
-        }
-
-        // ============================================================
-        // FILTRO INTELIGENTE
-        // ============================================================
-        function detectarTipoBusqueda(termino) {
-            if (/^0+[0-9]+$/.test(termino)) {
-                return 'recibo';
+    function obtenerTodosLosPagosCuotas() {
+        const pagos = [];
+        appState.pagos.forEach(reg => {
+            const afiliado = appState.afiliados.find(a => a.cedula === reg.cedula);
+            const nombre = afiliado ? afiliado.nombre : reg.nombre;
+            const fechaActual = new Date();
+            
+            for (let año = 2024; año <= fechaActual.getFullYear(); año++) {
+                const campo = `fecha_pago_año_${año}`;
+                const pagosAño = extraerPagosDeString(reg[campo], año);
+                pagosAño.forEach(p => {
+                    pagos.push({
+                        cedula: reg.cedula,
+                        nombre,
+                        ...p,
+                        fechaObj: new Date(p.fecha.split('/')[2], p.fecha.split('/')[1] - 1, p.fecha.split('/')[0])
+                    });
+                });
             }
-            if (/^\d+$/.test(termino)) {
-                return 'cedula';
+        });
+        return pagos;
+    }
+
+    function obtenerPagosCuotaPorAfiliado(cedula) {
+        const todosPagos = obtenerTodosLosPagosCuotas();
+        return todosPagos.filter(p => p.cedula === cedula).sort((a, b) => b.fechaObj - a.fechaObj);
+    }
+
+    function mesEstaPagado(cedula, año, mes) {
+        const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+        const registro = appState.pagos.find(p => p.cedula === cedula);
+        if (!registro) return false;
+        const pagosStr = registro[`fecha_pago_año_${año}`] || '';
+        return pagosStr.split(';').some(p => p.trim().startsWith(`${meses[mes]}_${año}`));
+    }
+
+    function esMesCondonado(año, mes) {
+        if (año === 2024) return true;
+        if (año === 2025 && mes >= 0 && mes <= 10) return true;
+        return false;
+    }
+
+    function esMesFuturo(año, mes) {
+        const hoy = new Date();
+        if (año > hoy.getFullYear()) return true;
+        if (año === hoy.getFullYear() && mes > hoy.getMonth()) return true;
+        return false;
+    }
+
+    function obtenerMesesDetallados(cedula, fechaAfiliacion) {
+        const afiliacion = parseFecha(fechaAfiliacion);
+        const hoy = new Date();
+        const meses = [];
+        const mesesNombres = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+        for (let año = afiliacion.getFullYear(); año <= hoy.getFullYear(); año++) {
+            const mesInicio = (año === afiliacion.getFullYear()) ? afiliacion.getMonth() : 0;
+            const mesFin = (año === hoy.getFullYear()) ? hoy.getMonth() : 11;
+
+            for (let mes = mesInicio; mes <= mesFin; mes++) {
+                const pagado = mesEstaPagado(cedula, año, mes);
+                const condonado = esMesCondonado(año, mes);
+                const futuro = esMesFuturo(año, mes);
+                
+                let estado = 'pendiente';
+                if (pagado) estado = 'pagado';
+                else if (condonado) estado = 'condonado';
+                else if (futuro) estado = 'futuro';
+                else estado = 'deuda';
+                
+                meses.push({
+                    año,
+                    mes,
+                    nombre: mesesNombres[mes],
+                    estado,
+                    valor: CONFIG.VALOR_CUOTA
+                });
             }
-            return 'nombre';
         }
+        return meses;
+    }
 
-        function buscarAfiliados(termino) {
-            if (!termino.trim()) return [];
+    function calcularResumen(cedula, fechaAfiliacion) {
+        const meses = obtenerMesesDetallados(cedula, fechaAfiliacion);
+        const deuda = meses.filter(m => m.estado === 'deuda').length * CONFIG.VALOR_CUOTA;
+        const pagado = meses.filter(m => m.estado === 'pagado').length * CONFIG.VALOR_CUOTA;
+        const condonado = meses.filter(m => m.estado === 'condonado').length;
+        const pendientes = meses.filter(m => m.estado === 'deuda').length;
+        
+        return {
+            deudaTotal: deuda,
+            pagadoTotal: pagado,
+            mesesPagados: meses.filter(m => m.estado === 'pagado').length,
+            mesesCondonados: condonado,
+            mesesDeuda: pendientes
+        };
+    }
 
-            const terminoLower = termino.trim().toLowerCase();
-            const tipo = detectarTipoBusqueda(terminoLower);
+    function obtenerUltimoRecibo(cedula) {
+        const pagos = obtenerPagosCuotaPorAfiliado(cedula);
+        if (pagos.length === 0) return '—';
+        return pagos[0].recibo !== 'N/A' ? pagos[0].recibo : '—';
+    }
 
-            if (tipo === 'cedula') {
-                const encontrado = appState.afiliados.find(a => a.cedula === terminoLower);
-                return encontrado ? [encontrado] : [];
+    // ============================================================
+    // FILTRO INTELIGENTE
+    // ============================================================
+    function detectarTipoBusqueda(termino) {
+        if (/^0+[0-9]+$/.test(termino)) {
+            return 'recibo';
+        }
+        if (/^\d+$/.test(termino)) {
+            return 'cedula';
+        }
+        return 'nombre';
+    }
+
+    function buscarAfiliados(termino) {
+        if (!termino.trim()) return [];
+        
+        const terminoLower = termino.trim().toLowerCase();
+        const tipo = detectarTipoBusqueda(terminoLower);
+        
+        if (tipo === 'cedula') {
+            const encontrado = appState.afiliados.find(a => a.cedula === terminoLower);
+            return encontrado ? [encontrado] : [];
+        }
+        
+        if (tipo === 'recibo') {
+            const todosPagos = obtenerTodosLosPagosCuotas();
+            const pagoEncontrado = todosPagos.find(p => p.recibo === terminoLower);
+            if (pagoEncontrado) {
+                const afiliado = appState.afiliados.find(a => a.cedula === pagoEncontrado.cedula);
+                return afiliado ? [afiliado] : [];
             }
-
-            if (tipo === 'recibo') {
-                const todosPagos = obtenerTodosLosPagosCuotas();
-                const pagoEncontrado = todosPagos.find(p => p.recibo === terminoLower);
-                if (pagoEncontrado) {
-                    const afiliado = appState.afiliados.find(a => a.cedula === pagoEncontrado.cedula);
-                    return afiliado ? [afiliado] : [];
-                }
-                return [];
-            }
-
-            // Búsqueda por nombre (sin acentos)
-            const terminoNormalizado = terminoLower.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-            return appState.afiliados.filter(a => {
-                const nombreNormalizado = a.nombre.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-                return nombreNormalizado.includes(terminoNormalizado);
-            });
+            return [];
         }
+        
+        // Búsqueda por nombre (sin acentos)
+        const terminoNormalizado = terminoLower.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        return appState.afiliados.filter(a => {
+            const nombreNormalizado = a.nombre.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            return nombreNormalizado.includes(terminoNormalizado);
+        });
+    }
 
-        // ============================================================
-        // RENDERIZADO
-        // ============================================================
-        function ocultarBuscador() {
-            document.getElementById('searchCard').classList.add('hidden-search');
-        }
+    // ============================================================
+    // RENDERIZADO
+    // ============================================================
+    function ocultarBuscador() {
+        document.getElementById('searchCard').classList.add('hidden-search');
+    }
 
-        function mostrarBuscador() {
-            document.getElementById('searchCard').classList.remove('hidden-search');
-        }
+    function mostrarBuscador() {
+        document.getElementById('searchCard').classList.remove('hidden-search');
+    }
 
-        function limpiarResultados() {
-            document.getElementById('resultsContainer').innerHTML = '';
-        }
+    function limpiarResultados() {
+        document.getElementById('resultsContainer').innerHTML = '';
+    }
 
-        function renderizarListaResultados(afiliados, termino) {
-            ocultarBuscador();
-            const container = document.getElementById('resultsContainer');
-
-            container.innerHTML = `
+    function renderizarListaResultados(afiliados, termino) {
+        ocultarBuscador();
+        const container = document.getElementById('resultsContainer');
+        
+        container.innerHTML = `
             <div class="results-list">
                 <div class="list-title">
                     📋 Se encontraron ${afiliados.length} resultado${afiliados.length !== 1 ? 's' : ''} para "${termino}"
@@ -882,32 +878,32 @@
             </div>
             <button class="back-btn" onclick="volverALista()">← Volver</button>
         `;
-        }
+    }
 
-        function renderizarDetalleAfiliado(afiliado) {
-            ocultarBuscador();
-            const meses = obtenerMesesDetallados(afiliado.cedula, afiliado.fecha);
-            const resumen = calcularResumen(afiliado.cedula, afiliado.fecha);
-            const ultimoRecibo = obtenerUltimoRecibo(afiliado.cedula);
-            const pagosRealizados = obtenerPagosCuotaPorAfiliado(afiliado.cedula);
-
-            const mesesDeuda = meses.filter(m => m.estado === 'deuda');
-            const mesesPagados = meses.filter(m => m.estado === 'pagado');
-            const mesesCondonados = meses.filter(m => m.estado === 'condonado');
-
-            const deudaPorAño = {};
-            mesesDeuda.forEach(({ año, mes, nombre }) => {
-                if (!deudaPorAño[año]) deudaPorAño[año] = [];
-                deudaPorAño[año].push({ mes, nombre });
-            });
-
-            const pagadosPorAño = {};
-            mesesPagados.forEach(({ año, mes, nombre }) => {
-                if (!pagadosPorAño[año]) pagadosPorAño[año] = [];
-                pagadosPorAño[año].push({ mes, nombre });
-            });
-
-            let html = `
+    function renderizarDetalleAfiliado(afiliado) {
+        ocultarBuscador();
+        const meses = obtenerMesesDetallados(afiliado.cedula, afiliado.fecha);
+        const resumen = calcularResumen(afiliado.cedula, afiliado.fecha);
+        const ultimoRecibo = obtenerUltimoRecibo(afiliado.cedula);
+        const pagosRealizados = obtenerPagosCuotaPorAfiliado(afiliado.cedula);
+        
+        const mesesDeuda = meses.filter(m => m.estado === 'deuda');
+        const mesesPagados = meses.filter(m => m.estado === 'pagado');
+        const mesesCondonados = meses.filter(m => m.estado === 'condonado');
+        
+        const deudaPorAño = {};
+        mesesDeuda.forEach(({ año, mes, nombre }) => {
+            if (!deudaPorAño[año]) deudaPorAño[año] = [];
+            deudaPorAño[año].push({ mes, nombre });
+        });
+        
+        const pagadosPorAño = {};
+        mesesPagados.forEach(({ año, mes, nombre }) => {
+            if (!pagadosPorAño[año]) pagadosPorAño[año] = [];
+            pagadosPorAño[año].push({ mes, nombre });
+        });
+        
+        let html = `
             <div class="result-card">
                 <div class="result-header">
                     <div class="result-name">${afiliado.nombre}</div>
@@ -936,26 +932,26 @@
                     </div>
                 </div>
         `;
-
-            // Meses que debe
-            if (mesesDeuda.length > 0) {
-                html += `
+        
+        // Meses que debe
+        if (mesesDeuda.length > 0) {
+            html += `
                 <div class="months-section">
                     <div class="section-title">
                         <span>⚠️</span> Meses pendientes por pagar
                     </div>
                     <div class="months-grid">
             `;
-                for (const año of Object.keys(deudaPorAño).sort()) {
-                    html += `<div style="width: 100%; margin-bottom: 6px;"><span style="font-size: 10px; font-weight: 600; color: #c62828;">${año}</span> `;
-                    deudaPorAño[año].forEach(m => {
-                        html += `<span class="month-badge debt">${m.nombre}</span> `;
-                    });
-                    html += `</div>`;
-                }
-                html += `</div></div>`;
-            } else {
-                html += `
+            for (const año of Object.keys(deudaPorAño).sort()) {
+                html += `<div style="width: 100%; margin-bottom: 6px;"><span style="font-size: 10px; font-weight: 600; color: #c62828;">${año}</span> `;
+                deudaPorAño[año].forEach(m => {
+                    html += `<span class="month-badge debt">${m.nombre}</span> `;
+                });
+                html += `</div>`;
+            }
+            html += `</div></div>`;
+        } else {
+            html += `
                 <div class="months-section">
                     <div class="section-title">
                         <span>✅</span> Estado de cuenta
@@ -965,53 +961,53 @@
                     </div>
                 </div>
             `;
-            }
-
-            // Meses pagados
-            if (mesesPagados.length > 0) {
-                html += `
+        }
+        
+        // Meses pagados
+        if (mesesPagados.length > 0) {
+            html += `
                 <div class="months-section">
                     <div class="section-title">
                         <span>✅</span> Meses pagados
                     </div>
                     <div class="months-grid">
             `;
-                for (const año of Object.keys(pagadosPorAño).sort().reverse()) {
-                    html += `<div style="width: 100%; margin-bottom: 6px;"><span style="font-size: 10px; font-weight: 600; color: #2e7d32;">${año}</span> `;
-                    pagadosPorAño[año].forEach(m => {
-                        html += `<span class="month-badge paid">${m.nombre}</span> `;
-                    });
-                    html += `</div>`;
-                }
-                html += `</div></div>`;
+            for (const año of Object.keys(pagadosPorAño).sort().reverse()) {
+                html += `<div style="width: 100%; margin-bottom: 6px;"><span style="font-size: 10px; font-weight: 600; color: #2e7d32;">${año}</span> `;
+                pagadosPorAño[año].forEach(m => {
+                    html += `<span class="month-badge paid">${m.nombre}</span> `;
+                });
+                html += `</div>`;
             }
-
-            // Meses condonados
-            if (mesesCondonados.length > 0) {
-                html += `
+            html += `</div></div>`;
+        }
+        
+        // Meses condonados
+        if (mesesCondonados.length > 0) {
+            html += `
                 <div class="months-section">
                     <div class="section-title">
                         <span>✨</span> Meses condonados (sin cargo)
                     </div>
                     <div class="months-grid">
             `;
-                mesesCondonados.forEach(m => {
-                    html += `<span class="month-badge condoned">${m.nombre} ${m.año}</span> `;
-                });
-                html += `</div></div>`;
-            }
-
-            // Historial de pagos de cuotas
-            if (pagosRealizados.length > 0) {
-                html += `
+            mesesCondonados.forEach(m => {
+                html += `<span class="month-badge condoned">${m.nombre} ${m.año}</span> `;
+            });
+            html += `</div></div>`;
+        }
+        
+        // Historial de pagos de cuotas
+        if (pagosRealizados.length > 0) {
+            html += `
                 <div class="payments-section">
                     <div class="section-title">
                         <span>📜</span> Historial de pagos de cuotas
                     </div>
                     <div class="payments-list">
             `;
-                pagosRealizados.forEach(p => {
-                    html += `
+            pagosRealizados.forEach(p => {
+                html += `
                     <div class="payment-item">
                         <div>
                             <span class="payment-month">💰 ${p.mes} ${p.año}</span>
@@ -1023,12 +1019,12 @@
                         </div>
                     </div>
                 `;
-                });
-                html += `</div></div>`;
-            }
-
-            // Último recibo
-            html += `
+            });
+            html += `</div></div>`;
+        }
+        
+        // Último recibo
+        html += `
                 <div class="receipt-section">
                     <div class="receipt-info">
                         <span class="receipt-label">🧾 Último recibo de cuota</span>
@@ -1038,177 +1034,173 @@
             </div>
             <button class="back-btn" onclick="volverALista()">← Volver</button>
         `;
+        
+        document.getElementById('resultsContainer').innerHTML = html;
+    }
 
-            document.getElementById('resultsContainer').innerHTML = html;
-        }
-
-        function mostrarLoading() {
-            ocultarBuscador();
-            const container = document.getElementById('resultsContainer');
-            container.innerHTML = `
+    function mostrarLoading() {
+        ocultarBuscador();
+        const container = document.getElementById('resultsContainer');
+        container.innerHTML = `
             <div class="loading">
                 <div class="spinner"></div>
                 <div style="color: #6b8c6b;">Cargando información...</div>
             </div>
         `;
+    }
+
+    function mostrarAlerta(mensaje, tipo = 'error') {
+        const toast = document.getElementById('alertToast');
+        toast.textContent = mensaje;
+        toast.className = `alert-toast ${tipo}`;
+        toast.style.display = 'block';
+        setTimeout(() => {
+            toast.style.display = 'none';
+        }, 3000);
+    }
+
+    // ============================================================
+    // ACCIONES PRINCIPALES
+    // ============================================================
+    window.seleccionarAfiliado = function(cedula) {
+        const afiliado = appState.afiliados.find(a => a.cedula === cedula);
+        if (afiliado) {
+            renderizarDetalleAfiliado(afiliado);
         }
-
-        function mostrarAlerta(mensaje, tipo = 'error') {
-            const toast = document.getElementById('alertToast');
-            toast.textContent = mensaje;
-            toast.className = `alert-toast ${tipo}`;
-            toast.style.display = 'block';
-            setTimeout(() => {
-                toast.style.display = 'none';
-            }, 3000);
+    };
+    
+    window.volverALista = function() {
+        mostrarBuscador();
+        limpiarResultados();
+        document.getElementById('searchInput').focus();
+    };
+    
+    async function realizarBusqueda() {
+        const termino = document.getElementById('searchInput').value;
+        if (!termino.trim()) {
+            mostrarAlerta('🔍 Ingrese cédula, nombre o número de recibo', 'error');
+            return;
         }
-
-        // ============================================================
-        // ACCIONES PRINCIPALES
-        // ============================================================
-        window.seleccionarAfiliado = function (cedula) {
-            const afiliado = appState.afiliados.find(a => a.cedula === cedula);
-            if (afiliado) {
-                renderizarDetalleAfiliado(afiliado);
-            }
-        };
-
-        window.volverALista = function () {
-            // Mostrar el buscador
+        
+        mostrarLoading();
+        await new Promise(resolve => setTimeout(resolve, 200));
+        
+        const resultados = buscarAfiliados(termino);
+        
+        if (resultados.length === 0) {
             mostrarBuscador();
-            // Limpiar los resultados
-            limpiarResultados();
-            // Enfocar el input de búsqueda
-            document.getElementById('searchInput').focus();
-        };
-
-        async function realizarBusqueda() {
-            const termino = document.getElementById('searchInput').value;
-            if (!termino.trim()) {
-                mostrarAlerta('🔍 Ingrese cédula, nombre o número de recibo', 'error');
-                return;
-            }
-
-            mostrarLoading();
-            await new Promise(resolve => setTimeout(resolve, 200));
-
-            const resultados = buscarAfiliados(termino);
-
-            if (resultados.length === 0) {
-                mostrarBuscador();
-                document.getElementById('resultsContainer').innerHTML = `
+            document.getElementById('resultsContainer').innerHTML = `
                 <div class="no-results">
                     <div class="no-results-icon">🔍</div>
                     <div>No se encontró ningún afiliado</div>
                     <div style="font-size: 11px; margin-top: 8px;">Prueba con otro nombre, cédula o número de recibo</div>
                 </div>
             `;
-                mostrarAlerta('No se encontraron resultados', 'error');
-            } else if (resultados.length === 1) {
-                renderizarDetalleAfiliado(resultados[0]);
-            } else {
-                renderizarListaResultados(resultados, termino);
-            }
+            mostrarAlerta('No se encontraron resultados', 'error');
+        } else if (resultados.length === 1) {
+            renderizarDetalleAfiliado(resultados[0]);
+        } else {
+            renderizarListaResultados(resultados, termino);
         }
+    }
 
-        // ============================================================
-        // CARGA INICIAL DE DATOS
-        // ============================================================
-        async function inicializarDatos() {
-            const container = document.getElementById('resultsContainer');
-            container.innerHTML = `
+    // ============================================================
+    // CARGA INICIAL DE DATOS
+    // ============================================================
+    async function inicializarDatos() {
+        const container = document.getElementById('resultsContainer');
+        container.innerHTML = `
             <div class="loading">
                 <div class="spinner"></div>
                 <div style="color: #6b8c6b;">Cargando afiliados...</div>
             </div>
         `;
-            ocultarBuscador();
-
-            try {
-                appState.afiliados = await cargarAfiliados();
-                appState.pagos = await cargarPagos();
-                mostrarBuscador();
-                limpiarResultados();
-                mostrarAlerta(`✅ ${appState.afiliados.length} afiliados cargados`, 'success');
-                return true;
-            } catch (error) {
-                mostrarBuscador();
-                container.innerHTML = `
+        ocultarBuscador();
+        
+        try {
+            appState.afiliados = await cargarAfiliados();
+            appState.pagos = await cargarPagos();
+            mostrarBuscador();
+            limpiarResultados();
+            mostrarAlerta(`✅ ${appState.afiliados.length} afiliados cargados`, 'success');
+            return true;
+        } catch (error) {
+            mostrarBuscador();
+            container.innerHTML = `
                 <div class="no-results">
                     <div class="no-results-icon">❌</div>
                     <div>Error al cargar datos</div>
                     <div style="font-size: 11px; margin-top: 8px;">${error.message}</div>
                 </div>
             `;
-                mostrarAlerta('Error al cargar datos: ' + error.message, 'error');
-                return false;
-            }
+            mostrarAlerta('Error al cargar datos: ' + error.message, 'error');
+            return false;
         }
+    }
 
-        // ============================================================
-        // EVENTOS Y AUTENTICACIÓN
-        // ============================================================
-        function setupEventListeners() {
-            document.getElementById('searchBtn').addEventListener('click', realizarBusqueda);
-            document.getElementById('searchInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') realizarBusqueda();
-            });
-
-            document.getElementById('logoutBtn').addEventListener('click', () => {
-                appState.authenticated = false;
-                document.getElementById('appContainer').style.display = 'none';
-                document.getElementById('loginContainer').style.display = 'flex';
-                document.getElementById('passwordInput').value = '';
-                document.getElementById('passwordInput').focus();
-                limpiarResultados();
-                document.getElementById('searchInput').value = '';
-                mostrarBuscador();
-            });
-        }
-
-        async function iniciarLogin() {
-            const password = document.getElementById('passwordInput').value;
-            const loginError = document.getElementById('loginError');
-
-            if (password !== CONFIG.PASSWORD) {
-                loginError.style.display = 'block';
-                return;
-            }
-
-            loginError.style.display = 'none';
-
-            const loginBtn = document.getElementById('loginBtn');
-            const originalText = loginBtn.textContent;
-            loginBtn.textContent = 'Cargando...';
-            loginBtn.disabled = true;
-
-            const exito = await inicializarDatos();
-
-            if (exito) {
-                appState.authenticated = true;
-                document.getElementById('loginContainer').style.display = 'none';
-                document.getElementById('appContainer').style.display = 'block';
-                document.getElementById('searchInput').focus();
-            }
-
-            loginBtn.textContent = originalText;
-            loginBtn.disabled = false;
-        }
-
-        // ============================================================
-        // INICIALIZACIÓN
-        // ============================================================
-        document.getElementById('loginBtn').addEventListener('click', iniciarLogin);
-        document.getElementById('passwordInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') iniciarLogin();
+    // ============================================================
+    // EVENTOS Y AUTENTICACIÓN
+    // ============================================================
+    function setupEventListeners() {
+        document.getElementById('searchBtn').addEventListener('click', realizarBusqueda);
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') realizarBusqueda();
         });
-
-        setupEventListeners();
-
-        document.getElementById('passwordInput').addEventListener('input', () => {
-            document.getElementById('loginError').style.display = 'none';
+        
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            appState.authenticated = false;
+            document.getElementById('appContainer').style.display = 'none';
+            document.getElementById('loginContainer').style.display = 'flex';
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('passwordInput').focus();
+            limpiarResultados();
+            document.getElementById('searchInput').value = '';
+            mostrarBuscador();
         });
-    </script>
+    }
+
+    async function iniciarLogin() {
+        const password = document.getElementById('passwordInput').value;
+        const loginError = document.getElementById('loginError');
+        
+        if (password !== CONFIG.PASSWORD) {
+            loginError.style.display = 'block';
+            return;
+        }
+        
+        loginError.style.display = 'none';
+        
+        const loginBtn = document.getElementById('loginBtn');
+        const originalText = loginBtn.textContent;
+        loginBtn.textContent = 'Cargando...';
+        loginBtn.disabled = true;
+        
+        const exito = await inicializarDatos();
+        
+        if (exito) {
+            appState.authenticated = true;
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('appContainer').style.display = 'block';
+            document.getElementById('searchInput').focus();
+        }
+        
+        loginBtn.textContent = originalText;
+        loginBtn.disabled = false;
+    }
+
+    // ============================================================
+    // INICIALIZACIÓN
+    // ============================================================
+    document.getElementById('loginBtn').addEventListener('click', iniciarLogin);
+    document.getElementById('passwordInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') iniciarLogin();
+    });
+    
+    setupEventListeners();
+    
+    document.getElementById('passwordInput').addEventListener('input', () => {
+        document.getElementById('loginError').style.display = 'none';
+    });
+</script>
 </body>
-
 </html>
