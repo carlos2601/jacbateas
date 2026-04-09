@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <title>JAC Bateas · Consulta de Cuotas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #1a4a2a 0%, #2d6a4f 100%);
+            min-height: 100vh;
+            padding: 16px;
+        }
+
+        /* Login */
+        .login-container {
+            max-width: 340px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 32px;
+            padding: 32px 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.4s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-icon {
+            text-align: center;
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .login-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a4a2a;
+            margin-bottom: 6px;
+        }
+
+        .login-subtitle {
+            text-align: center;
+            font-size: 12px;
+            color: #6b8c6b;
+            margin-bottom: 28px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #2d6a4f;
+            margin-bottom: 6px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid #d4e6d4;
+            border-radius: 14px;
+            font-size: 16px;
+            transition: all 0.2s;
+            background: #f8fff8;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #1a4a2a;
+            background: white;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: #1a4a2a;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .login-btn:active {
+            transform: scale(0.97);
+            background: #2d6a4f;
+        }
+
+        .error-message {
+            background: #ffe5e5;
+            color: #c62828;
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            text-align: center;
+            margin-top: 14px;
+            display: none;
+        }
+
+        /* App Principal */
+        .app-container {
+            max-width: 500px;
+            margin: 0 auto;
+            display: none;
+        }
+
+        /* Header con título centrado y botón salir */
+        .app-header {
+            background: white;
+            border-radius: 28px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            position: relative;
+            text-align: center;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a4a2a;
+        }
+
+        .header-subtitle {
+            font-size: 10px;
+            color: #6b8c6b;
+            margin-top: 2px;
+        }
+
+        .logout-btn {
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #fee;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            color: #c62828;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Buscador */
+        .search-card {
+            background: white;
+            border-radius: 24px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .search-input-wrapper {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-input-wrapper input {
+            flex: 1;
+            padding: 14px 16px;
+            border: 1.5px solid #e0e8e0;
+            border-radius: 16px;
+            font-size: 15px;
+            background: #fafdfa;
+        }
+
+        .search-input-wrapper input:focus {
+            outline: none;
+            border-color: #1a4a2a;
+        }
+
+        .search-btn {
+            background: #1a4a2a;
+            border: none;
+            padding: 0 20px;
+            border-radius: 16px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .search-hint {
+            font-size: 10px;
+            color: #6b8c6b;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        /* Lista de resultados múltiples */
+        .results-list {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 16px;
+        }
+
+        .list-title {
+            padding: 16px;
+            background: #f0f5f0;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2d6a4f;
+            border-bottom: 1px solid #e0e8e0;
+        }
+
+        .list-item {
+            padding: 14px 16px;
+            border-bottom: 1px solid #e8f0e8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .list-item:active {
+            background: #f0f5f0;
+        }
+
+        .list-item-info {
+            flex: 1;
+        }
+
+        .list-item-name {
+            font-weight: 600;
+            color: #1a4a2a;
+            margin-bottom: 4px;
+        }
+
+        .list-item-detail {
+            font-size: 11px;
+            color: #6b8c6b;
+        }
+
+        .list-item-select {
+            background: #1a4a2a;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Tarjeta de Resultado Individual */
+        .result-card {
+            background: white;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 0.3s ease;
+            margin-bottom: 16px;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-header {
+            background: linear-gradient(135deg, #1a4a2a 0%, #2d6a4f 100%);
+            padding: 16px 20px;
+            color: white;
+        }
+
+        .result-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .result-id-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        /* Grid de Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding: 16px;
+            background: #f8fff8;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1a4a2a;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: #6b8c6b;
+            margin-top: 4px;
+        }
+
+        .stat-value.debt {
+            color: #c62828;
+        }
+
+        .stat-value.paid {
+            color: #2e7d32;
+        }
+
+        /* Sección de Meses */
+        .months-section {
+            padding: 0 16px 16px 16px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #2d6a4f;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .months-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .month-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+            background: #f0f5f0;
+            color: #2d6a4f;
+        }
+
+        .month-badge.debt {
+            background: #ffe5e5;
+            color: #c62828;
+        }
+
+        .month-badge.paid {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .month-badge.condoned {
+            background: #fff8e1;
+            color: #f9a825;
+        }
+
+        /* Historial de pagos de cuotas */
+        .payments-section {
+            padding: 0 16px 16px 16px;
+            border-top: 1px solid #e8f0e8;
+            margin-top: 8px;
+        }
+
+        .payments-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .payment-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #e8f0e8;
+            font-size: 11px;
+        }
+
+        .payment-month {
+            font-weight: 600;
+            color: #2d6a4f;
+        }
+
+        .payment-date {
+            color: #6b8c6b;
+            font-size: 10px;
+        }
+
+        .payment-receipt {
+            background: #f0f5f0;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-family: monospace;
+            font-weight: 600;
+            font-size: 10px;
+        }
+
+        .payment-amount {
+            font-weight: 700;
+            color: #2e7d32;
+        }
+
+        /* Último Recibo */
+        .receipt-section {
+            padding: 0 16px 16px 16px;
+            border-top: 1px solid #e8f0e8;
+            margin-top: 4px;
+        }
+
+        .receipt-info {
+            background: #f0f5f0;
+            padding: 10px 16px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .receipt-label {
+            font-size: 11px;
+            color: #6b8c6b;
+        }
+
+        .receipt-number {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a4a2a;
+            font-family: monospace;
+        }
+
+        /* Botón volver */
+        .back-btn {
+            background: #e8f0e8;
+            border: none;
+            padding: 10px;
+            border-radius: 16px;
+            width: 100%;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2d6a4f;
+            cursor: pointer;
+            margin-bottom: 16px;
+        }
+
+        /* Mensajes */
+        .no-results {
+            background: white;
+            border-radius: 24px;
+            padding: 40px 20px;
+            text-align: center;
+            color: #6b8c6b;
+        }
+
+        .no-results-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .loading {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #e0e8e0;
+            border-top-color: #1a4a2a;
+            border-radius: 50%;
+            margin: 0 auto 12px;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Alert */
+        .alert-toast {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: #1a1a2e;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 13px;
+            text-align: center;
+            z-index: 1000;
+            animation: slideUp 0.3s ease;
+            display: none;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-toast.error {
+            background: #c62828;
+        }
+
+        .alert-toast.success {
+            background: #2e7d32;
+        }
+
+        /* Scroll suave */
+        .payments-list::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .payments-list::-webkit-scrollbar-track {
+            background: #e8f0e8;
+            border-radius: 10px;
+        }
+
+        .payments-list::-webkit-scrollbar-thumb {
+            background: #1a4a2a;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- PANTALLA DE LOGIN -->
+    <div id="loginContainer" class="login-container">
+        <div class="login-icon">🏦</div>
+        <div class="login-title">JAC Bateas</div>
+        <div class="login-subtitle">Consulta de Cuotas · Secretaría</div>
+
+        <div class="input-group">
+            <label>🔐 Contraseña</label>
+            <input type="password" id="passwordInput" placeholder="Ingrese la contraseña" autofocus>
+        </div>
+
+        <button class="login-btn" id="loginBtn">Ingresar</button>
+        <div id="loginError" class="error-message">❌ Contraseña incorrecta</div>
+    </div>
+
+    <!-- APLICACIÓN PRINCIPAL -->
+    <div id="appContainer" class="app-container">
+
+
+        <!-- Buscador -->
+        <div class="search-card">
+            <div class="app-header">
+                <div class="header-title">🏦 JAC Bateas</div>
+                <div class="header-subtitle">Consulta de cuotas mensuales</div>
+                <button class="logout-btn" id="logoutBtn">✕ Salir</button>
+            </div>
+
+            <div class="search-input-wrapper">
+                <input type="text" id="searchInput" placeholder="Cédula, nombre o # recibo..." autocomplete="off">
+                <button class="search-btn" id="searchBtn">Buscar</button>
+            </div>
+            <div class="search-hint">
+                💡 Busca por cédula (ej: 12345), nombre (ej: Carlos) o recibo (ej: 00001)
+            </div>
+        </div>
+
+        <!-- Contenido de resultados -->
+        <div id="resultsContainer"></div>
+    </div>
+
+    <div id="alertToast" class="alert-toast"></div>
+
+    <script>
+        // ============================================================
+        // CONFIGURACIÓN
+        // ============================================================
+        const CONFIG = {
+            PASSWORD: 'Linda0127',
+            VALOR_CUOTA: 5000,
+            SOURCE: {
+                REPO_OWNER: 'carlos2601',
+                REPO_NAME: 'juntadeaccioncomunalbarriobateaspuertogaitanmetalilianalondo-ogallego1010101010101000111010001010010',
+                AFILIADOS_PATH: 'afiliados.json',
+                BRANCH: 'main'
+            },
+            DESTINATION: {
+                REPO_OWNER: 'carlos2601',
+                REPO_NAME: 'jacbateas',
+                CUOTA_PATH: 'data/cuota.json',
+                BRANCH: 'main'
+            }
+        };
+
+        let appState = {
+            afiliados: [],
+            pagos: [],
+            authenticated: false
+        };
+
+        // ============================================================
+        // FUNCIONES DE CARGA DE DATOS
+        // ============================================================
+        async function cargarAfiliados() {
+            const url = `https://raw.githubusercontent.com/${CONFIG.SOURCE.REPO_OWNER}/${CONFIG.SOURCE.REPO_NAME}/refs/heads/${CONFIG.SOURCE.BRANCH}/${CONFIG.SOURCE.AFILIADOS_PATH}`;
+            const res = await fetch(url);
+            if (!res.ok) throw new Error('No se pudo cargar la lista de afiliados');
+            return await res.json();
+        }
+
+        async function cargarPagos() {
+            const url = `https://raw.githubusercontent.com/${CONFIG.DESTINATION.REPO_OWNER}/${CONFIG.DESTINATION.REPO_NAME}/refs/heads/${CONFIG.DESTINATION.BRANCH}/${CONFIG.DESTINATION.CUOTA_PATH}`;
+            try {
+                const res = await fetch(url);
+                if (res.status === 404) return [];
+                const data = await res.json();
+                return data.pagos || [];
+            } catch {
+                return [];
+            }
+        }
+
+        // ============================================================
+        // FUNCIONES DE UTILIDAD - SOLO CUOTAS
+        // ============================================================
+        function parseFecha(fechaStr) {
+            if (!fechaStr) return new Date();
+            const partes = fechaStr.split('/');
+            return new Date(parseInt(partes[2]), parseInt(partes[1]) - 1, parseInt(partes[0]));
+        }
+
+        function extraerPagosDeString(str, año) {
+            if (!str) return [];
+            return str.split(';').filter(p => p.trim()).map(p => {
+                const partes = p.trim().split('_');
+                return {
+                    mes: partes[0],
+                    año: parseInt(partes[1]),
+                    valor: parseInt(partes[2]),
+                    fecha: partes[3],
+                    hora: partes[4] || '00:00:00',
+                    recibo: partes[5] || 'N/A'
+                };
+            }).filter(p => p.año === año);
+        }
+
+        function obtenerTodosLosPagosCuotas() {
+            const pagos = [];
+            appState.pagos.forEach(reg => {
+                const afiliado = appState.afiliados.find(a => a.cedula === reg.cedula);
+                const nombre = afiliado ? afiliado.nombre : reg.nombre;
+                const fechaActual = new Date();
+
+                for (let año = 2024; año <= fechaActual.getFullYear(); año++) {
+                    const campo = `fecha_pago_año_${año}`;
+                    const pagosAño = extraerPagosDeString(reg[campo], año);
+                    pagosAño.forEach(p => {
+                        pagos.push({
+                            cedula: reg.cedula,
+                            nombre,
+                            ...p,
+                            fechaObj: new Date(p.fecha.split('/')[2], p.fecha.split('/')[1] - 1, p.fecha.split('/')[0])
+                        });
+                    });
+                }
+            });
+            return pagos;
+        }
+
+        function obtenerPagosCuotaPorAfiliado(cedula) {
+            const todosPagos = obtenerTodosLosPagosCuotas();
+            return todosPagos.filter(p => p.cedula === cedula).sort((a, b) => b.fechaObj - a.fechaObj);
+        }
+
+        function mesEstaPagado(cedula, año, mes) {
+            const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+            const registro = appState.pagos.find(p => p.cedula === cedula);
+            if (!registro) return false;
+            const pagosStr = registro[`fecha_pago_año_${año}`] || '';
+            return pagosStr.split(';').some(p => p.trim().startsWith(`${meses[mes]}_${año}`));
+        }
+
+        function esMesCondonado(año, mes) {
+            if (año === 2024) return true;
+            if (año === 2025 && mes >= 0 && mes <= 10) return true;
+            return false;
+        }
+
+        function esMesFuturo(año, mes) {
+            const hoy = new Date();
+            if (año > hoy.getFullYear()) return true;
+            if (año === hoy.getFullYear() && mes > hoy.getMonth()) return true;
+            return false;
+        }
+
+        function obtenerMesesDetallados(cedula, fechaAfiliacion) {
+            const afiliacion = parseFecha(fechaAfiliacion);
+            const hoy = new Date();
+            const meses = [];
+            const mesesNombres = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+            for (let año = afiliacion.getFullYear(); año <= hoy.getFullYear(); año++) {
+                const mesInicio = (año === afiliacion.getFullYear()) ? afiliacion.getMonth() : 0;
+                const mesFin = (año === hoy.getFullYear()) ? hoy.getMonth() : 11;
+
+                for (let mes = mesInicio; mes <= mesFin; mes++) {
+                    const pagado = mesEstaPagado(cedula, año, mes);
+                    const condonado = esMesCondonado(año, mes);
+                    const futuro = esMesFuturo(año, mes);
+
+                    let estado = 'pendiente';
+                    if (pagado) estado = 'pagado';
+                    else if (condonado) estado = 'condonado';
+                    else if (futuro) estado = 'futuro';
+                    else estado = 'deuda';
+
+                    meses.push({
+                        año,
+                        mes,
+                        nombre: mesesNombres[mes],
+                        estado,
+                        valor: CONFIG.VALOR_CUOTA
+                    });
+                }
+            }
+            return meses;
+        }
+
+        function calcularResumen(cedula, fechaAfiliacion) {
+            const meses = obtenerMesesDetallados(cedula, fechaAfiliacion);
+            const deuda = meses.filter(m => m.estado === 'deuda').length * CONFIG.VALOR_CUOTA;
+            const pagado = meses.filter(m => m.estado === 'pagado').length * CONFIG.VALOR_CUOTA;
+            const condonado = meses.filter(m => m.estado === 'condonado').length;
+            const pendientes = meses.filter(m => m.estado === 'deuda').length;
+
+            return {
+                deudaTotal: deuda,
+                pagadoTotal: pagado,
+                mesesPagados: meses.filter(m => m.estado === 'pagado').length,
+                mesesCondonados: condonado,
+                mesesDeuda: pendientes
+            };
+        }
+
+        function obtenerUltimoRecibo(cedula) {
+            const pagos = obtenerPagosCuotaPorAfiliado(cedula);
+            if (pagos.length === 0) return '—';
+            return pagos[0].recibo !== 'N/A' ? pagos[0].recibo : '—';
+        }
+
+        // ============================================================
+        // FILTRO INTELIGENTE
+        // ============================================================
+        function detectarTipoBusqueda(termino) {
+            if (/^0+[0-9]+$/.test(termino)) {
+                return 'recibo';
+            }
+            if (/^\d+$/.test(termino)) {
+                return 'cedula';
+            }
+            return 'nombre';
+        }
+
+        function buscarAfiliados(termino) {
+            if (!termino.trim()) return [];
+
+            const terminoLower = termino.trim().toLowerCase();
+            const tipo = detectarTipoBusqueda(terminoLower);
+
+            if (tipo === 'cedula') {
+                const encontrado = appState.afiliados.find(a => a.cedula === terminoLower);
+                return encontrado ? [encontrado] : [];
+            }
+
+            if (tipo === 'recibo') {
+                const todosPagos = obtenerTodosLosPagosCuotas();
+                const pagoEncontrado = todosPagos.find(p => p.recibo === terminoLower);
+                if (pagoEncontrado) {
+                    const afiliado = appState.afiliados.find(a => a.cedula === pagoEncontrado.cedula);
+                    return afiliado ? [afiliado] : [];
+                }
+                return [];
+            }
+
+            // Búsqueda por nombre (sin acentos)
+            const terminoNormalizado = terminoLower.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            return appState.afiliados.filter(a => {
+                const nombreNormalizado = a.nombre.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                return nombreNormalizado.includes(terminoNormalizado);
+            });
+        }
+
+        // ============================================================
+        // RENDERIZADO
+        // ============================================================
+        function renderizarListaResultados(afiliados, termino) {
+            const container = document.getElementById('resultsContainer');
+
+            container.innerHTML = `
+            <div class="results-list">
+                <div class="list-title">
+                    📋 Se encontraron ${afiliados.length} resultado${afiliados.length !== 1 ? 's' : ''} para "${termino}"
+                </div>
+                ${afiliados.map(af => `
+                    <div class="list-item" onclick="seleccionarAfiliado('${af.cedula}')">
+                        <div class="list-item-info">
+                            <div class="list-item-name">${af.nombre}</div>
+                            <div class="list-item-detail">📄 C.C. ${af.cedula} · 📅 Afiliado: ${af.fecha}</div>
+                        </div>
+                        <div class="list-item-select">Ver →</div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+        }
+
+        function renderizarDetalleAfiliado(afiliado) {
+            const meses = obtenerMesesDetallados(afiliado.cedula, afiliado.fecha);
+            const resumen = calcularResumen(afiliado.cedula, afiliado.fecha);
+            const ultimoRecibo = obtenerUltimoRecibo(afiliado.cedula);
+            const pagosRealizados = obtenerPagosCuotaPorAfiliado(afiliado.cedula);
+
+            const mesesDeuda = meses.filter(m => m.estado === 'deuda');
+            const mesesPagados = meses.filter(m => m.estado === 'pagado');
+            const mesesCondonados = meses.filter(m => m.estado === 'condonado');
+
+            const deudaPorAño = {};
+            mesesDeuda.forEach(({ año, mes, nombre }) => {
+                if (!deudaPorAño[año]) deudaPorAño[año] = [];
+                deudaPorAño[año].push({ mes, nombre });
+            });
+
+            const pagadosPorAño = {};
+            mesesPagados.forEach(({ año, mes, nombre }) => {
+                if (!pagadosPorAño[año]) pagadosPorAño[año] = [];
+                pagadosPorAño[año].push({ mes, nombre });
+            });
+
+            let html = `
+            <div class="result-card">
+                <div class="result-header">
+                    <div class="result-name">${afiliado.nombre}</div>
+                    <div class="result-id-row">
+                        <span>📄 C.C. ${afiliado.cedula}</span>
+                        <span>📅 ${afiliado.fecha}</span>
+                    </div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value ${resumen.deudaTotal > 0 ? 'debt' : ''}">$${resumen.deudaTotal.toLocaleString()}</div>
+                        <div class="stat-label">💰 Deuda total</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value paid">$${resumen.pagadoTotal.toLocaleString()}</div>
+                        <div class="stat-label">✅ Total pagado</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value ${resumen.mesesDeuda > 0 ? 'debt' : ''}">${resumen.mesesDeuda}</div>
+                        <div class="stat-label">📆 Cuotas pendientes</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${resumen.mesesPagados}</div>
+                        <div class="stat-label">✓ Cuotas pagadas</div>
+                    </div>
+                </div>
+        `;
+
+            // Meses que debe
+            if (mesesDeuda.length > 0) {
+                html += `
+                <div class="months-section">
+                    <div class="section-title">
+                        <span>⚠️</span> Meses pendientes por pagar
+                    </div>
+                    <div class="months-grid">
+            `;
+                for (const año of Object.keys(deudaPorAño).sort()) {
+                    html += `<div style="width: 100%; margin-bottom: 6px;"><span style="font-size: 10px; font-weight: 600; color: #c62828;">${año}</span> `;
+                    deudaPorAño[año].forEach(m => {
+                        html += `<span class="month-badge debt">${m.nombre}</span> `;
+                    });
+                    html += `</div>`;
+                }
+                html += `</div></div>`;
+            } else {
+                html += `
+                <div class="months-section">
+                    <div class="section-title">
+                        <span>✅</span> Estado de cuenta
+                    </div>
+                    <div class="months-grid">
+                        <span class="month-badge paid" style="background: #e8f5e9;">✓ Sin deudas pendientes</span>
+                    </div>
+                </div>
+            `;
+            }
+
+            // Meses pagados
+            if (mesesPagados.length > 0) {
+                html += `
+                <div class="months-section">
+                    <div class="section-title">
+                        <span>✅</span> Meses pagados
+                    </div>
+                    <div class="months-grid">
+            `;
+                for (const año of Object.keys(pagadosPorAño).sort().reverse()) {
+                    html += `<div style="width: 100%; margin-bottom: 6px;"><span style="font-size: 10px; font-weight: 600; color: #2e7d32;">${año}</span> `;
+                    pagadosPorAño[año].forEach(m => {
+                        html += `<span class="month-badge paid">${m.nombre}</span> `;
+                    });
+                    html += `</div>`;
+                }
+                html += `</div></div>`;
+            }
+
+            // Meses condonados
+            if (mesesCondonados.length > 0) {
+                html += `
+                <div class="months-section">
+                    <div class="section-title">
+                        <span>✨</span> Meses condonados (sin cargo)
+                    </div>
+                    <div class="months-grid">
+            `;
+                mesesCondonados.forEach(m => {
+                    html += `<span class="month-badge condoned">${m.nombre} ${m.año}</span> `;
+                });
+                html += `</div></div>`;
+            }
+
+            // Historial de pagos de cuotas
+            if (pagosRealizados.length > 0) {
+                html += `
+                <div class="payments-section">
+                    <div class="section-title">
+                        <span>📜</span> Historial de pagos de cuotas
+                    </div>
+                    <div class="payments-list">
+            `;
+                pagosRealizados.forEach(p => {
+                    html += `
+                    <div class="payment-item">
+                        <div>
+                            <span class="payment-month">💰 ${p.mes} ${p.año}</span>
+                            <div class="payment-date">${p.fecha} ${p.hora}</div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span class="payment-receipt">#${p.recibo}</span>
+                            <span class="payment-amount">$${p.valor.toLocaleString()}</span>
+                        </div>
+                    </div>
+                `;
+                });
+                html += `</div></div>`;
+            }
+
+            // Último recibo
+            html += `
+                <div class="receipt-section">
+                    <div class="receipt-info">
+                        <span class="receipt-label">🧾 Último recibo de cuota</span>
+                        <span class="receipt-number">${ultimoRecibo}</span>
+                    </div>
+                </div>
+            </div>
+            <button class="back-btn" onclick="volverALista()">← Volver a resultados</button>
+        `;
+
+            document.getElementById('resultsContainer').innerHTML = html;
+        }
+
+        function mostrarLoading() {
+            const container = document.getElementById('resultsContainer');
+            container.innerHTML = `
+            <div class="loading">
+                <div class="spinner"></div>
+                <div style="color: #6b8c6b;">Cargando información...</div>
+            </div>
+        `;
+        }
+
+        function mostrarAlerta(mensaje, tipo = 'error') {
+            const toast = document.getElementById('alertToast');
+            toast.textContent = mensaje;
+            toast.className = `alert-toast ${tipo}`;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        // ============================================================
+        // ACCIONES PRINCIPALES
+        // ============================================================
+        window.seleccionarAfiliado = function (cedula) {
+            const afiliado = appState.afiliados.find(a => a.cedula === cedula);
+            if (afiliado) {
+                renderizarDetalleAfiliado(afiliado);
+            }
+        };
+
+        window.volverALista = function () {
+            const termino = document.getElementById('searchInput').value;
+            if (termino.trim()) {
+                realizarBusqueda();
+            } else {
+                document.getElementById('resultsContainer').innerHTML = '';
+            }
+        };
+
+        async function realizarBusqueda() {
+            const termino = document.getElementById('searchInput').value;
+            if (!termino.trim()) {
+                mostrarAlerta('🔍 Ingrese cédula, nombre o número de recibo', 'error');
+                return;
+            }
+
+            mostrarLoading();
+            await new Promise(resolve => setTimeout(resolve, 200));
+
+            const resultados = buscarAfiliados(termino);
+
+            if (resultados.length === 0) {
+                document.getElementById('resultsContainer').innerHTML = `
+                <div class="no-results">
+                    <div class="no-results-icon">🔍</div>
+                    <div>No se encontró ningún afiliado</div>
+                    <div style="font-size: 11px; margin-top: 8px;">Prueba con otro nombre, cédula o número de recibo</div>
+                </div>
+            `;
+                mostrarAlerta('No se encontraron resultados', 'error');
+            } else if (resultados.length === 1) {
+                renderizarDetalleAfiliado(resultados[0]);
+            } else {
+                renderizarListaResultados(resultados, termino);
+            }
+        }
+
+        // ============================================================
+        // CARGA INICIAL DE DATOS
+        // ============================================================
+        async function inicializarDatos() {
+            mostrarLoading();
+            try {
+                appState.afiliados = await cargarAfiliados();
+                appState.pagos = await cargarPagos();
+                mostrarAlerta(`✅ ${appState.afiliados.length} afiliados cargados`, 'success');
+                return true;
+            } catch (error) {
+                mostrarAlerta('❌ Error al cargar datos: ' + error.message, 'error');
+                return false;
+            }
+        }
+
+        // ============================================================
+        // EVENTOS Y AUTENTICACIÓN
+        // ============================================================
+        function setupEventListeners() {
+            document.getElementById('searchBtn').addEventListener('click', realizarBusqueda);
+            document.getElementById('searchInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') realizarBusqueda();
+            });
+
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                appState.authenticated = false;
+                document.getElementById('appContainer').style.display = 'none';
+                document.getElementById('loginContainer').style.display = 'block';
+                document.getElementById('passwordInput').value = '';
+                document.getElementById('passwordInput').focus();
+                document.getElementById('resultsContainer').innerHTML = '';
+                document.getElementById('searchInput').value = '';
+            });
+        }
+
+        async function iniciarLogin() {
+            const password = document.getElementById('passwordInput').value;
+            const loginError = document.getElementById('loginError');
+
+            if (password !== CONFIG.PASSWORD) {
+                loginError.style.display = 'block';
+                return;
+            }
+
+            loginError.style.display = 'none';
+
+            const loginBtn = document.getElementById('loginBtn');
+            const originalText = loginBtn.textContent;
+            loginBtn.textContent = 'Cargando...';
+            loginBtn.disabled = true;
+
+            const exito = await inicializarDatos();
+
+            if (exito) {
+                appState.authenticated = true;
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('appContainer').style.display = 'block';
+                document.getElementById('searchInput').focus();
+            }
+
+            loginBtn.textContent = originalText;
+            loginBtn.disabled = false;
+        }
+
+        // ============================================================
+        // INICIALIZACIÓN
+        // ============================================================
+        document.getElementById('loginBtn').addEventListener('click', iniciarLogin);
+        document.getElementById('passwordInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') iniciarLogin();
+        });
+
+        setupEventListeners();
+
+        document.getElementById('passwordInput').addEventListener('input', () => {
+            document.getElementById('loginError').style.display = 'none';
+        });
+    </script>
+</body>
+
+</html>
