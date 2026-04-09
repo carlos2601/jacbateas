@@ -17,16 +17,19 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background: linear-gradient(135deg, #1a4a2a 0%, #2d6a4f 100%);
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 16px;
         }
 
-        /* Login */
+        /* Login - Centrado vertical y horizontal */
         .login-container {
+            width: 100%;
             max-width: 340px;
-            margin: 0 auto;
             background: white;
             border-radius: 32px;
-            padding: 32px 24px;
+            padding: 40px 24px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             animation: fadeInUp 0.4s ease;
         }
@@ -45,23 +48,23 @@
 
         .login-icon {
             text-align: center;
-            font-size: 48px;
-            margin-bottom: 12px;
+            font-size: 56px;
+            margin-bottom: 16px;
         }
 
         .login-title {
             text-align: center;
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 700;
             color: #1a4a2a;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
         .login-subtitle {
             text-align: center;
-            font-size: 12px;
+            font-size: 13px;
             color: #6b8c6b;
-            margin-bottom: 28px;
+            margin-bottom: 32px;
         }
 
         .input-group {
@@ -70,10 +73,10 @@
 
         .input-group label {
             display: block;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
             color: #2d6a4f;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
         .input-group input {
@@ -123,20 +126,28 @@
 
         /* App Principal */
         .app-container {
+            width: 100%;
             max-width: 500px;
             margin: 0 auto;
             display: none;
         }
 
-        /* Header con título centrado y botón salir */
-        .app-header {
+        /* Card del buscador */
+        .search-card {
             background: white;
             border-radius: 28px;
-            padding: 16px 20px;
-            margin-bottom: 16px;
+            overflow: hidden;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            position: relative;
+            margin-bottom: 16px;
+        }
+
+        /* Header dentro del buscador */
+        .app-header {
+            background: white;
+            padding: 16px 20px;
             text-align: center;
+            border-bottom: 1px solid #e8f0e8;
+            position: relative;
         }
 
         .header-title {
@@ -146,14 +157,14 @@
         }
 
         .header-subtitle {
-            font-size: 10px;
+            font-size: 11px;
             color: #6b8c6b;
-            margin-top: 2px;
+            margin-top: 4px;
         }
 
         .logout-btn {
             position: absolute;
-            right: -10px;
+            right: 16px;
             top: 50%;
             transform: translateY(-50%);
             background: #fee;
@@ -167,12 +178,8 @@
         }
 
         /* Buscador */
-        .search-card {
-            background: white;
-            border-radius: 24px;
+        .search-wrapper {
             padding: 16px;
-            margin-bottom: 16px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
         .search-input-wrapper {
@@ -203,19 +210,20 @@
             font-weight: 600;
             cursor: pointer;
             font-size: 14px;
+            white-space: nowrap;
         }
 
         .search-hint {
             font-size: 10px;
             color: #6b8c6b;
-            margin-top: 8px;
+            margin-top: 10px;
             text-align: center;
         }
 
         /* Lista de resultados múltiples */
         .results-list {
             background: white;
-            border-radius: 24px;
+            border-radius: 28px;
             overflow: hidden;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             margin-bottom: 16px;
@@ -392,7 +400,7 @@
             color: #f9a825;
         }
 
-        /* Historial de pagos de cuotas */
+        /* Historial de pagos */
         .payments-section {
             padding: 0 16px 16px 16px;
             border-top: 1px solid #e8f0e8;
@@ -469,10 +477,10 @@
         .back-btn {
             background: #e8f0e8;
             border: none;
-            padding: 10px;
-            border-radius: 16px;
+            padding: 12px;
+            border-radius: 20px;
             width: 100%;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
             color: #2d6a4f;
             cursor: pointer;
@@ -482,7 +490,7 @@
         /* Mensajes */
         .no-results {
             background: white;
-            border-radius: 24px;
+            border-radius: 28px;
             padding: 40px 20px;
             text-align: center;
             color: #6b8c6b;
@@ -495,7 +503,7 @@
 
         .loading {
             background: white;
-            border-radius: 24px;
+            border-radius: 28px;
             padding: 40px;
             text-align: center;
         }
@@ -567,6 +575,11 @@
             background: #1a4a2a;
             border-radius: 10px;
         }
+
+        /* Ocultar buscador */
+        .hidden-search {
+            display: none !important;
+        }
     </style>
 </head>
 
@@ -574,7 +587,7 @@
 
     <!-- PANTALLA DE LOGIN -->
     <div id="loginContainer" class="login-container">
-        <div class="login-icon">🏦</div>
+
         <div class="login-title">JAC Bateas</div>
         <div class="login-subtitle">Consulta de Cuotas · Secretaría</div>
 
@@ -589,22 +602,22 @@
 
     <!-- APLICACIÓN PRINCIPAL -->
     <div id="appContainer" class="app-container">
-
-
         <!-- Buscador -->
-        <div class="search-card">
+        <div class="search-card" id="searchCard">
             <div class="app-header">
                 <div class="header-title">🏦 JAC Bateas</div>
                 <div class="header-subtitle">Consulta de cuotas mensuales</div>
                 <button class="logout-btn" id="logoutBtn">✕ Salir</button>
             </div>
 
-            <div class="search-input-wrapper">
-                <input type="text" id="searchInput" placeholder="Cédula, nombre o # recibo..." autocomplete="off">
-                <button class="search-btn" id="searchBtn">Buscar</button>
-            </div>
-            <div class="search-hint">
-                💡 Busca por cédula (ej: 12345), nombre (ej: Carlos) o recibo (ej: 00001)
+            <div class="search-wrapper">
+                <div class="search-input-wrapper">
+                    <input type="text" id="searchInput" placeholder="Cédula, nombre o # recibo..." autocomplete="off">
+                    <button class="search-btn" id="searchBtn">Buscar</button>
+                </div>
+                <div class="search-hint">
+                    💡 Busca por cédula (ej: 12345), nombre (ej: Carlos) o recibo (ej: 00001)
+                </div>
             </div>
         </div>
 
@@ -836,7 +849,20 @@
         // ============================================================
         // RENDERIZADO
         // ============================================================
+        function ocultarBuscador() {
+            document.getElementById('searchCard').classList.add('hidden-search');
+        }
+
+        function mostrarBuscador() {
+            document.getElementById('searchCard').classList.remove('hidden-search');
+        }
+
+        function limpiarResultados() {
+            document.getElementById('resultsContainer').innerHTML = '';
+        }
+
         function renderizarListaResultados(afiliados, termino) {
+            ocultarBuscador();
             const container = document.getElementById('resultsContainer');
 
             container.innerHTML = `
@@ -854,10 +880,12 @@
                     </div>
                 `).join('')}
             </div>
+            <button class="back-btn" onclick="volverALista()">← Volver</button>
         `;
         }
 
         function renderizarDetalleAfiliado(afiliado) {
+            ocultarBuscador();
             const meses = obtenerMesesDetallados(afiliado.cedula, afiliado.fecha);
             const resumen = calcularResumen(afiliado.cedula, afiliado.fecha);
             const ultimoRecibo = obtenerUltimoRecibo(afiliado.cedula);
@@ -1008,13 +1036,14 @@
                     </div>
                 </div>
             </div>
-            <button class="back-btn" onclick="volverALista()">← Volver a resultados</button>
+            <button class="back-btn" onclick="volverALista()">← Volver</button>
         `;
 
             document.getElementById('resultsContainer').innerHTML = html;
         }
 
         function mostrarLoading() {
+            ocultarBuscador();
             const container = document.getElementById('resultsContainer');
             container.innerHTML = `
             <div class="loading">
@@ -1045,12 +1074,12 @@
         };
 
         window.volverALista = function () {
-            const termino = document.getElementById('searchInput').value;
-            if (termino.trim()) {
-                realizarBusqueda();
-            } else {
-                document.getElementById('resultsContainer').innerHTML = '';
-            }
+            // Mostrar el buscador
+            mostrarBuscador();
+            // Limpiar los resultados
+            limpiarResultados();
+            // Enfocar el input de búsqueda
+            document.getElementById('searchInput').focus();
         };
 
         async function realizarBusqueda() {
@@ -1066,6 +1095,7 @@
             const resultados = buscarAfiliados(termino);
 
             if (resultados.length === 0) {
+                mostrarBuscador();
                 document.getElementById('resultsContainer').innerHTML = `
                 <div class="no-results">
                     <div class="no-results-icon">🔍</div>
@@ -1085,14 +1115,32 @@
         // CARGA INICIAL DE DATOS
         // ============================================================
         async function inicializarDatos() {
-            mostrarLoading();
+            const container = document.getElementById('resultsContainer');
+            container.innerHTML = `
+            <div class="loading">
+                <div class="spinner"></div>
+                <div style="color: #6b8c6b;">Cargando afiliados...</div>
+            </div>
+        `;
+            ocultarBuscador();
+
             try {
                 appState.afiliados = await cargarAfiliados();
                 appState.pagos = await cargarPagos();
+                mostrarBuscador();
+                limpiarResultados();
                 mostrarAlerta(`✅ ${appState.afiliados.length} afiliados cargados`, 'success');
                 return true;
             } catch (error) {
-                mostrarAlerta('❌ Error al cargar datos: ' + error.message, 'error');
+                mostrarBuscador();
+                container.innerHTML = `
+                <div class="no-results">
+                    <div class="no-results-icon">❌</div>
+                    <div>Error al cargar datos</div>
+                    <div style="font-size: 11px; margin-top: 8px;">${error.message}</div>
+                </div>
+            `;
+                mostrarAlerta('Error al cargar datos: ' + error.message, 'error');
                 return false;
             }
         }
@@ -1109,11 +1157,12 @@
             document.getElementById('logoutBtn').addEventListener('click', () => {
                 appState.authenticated = false;
                 document.getElementById('appContainer').style.display = 'none';
-                document.getElementById('loginContainer').style.display = 'block';
+                document.getElementById('loginContainer').style.display = 'flex';
                 document.getElementById('passwordInput').value = '';
                 document.getElementById('passwordInput').focus();
-                document.getElementById('resultsContainer').innerHTML = '';
+                limpiarResultados();
                 document.getElementById('searchInput').value = '';
+                mostrarBuscador();
             });
         }
 
