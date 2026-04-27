@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-04-27T05:44:38.991Z",
+  "ultima_actualizacion": "2026-04-27T05:45:30.204Z",
   "configuracion": {
     "comision_certificado_porcentaje": 50,
     "valor_certificado": 20000,
@@ -21,6 +21,21 @@
       "hora_registro": "00:44:38",
       "balance_anterior": 2115000,
       "balance_posterior": 1835000
+    },
+    {
+      "id": "GMOGRWWUY",
+      "fecha": "27/04/2026",
+      "hora": "00:45:30",
+      "concepto": "perifoneo",
+      "categoria": "Otros",
+      "valor": 100000,
+      "responsable": "presidente",
+      "comprobante": "N/A",
+      "observaciones": "",
+      "fecha_registro": "27/04/2026",
+      "hora_registro": "00:45:30",
+      "balance_anterior": 1835000,
+      "balance_posterior": 1735000
     }
   ]
 }
