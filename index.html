@@ -173,13 +173,147 @@
             }
         }
 
-       
+        /* ===== MENÚ DE SELECCIÓN ===== */
+        .menu-card {
+            display: none;
+        }
+
+        .menu-card.show {
+            display: block;
+        }
+
+        .login-card.hidden {
+            display: none;
+        }
+
+        .menu-title {
+            font-size: 1.2rem;
+            color: #1a4a2a;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .menu-user {
+            color: #4a6b4a;
+            font-size: 0.85rem;
+            margin-bottom: 24px;
+            background: #f0f8f0;
+            padding: 10px 16px;
+            border-radius: 12px;
+            display: inline-block;
+        }
+
+        .menu-user span {
+            font-weight: 700;
+            color: #1a4a2a;
+        }
+
+        .menu-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .menu-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 20px;
+            border-radius: 16px;
+            border: 2px solid #d0e4d0;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #1a4a2a;
+        }
+
+        .menu-btn:hover {
+            background: #f0f8f0;
+            border-color: #4c8c4c;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 40, 0, 0.1);
+        }
+
+        .menu-btn .icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .menu-btn .icon.treasury {
+            background: #e6f0e6;
+        }
+
+        .menu-btn .icon.expenses {
+            background: #ffe4e4;
+        }
+
+        .menu-btn .icon.reports {
+            background: #e4f0ff;
+        }
+
+        .menu-btn .icon.admin {
+            background: #fff9e6;
+        }
+
+        .menu-btn .info {
+            flex: 1;
+        }
+
+        .menu-btn .info .name {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a4a2a;
+        }
+
+        .menu-btn .info .desc {
+            font-size: 0.7rem;
+            color: #6a8b6a;
+            margin-top: 2px;
+            font-weight: 500;
+        }
+
+        .menu-btn .arrow {
+            font-size: 1.2rem;
+            color: #a0c0a0;
+            font-weight: 400;
+        }
+
+        .btn-logout {
+            background: none;
+            border: 1px solid #d0e4d0;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #8a6b6b;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 16px;
+            transition: all 0.15s;
+        }
+
+        .btn-logout:hover {
+            background: #f5f0f0;
+            border-color: #c0a0a0;
+            color: #6b2020;
+        }
     </style>
 </head>
 
 <body>
     <div class="login-container">
-        <div class="login-card">
+        <!-- TARJETA DE LOGIN -->
+        <div class="login-card" id="loginCard">
             <div class="logo">🌿</div>
             <h1>JAC Bateas</h1>
             <div class="subtitle">
@@ -205,6 +339,64 @@
                 <span>Junta de Acción Comunal · 2026</span>
             </div>
         </div>
+
+        <!-- TARJETA DE MENÚ -->
+        <div class="login-card menu-card" id="menuCard">
+            <div class="logo">🌿</div>
+            <h1 class="menu-title">JAC Bateas</h1>
+            <div class="menu-user">
+                👤 Sesión: <span id="menuUsername"></span> |
+                🔰 Rol: <span id="menuRol"></span>
+            </div>
+
+            <div class="menu-options">
+                <!-- Tesorería (Recaudos) -->
+                <button class="menu-btn" id="goToTreasuryBtn">
+                    <div class="icon treasury">💰</div>
+                    <div class="info">
+                        <div class="name">Tesorería · Recaudos</div>
+                        <div class="desc">Registrar pagos de cuotas y certificados</div>
+                    </div>
+                    <div class="arrow">→</div>
+                </button>
+
+                <!-- Gastos -->
+                <button class="menu-btn" id="goToExpensesBtn">
+                    <div class="icon expenses">💸</div>
+                    <div class="info">
+                        <div class="name">Control de Gastos</div>
+                        <div class="desc">Registrar y controlar los gastos de la JAC</div>
+                    </div>
+                    <div class="arrow">→</div>
+                </button>
+
+                <!-- Informes (opcional, para futuros roles) -->
+                <button class="menu-btn" id="goToReportsBtn" style="display: none;">
+                    <div class="icon reports">📊</div>
+                    <div class="info">
+                        <div class="name">Informes</div>
+                        <div class="desc">Ver reportes y estadísticas</div>
+                    </div>
+                    <div class="arrow">→</div>
+                </button>
+
+                <!-- Panel de Administración (solo admin) -->
+                <button class="menu-btn" id="goToAdminBtn" style="display: none;">
+                    <div class="icon admin">⚙️</div>
+                    <div class="info">
+                        <div class="name">Administración</div>
+                        <div class="desc">Gestionar tokens, usuarios y configuración</div>
+                    </div>
+                    <div class="arrow">→</div>
+                </button>
+            </div>
+
+            <button class="btn-logout" id="logoutBtn">🚪 Cerrar sesión</button>
+
+            <div class="footer">
+                <span>Junta de Acción Comunal · 2026</span>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -216,6 +408,10 @@
         const passwordInput = document.getElementById('password');
         const loginBtn = document.getElementById('loginBtn');
         const alertMessage = document.getElementById('alertMessage');
+        const loginCard = document.getElementById('loginCard');
+        const menuCard = document.getElementById('menuCard');
+        const menuUsername = document.getElementById('menuUsername');
+        const menuRol = document.getElementById('menuRol');
 
         // Mostrar alertas
         function mostrarAlerta(mensaje, tipo = 'error') {
@@ -276,7 +472,74 @@
             }
         }
 
-        // Redirigir según rol y permisos
+        // Mostrar menú de selección
+        function mostrarMenu(usuario) {
+            // Ocultar login, mostrar menú
+            loginCard.classList.add('hidden');
+            menuCard.classList.add('show');
+
+            // Mostrar información del usuario
+            menuUsername.textContent = usuario.usuario;
+            menuRol.textContent = usuario.rol.charAt(0).toUpperCase() + usuario.rol.slice(1);
+
+            // Configurar visibilidad según rol
+            const goToTreasuryBtn = document.getElementById('goToTreasuryBtn');
+            const goToExpensesBtn = document.getElementById('goToExpensesBtn');
+            const goToReportsBtn = document.getElementById('goToReportsBtn');
+            const goToAdminBtn = document.getElementById('goToAdminBtn');
+
+            // Tesorería: visible para todos excepto revisor
+            if (usuario.rol === 'revisor' || (usuario.permisos && usuario.permisos.solo_informes)) {
+                goToTreasuryBtn.style.display = 'none';
+                goToExpensesBtn.style.display = 'none';
+                goToReportsBtn.style.display = 'flex';
+            } else {
+                goToTreasuryBtn.style.display = 'flex';
+                goToExpensesBtn.style.display = 'flex';
+                goToReportsBtn.style.display = 'none';
+            }
+
+            // Admin: solo si es admin
+            if (usuario.rol === 'admin') {
+                goToAdminBtn.style.display = 'flex';
+            }
+        }
+
+        // Navegar a un módulo
+        function navegarA(modulo, usuario) {
+            const sessionToken = sessionStorage.getItem('session_token');
+            let url = '';
+
+            switch (modulo) {
+                case 'tesoreria':
+                    if (usuario.rol === 'tesorera') {
+                        url = `tesoreria.html?mode=full&user=${encodeURIComponent(usuario.usuario)}&token=${sessionToken}`;
+                    } else {
+                        url = `tesoreria.html?mode=readonly&user=${encodeURIComponent(usuario.usuario)}&token=${sessionToken}`;
+                    }
+                    break;
+
+                case 'gastos':
+                    // Todos los que no son revisor pueden registrar gastos
+                    url = `gastos.html?mode=full&user=${encodeURIComponent(usuario.usuario)}&token=${sessionToken}`;
+                    break;
+
+                case 'informes':
+                    url = `informes.html?mode=readonly&user=${encodeURIComponent(usuario.usuario)}&token=${sessionToken}`;
+                    break;
+
+                case 'admin':
+                    url = `admin.html?user=${encodeURIComponent(usuario.usuario)}&token=${sessionToken}`;
+                    break;
+
+                default:
+                    url = `tesoreria.html?mode=full&user=${encodeURIComponent(usuario.usuario)}&token=${sessionToken}`;
+            }
+
+            window.location.href = url;
+        }
+
+        // Redirigir según rol y permisos (método directo sin menú)
         function redirigirSegunRol(usuario) {
             // Guardar información del usuario en sessionStorage
             sessionStorage.setItem('usuario_actual', JSON.stringify({
@@ -294,22 +557,10 @@
             // Mostrar mensaje de éxito
             mostrarAlerta(`¡Bienvenido ${usuario.usuario}!`, 'success');
 
-            // Redirigir según el rol
+            // Mostrar menú de selección
             setTimeout(() => {
-                // Si el rol es "revisor" o tiene permiso solo_informes, va directo a informes
-                if (usuario.rol === 'revisor' || (usuario.permisos && usuario.permisos.solo_informes)) {
-                    window.location.href = `informes.html?mode=readonly&user=${encodeURIComponent(usuario.usuario)}&token=${sessionToken}`;
-                }
-                // Tesorera y presidente van a tesorería
-                else if (usuario.rol === 'tesorera') {
-                    window.location.href = `tesoreria.html?mode=full&user=${encodeURIComponent(usuario.usuario)}&token=${sessionToken}`;
-                } else if (usuario.rol === 'presidente') {
-                    window.location.href = `tesoreria.html?mode=readonly&user=${encodeURIComponent(usuario.usuario)}&token=${sessionToken}`;
-                } else {
-                    // Por defecto, si no se reconoce el rol, va a informes
-                    window.location.href = `informes.html?mode=readonly&user=${encodeURIComponent(usuario.usuario)}&token=${sessionToken}`;
-                }
-            }, 800);
+                mostrarMenu(usuario);
+            }, 500);
         }
 
         // Evento de login
@@ -345,28 +596,52 @@
             }
         });
 
+        // Eventos de botones del menú
+        document.getElementById('goToTreasuryBtn').addEventListener('click', () => {
+            const usuarioActual = JSON.parse(sessionStorage.getItem('usuario_actual') || '{}');
+            navegarA('tesoreria', usuarioActual);
+        });
+
+        document.getElementById('goToExpensesBtn').addEventListener('click', () => {
+            const usuarioActual = JSON.parse(sessionStorage.getItem('usuario_actual') || '{}');
+            navegarA('gastos', usuarioActual);
+        });
+
+        document.getElementById('goToReportsBtn').addEventListener('click', () => {
+            const usuarioActual = JSON.parse(sessionStorage.getItem('usuario_actual') || '{}');
+            navegarA('informes', usuarioActual);
+        });
+
+        document.getElementById('goToAdminBtn').addEventListener('click', () => {
+            const usuarioActual = JSON.parse(sessionStorage.getItem('usuario_actual') || '{}');
+            navegarA('admin', usuarioActual);
+        });
+
+        // Cerrar sesión desde el menú
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            const confirmar = confirm('¿Estás seguro de cerrar sesión?');
+            if (confirmar) {
+                sessionStorage.clear();
+                localStorage.removeItem('github_token');
+                localStorage.removeItem('jac_access_token');
+                window.location.reload();
+            }
+        });
+
         // Verificar si ya hay sesión activa
         (function verificarSesionActiva() {
             try {
                 const usuarioActual = sessionStorage.getItem('usuario_actual');
                 if (usuarioActual) {
                     const usuario = JSON.parse(usuarioActual);
-                    // Preguntar si quiere continuar con la sesión anterior
-                    const continuar = confirm(`¿Continuar como ${usuario.usuario} (${usuario.rol})?`);
-                    if (continuar) {
-                        const token = sessionStorage.getItem('session_token');
 
-                        // Redirigir según el rol
-                        if (usuario.rol === 'revisor' || (usuario.permisos && usuario.permisos.solo_informes)) {
-                            window.location.href = `informes.html?mode=readonly&user=${encodeURIComponent(usuario.usuario)}&token=${token}`;
-                        } else if (usuario.rol === 'tesorera') {
-                            window.location.href = `tesoreria.html?mode=full&user=${encodeURIComponent(usuario.usuario)}&token=${token}`;
-                        } else if (usuario.rol === 'presidente') {
-                            window.location.href = `tesoreria.html?mode=readonly&user=${encodeURIComponent(usuario.usuario)}&token=${token}`;
-                        } else {
-                            window.location.href = `informes.html?mode=readonly&user=${encodeURIComponent(usuario.usuario)}&token=${token}`;
-                        }
+                    // Si hay sesión activa, mostrar directamente el menú
+                    // y restaurar el token
+                    const token = sessionStorage.getItem('session_token');
+                    if (token) {
+                        mostrarMenu(usuario);
                     } else {
+                        // Si no hay token, limpiar y mostrar login
                         sessionStorage.clear();
                     }
                 }
@@ -378,5 +653,3 @@
 </body>
 
 </html>
-
-
