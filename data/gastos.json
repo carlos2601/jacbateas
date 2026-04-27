@@ -1,26 +1,10 @@
 {
-  "ultima_actualizacion": "2026-04-27T05:52:46.395Z",
+  "ultima_actualizacion": "2026-04-27T05:52:49.587Z",
   "configuracion": {
     "comision_certificado_porcentaje": 50,
     "valor_certificado": 20000,
     "valor_cuota": 5000,
     "costo_papeleria_por_certificado": 10000
   },
-  "gastos": [
-    {
-      "id": "GMOGRXUQI",
-      "fecha": "27/04/2026",
-      "hora": "00:46:14",
-      "concepto": "almuerzos tribunal",
-      "categoria": "Refrigerios",
-      "valor": 75000,
-      "responsable": "presidente",
-      "comprobante": "N/A",
-      "observaciones": "",
-      "fecha_registro": "27/04/2026",
-      "hora_registro": "00:46:14",
-      "balance_anterior": 1735000,
-      "balance_posterior": 1660000
-    }
-  ]
+  "gastos": []
 }
