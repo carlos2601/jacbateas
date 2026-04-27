@@ -1,1 +1,21 @@
-
+{
+  "ultima_actualizacion": "2024-12-20T15:30:00-05:00",
+  "configuracion": {
+    "comision_certificado_porcentaje": 50,
+    "valor_certificado": 20000,
+    "valor_cuota": 5000,
+    "costo_papeleria_por_certificado": 10000
+  },
+  "categorias": [
+    "Mantenimiento",
+    "Servicios públicos",
+    "Eventos comunitarios",
+    "Materiales",
+    "Transporte",
+    "Papelería",
+    "Refrigerios",
+    "Otros"
+  ],
+  "gastos": [],
+  "balance_historico": []
+}
