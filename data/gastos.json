@@ -1,26 +1,10 @@
 {
-  "ultima_actualizacion": "2026-04-27T05:26:29.786Z",
+  "ultima_actualizacion": "2026-04-27T05:40:47.270Z",
   "configuracion": {
     "comision_certificado_porcentaje": 50,
     "valor_certificado": 20000,
     "valor_cuota": 5000,
     "costo_papeleria_por_certificado": 10000
   },
-  "gastos": [
-    {
-      "id": "GMOGR8GW4",
-      "fecha": "27/04/2026",
-      "hora": "00:26:29",
-      "concepto": "refrigerio, almuerzos del tribunal de garantias",
-      "categoria": "Eventos comunitarios",
-      "valor": 284998,
-      "responsable": "presidente",
-      "comprobante": "0001",
-      "observaciones": "",
-      "fecha_registro": "27/04/2026",
-      "hora_registro": "00:26:29",
-      "balance_anterior": 2115000,
-      "balance_posterior": 1830002
-    }
-  ]
+  "gastos": []
 }
