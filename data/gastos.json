@@ -1,10 +1,26 @@
 {
-  "ultima_actualizacion": "2026-04-27T05:40:47.270Z",
+  "ultima_actualizacion": "2026-04-27T05:44:38.991Z",
   "configuracion": {
     "comision_certificado_porcentaje": 50,
     "valor_certificado": 20000,
     "valor_cuota": 5000,
     "costo_papeleria_por_certificado": 10000
   },
-  "gastos": []
+  "gastos": [
+    {
+      "id": "GMOGRVTCC",
+      "fecha": "27/04/2026",
+      "hora": "00:44:38",
+      "concepto": "desayuno, almuerzo, gaseosa",
+      "categoria": "Refrigerios",
+      "valor": 280000,
+      "responsable": "presidente",
+      "comprobante": "N/A",
+      "observaciones": "",
+      "fecha_registro": "27/04/2026",
+      "hora_registro": "00:44:38",
+      "balance_anterior": 2115000,
+      "balance_posterior": 1835000
+    }
+  ]
 }
