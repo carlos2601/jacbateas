@@ -1,1 +1,1958 @@
 
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>JAC Bateas · Control de Gastos</title>
+    <style>
+        /* ===== RESET Y VARIABLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #4c724c 0%, #4c724c 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5px;
+        }
+
+        .app {
+            max-width: 1440px;
+            width: 100%;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 15px 35px rgba(10, 30, 50, 0.15);
+            padding: 5px;
+            border: 1px solid rgba(200, 210, 220, 0.3);
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2px;
+            padding-bottom: 1px;
+            border-bottom: 2px solid #d0dce6;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .logo-area h1 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1a3a5c;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-area h1 span {
+            background: #e6eef0;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #1a3a5c;
+            letter-spacing: 0.3px;
+            border: 1px solid #b8c8d8;
+        }
+
+        .year-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f2f5f9;
+            padding: 6px 18px;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            color: #1a3a5c;
+            border: 1px solid #c0d0e0;
+            font-weight: 500;
+        }
+
+        .year-badge select {
+            border: none;
+            background: transparent;
+            padding: 4px 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #1a3a5c;
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* ===== MODALES DE API ===== */
+        .api-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 30, 50, 0.5);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 20000;
+            padding: 20px;
+        }
+
+        .api-modal-content {
+            background: white;
+            border-radius: 24px;
+            max-width: 400px;
+            width: 100%;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(10, 30, 50, 0.3);
+            border: 2px solid #1a3a5c;
+        }
+
+        .api-modal-content h2 {
+            color: #1a3a5c;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .api-modal-content p {
+            color: #4a5a6a;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .api-modal-content input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #d0dce4;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            outline: none;
+        }
+
+        .api-modal-content input:focus {
+            border-color: #1a3a5c;
+        }
+
+        .api-modal-content button {
+            background: #1a3a5c;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .api-modal-content button:hover {
+            background: #2a4a6c;
+        }
+
+        .api-modal-content .error-message {
+            color: #c04040;
+            margin-top: 10px;
+            font-size: 0.8rem;
+            display: none;
+        }
+
+        .remember-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+            padding: 8px;
+            background: #f5f8fa;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .remember-checkbox input {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .remember-checkbox label {
+            font-size: 0.85rem;
+            color: #1a3a5c;
+            cursor: pointer;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        /* ===== BOTONES ===== */
+        .btn {
+            border: none;
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.15s;
+            background: white;
+            color: #1e293b;
+            border: 1px solid #d0dce0;
+            height: 34px;
+        }
+
+        .btn:hover {
+            background: #f0f4f8;
+            border-color: #a0b0c0;
+        }
+
+        .btn-primary {
+            background: #1a3a5c;
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #2a4a6c;
+        }
+
+        .btn-success {
+            background: #1e6a3a;
+            color: white;
+            border: none;
+        }
+
+        .btn-success:hover {
+            background: #2a7a4a;
+        }
+
+        .btn-danger {
+            background: #c04040;
+            color: white;
+            border: none;
+        }
+
+        .btn-danger:hover {
+            background: #a03030;
+        }
+
+        .btn-warning {
+            background: #ffd966;
+            color: #1a3a5c;
+            border: none;
+        }
+
+        .btn-warning:hover {
+            background: #ffcd4a;
+        }
+
+        .btn-secondary {
+            background: #4a5a6a;
+            color: white;
+            border: none;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6a7a;
+        }
+
+        .btn-expense {
+            background: #c04040;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn-expense:hover {
+            background: #a03030;
+            transform: scale(1.05);
+        }
+
+        /* ===== BARRA DE ACCIONES ===== */
+        .action-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 2px;
+            align-items: center;
+            background: #1a4a2a;
+            padding: 12px 16px;
+            border-radius: 20px;
+            border: 1px solid #d0dce8;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 180px;
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 1.5px solid #d0dce8;
+            border-radius: 10px;
+            padding: 0 10px;
+            transition: all 0.15s;
+        }
+
+        .search-box:focus-within {
+            border-color: #2a5a8c;
+            box-shadow: 0 0 0 3px rgba(42, 90, 140, 0.1);
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 8px 6px;
+            border: none;
+            background: transparent;
+            font-size: 0.85rem;
+        }
+
+        .search-box input:focus {
+            outline: none;
+        }
+
+        .report-group {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        /* ===== TARJETAS DE ESTADÍSTICAS (5 COLUMNAS) ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 14px 6px;
+            border-radius: 14px;
+            border: 1px solid #c0d0e0;
+            box-shadow: 0 2px 8px rgba(10, 30, 50, 0.05);
+            min-height: 110px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .stat-card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .stat-card .stat-front,
+        .stat-card .stat-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            top: 0;
+            left: 0;
+            padding: 14px 6px;
+            border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: white;
+        }
+
+        .stat-card .stat-front {
+            transform: rotateY(0deg);
+            z-index: 2;
+        }
+
+        .stat-card .stat-back {
+            transform: rotateY(180deg);
+            background: #1a3a5c;
+            color: white;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            border: 2px solid #ffd966;
+        }
+
+        .stat-back .eye-icon {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .stat-back .back-text {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-align: center;
+            padding: 0 5px;
+        }
+
+        .stat-label {
+            font-size: 0.68rem;
+            color: #4a5a6a;
+            text-transform: uppercase;
+            letter-spacing: 0.2px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            white-space: nowrap;
+        }
+
+        .stat-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1a2a3a;
+            line-height: 1.3;
+            margin: 2px 0;
+        }
+
+        .stat-desc {
+            font-size: 0.58rem;
+            color: #6a7a8a;
+            margin-top: 4px;
+        }
+
+        .stat-card.recaudo {
+            border-top: 4px solid #2a9d2a;
+        }
+
+        .stat-card.certificados {
+            border-top: 4px solid #b68b40;
+        }
+
+        .stat-card.disponible {
+            border-top: 4px solid #2a6a9a;
+        }
+
+        .stat-card.gastos {
+            border-top: 4px solid #c04040;
+        }
+
+        .stat-card.saldo {
+            border-top: 4px solid #1a6a3a;
+        }
+
+        /* ===== TABLA ===== */
+        .table-section {
+            background: #1a4a2a;
+            border-radius: 20px;
+            border: 3px solid #1a4a2a;
+            margin-bottom: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(10, 30, 50, 0.05);
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 5px;
+            background: #f0f4f8;
+            border-bottom: 2px solid #c8d4e4;
+            background-color: #d0d8e0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .table-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #1a3a5c;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.7rem;
+        }
+
+        th {
+            background: #1a4a2a;
+            color: white;
+            font-weight: 600;
+            padding: 12px 6px;
+            text-align: center;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 8px 6px;
+            border-bottom: 1px solid #c0d0da;
+            vertical-align: middle;
+            text-align: center;
+            background: white;
+            font-size: 12px;
+            font-weight: 500;
+            color: #1a2a3a;
+        }
+
+        tr:hover td {
+            background: #f5f8fa;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: inline-block;
+            background: #e0e8f0;
+            color: #1a3a5c;
+        }
+
+        .badge-expense {
+            background: #ffe0e0;
+            color: #c04040;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .btn-detail {
+            background: #e0e8f0;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #1a3a5c;
+            cursor: pointer;
+            transition: all 0.1s;
+            border: 1px solid #b8c8d8;
+        }
+
+        .btn-detail:hover {
+            background: #d0dae4;
+        }
+
+        .balance-positive {
+            color: #2a7a2a;
+            font-weight: 700;
+        }
+
+        .balance-negative {
+            color: #c04040;
+            font-weight: 700;
+        }
+
+        /* ===== MODALES ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 30, 50, 0.5);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 20px;
+            box-shadow: 0 25px 50px -12px rgba(10, 30, 50, 0.3);
+            border: 1px solid #d0dce4;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #c8d4e4;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 10;
+        }
+
+        .modal-header h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a3a5c;
+            text-align: center;
+            flex: 1;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: #6a7a8a;
+            padding: 2px 6px;
+        }
+
+        .close-btn:hover {
+            color: #1a3a5c;
+        }
+
+        .expense-field {
+            margin-bottom: 16px;
+        }
+
+        .expense-field label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #1a3a5c;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .expense-field input,
+        .expense-field select,
+        .expense-field textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #d0dce4;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .expense-field textarea {
+            resize: vertical;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .loading {
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: none;
+            z-index: 10002;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #e4ffe4;
+            color: #1a4a2a;
+            border-left: 6px solid #2a8e5a;
+        }
+
+        .alert-error {
+            background: #ffe4e4;
+            color: #8a2a2a;
+            border-left: 6px solid #c04040;
+        }
+
+        .alert-info {
+            background: #e4f0ff;
+            color: #2a4a6a;
+            border-left: 6px solid #4a8ac0;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .summary-box {
+            background: #f5f8fa;
+            border: 2px solid #d0dce4;
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .summary-box h4 {
+            color: #1a3a5c;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid #e0e8f0;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0 0 0;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 1200px) {
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 800px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- MODAL DE VALIDACIÓN DE TOKEN DE ACCESO -->
+    <div id="accessTokenModal" class="api-modal">
+        <div class="api-modal-content">
+            <h2>🔐 Validar Token de Acceso</h2>
+            <p>Ingresa el token de acceso generado en el panel de administración</p>
+            <input type="password" id="accessTokenInput" placeholder="Token de acceso" autofocus>
+            <div class="remember-checkbox">
+                <input type="checkbox" id="rememberAccessTokenCheckbox">
+                <label for="rememberAccessTokenCheckbox">🔒 Recordar token en este equipo</label>
+            </div>
+            <button id="validateAccessTokenBtn">Validar y continuar</button>
+            <div id="accessTokenError" class="error-message">❌ Token inválido o expirado</div>
+        </div>
+    </div>
+
+    <!-- MODAL DE TOKEN DE GITHUB -->
+    <div id="githubTokenModal" class="api-modal" style="display: none;">
+        <div class="api-modal-content">
+            <h2>🔐 Configuración API GitHub</h2>
+            <p>Ingresa el token de GitHub para acceder al sistema</p>
+            <input type="password" id="githubTokenInput" placeholder="Token GitHub">
+            <div class="remember-checkbox">
+                <input type="checkbox" id="rememberGithubTokenCheckbox">
+                <label for="rememberGithubTokenCheckbox">🔒 Recordar token en este equipo</label>
+            </div>
+            <button id="validateGithubTokenBtn">Validar y continuar</button>
+            <div id="githubTokenError" class="error-message">❌ Token inválido. Intenta nuevamente.</div>
+        </div>
+    </div>
+
+    <!-- APLICACIÓN PRINCIPAL -->
+    <div class="app" id="mainApp" style="display: none;">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="logo-area">
+                <h1 style="text-align: center; align-items: center;">
+                    💸 Control de Gastos - Junta de Acción Comunal Bateas
+                </h1>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <div class="year-badge">
+                    <span>📅</span>
+                    <select id="yearSelect"></select>
+                </div>
+                <div class="button-group">
+                    <button id="goToTreasuryBtn" class="btn" style="background: #1a4a2a; color: white;">
+                        <span>💰</span> Tesorería
+                    </button>
+                    <button id="changeTokenBtn" class="btn btn-warning">
+                        <span>🔄</span> Cambiar Token
+                    </button>
+                    <button id="logoutTempBtn" class="btn btn-secondary">
+                        <span>🚪</span> Salir
+                    </button>
+                    <button id="logoutFullBtn" class="btn btn-danger">
+                        <span>🗑️</span> Cerrar sesión
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ALERTAS FLOTANTES -->
+        <div id="alertMessage" class="alert"></div>
+
+        <!-- ACCIONES -->
+        <div class="action-bar">
+            <div class="search-box">
+                <span style="color: #6a7a8a;">🔍</span>
+                <input type="text" id="searchInput" placeholder="Buscar por concepto, categoría o responsable...">
+            </div>
+            <button id="newExpenseBtn" class="btn-expense">
+                💸 Nuevo Gasto
+            </button>
+            <div class="report-group">
+                <button id="expensesTodayBtn" class="btn">📅 Hoy</button>
+                <button id="expensesMonthBtn" class="btn">📆 Mes</button>
+                <button id="expensesYearBtn" class="btn">📊 Año</button>
+                <button id="expensesAllBtn" class="btn">📋 Todos</button>
+            </div>
+        </div>
+
+        <!-- ESTADÍSTICAS FINANCIERAS (5 TARJETAS) -->
+        <div class="stats-grid">
+            <!-- 1. RECAUDO DE CUOTAS -->
+            <div class="stat-card recaudo" onclick="this.classList.toggle('flipped')">
+                <div class="stat-front">
+                    <div class="stat-label">💰 Recaudo Cuotas</div>
+                    <div class="stat-value" id="recaudoCuotas">$0</div>
+                    <div class="stat-desc">Mensualidades recibidas</div>
+                </div>
+                <div class="stat-back">
+                    <div class="eye-icon">🏠</div>
+                    <div class="back-text">Total de cuotas de afiliados</div>
+                </div>
+            </div>
+
+            <!-- 2. CERTIFICADOS (NETO - 50%) -->
+            <div class="stat-card certificados" onclick="this.classList.toggle('flipped')">
+                <div class="stat-front">
+                    <div class="stat-label">📜 Certificados</div>
+                    <div class="stat-value" id="certificadosNeto">$0</div>
+                    <div class="stat-desc" style="color: #c04040;">Neto (50% comisión)</div>
+                </div>
+                <div class="stat-back">
+                    <div class="eye-icon">📄</div>
+                    <div class="back-text">Bruto: <span id="certificadosBruto">$0</span> | Comisión: <span
+                            id="comisionCertificados">$0</span></div>
+                </div>
+            </div>
+
+            <!-- 3. DISPONIBLE TOTAL -->
+            <div class="stat-card disponible" onclick="this.classList.toggle('flipped')">
+                <div class="stat-front">
+                    <div class="stat-label">✅ Disponible Total</div>
+                    <div class="stat-value" id="disponibleTotal">$0</div>
+                    <div class="stat-desc">Cuotas + Certificados Neto</div>
+                </div>
+                <div class="stat-back">
+                    <div class="eye-icon">💵</div>
+                    <div class="back-text">Dinero real disponible para usar</div>
+                </div>
+            </div>
+
+            <!-- 4. GASTOS -->
+            <div class="stat-card gastos" onclick="this.classList.toggle('flipped')">
+                <div class="stat-front">
+                    <div class="stat-label">💸 Gastos Totales</div>
+                    <div class="stat-value" id="gastosTotales">$0</div>
+                    <div class="stat-desc"><span id="numGastos">0</span> gastos registrados</div>
+                </div>
+                <div class="stat-back">
+                    <div class="eye-icon">📊</div>
+                    <div class="back-text">Total de gastos registrados en el sistema</div>
+                </div>
+            </div>
+
+            <!-- 5. SALDO TOTAL -->
+            <div class="stat-card saldo" onclick="this.classList.toggle('flipped')">
+                <div class="stat-front">
+                    <div class="stat-label">🏦 Saldo Total</div>
+                    <div class="stat-value" id="saldoTotal">$0</div>
+                    <div class="stat-desc">Disponible - Gastos</div>
+                </div>
+                <div class="stat-back">
+                    <div class="eye-icon">🔒</div>
+                    <div class="back-text">Saldo final después de todos los gastos</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABLA DE GASTOS -->
+        <div class="table-section">
+            <div class="table-header">
+                <div class="table-title">
+                    📋 Registro de Gastos · <span style="background: #d0dce0; padding: 4px 14px; border-radius: 100px;"
+                        id="añoActualDisplay"></span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <span style="font-size: 0.75rem; font-weight: 600; color: #1a3a5c;">
+                        📜 Certificados: <span id="numCertificados">0</span> |
+                        💰 Cuotas: <span id="numCuotas">0</span>
+                    </span>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table id="expensesTable">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Concepto</th>
+                            <th>Categoría</th>
+                            <th>Valor</th>
+                            <th>Saldo Anterior</th>
+                            <th>Saldo Posterior</th>
+                            <th>Responsable</th>
+                            <th>Comprobante</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- MODAL DE NUEVO GASTO -->
+        <div id="expenseModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>💸 Registrar Nuevo Gasto</h3>
+                    <button class="close-btn" id="closeExpenseModalBtn">&times;</button>
+                </div>
+
+                <div class="summary-box" id="balanceSummary">
+                    <h4>📊 Balance Actual</h4>
+                    <div class="summary-item">
+                        <span>💰 Recaudo Cuotas:</span>
+                        <span style="color: #2a7a2a; font-weight: 600;" id="summaryCuotas">$0</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>📜 Certificados Neto:</span>
+                        <span style="color: #b68b40; font-weight: 600;" id="summaryCertNeto">$0</span>
+                    </div>
+                    <div class="summary-total">
+                        <span>✅ DISPONIBLE TOTAL:</span>
+                        <span style="color: #2a6a9a; font-size: 1.1rem;" id="summaryDisponible">$0</span>
+                    </div>
+                    <div class="summary-item" style="margin-top: 8px;">
+                        <span>💸 Gastos registrados:</span>
+                        <span style="color: #c04040; font-weight: 600;" id="summaryGastos">$0</span>
+                    </div>
+                    <div class="summary-total" style="border-top: 2px solid #c8d4e4;">
+                        <span>🏦 SALDO DISPONIBLE:</span>
+                        <span style="font-weight: 700; font-size: 1.1rem;" id="summarySaldo">$0</span>
+                    </div>
+                </div>
+
+                <div class="expense-field">
+                    <label>📅 FECHA DEL GASTO</label>
+                    <input type="date" id="fechaGasto" required>
+                </div>
+
+                <div class="expense-field">
+                    <label>📝 CONCEPTO</label>
+                    <input type="text" id="conceptoGasto" placeholder="Descripción detallada del gasto" required>
+                </div>
+
+                <div class="expense-field">
+                    <label>📂 CATEGORÍA</label>
+                    <select id="categoriaGasto">
+                        <option value="Mantenimiento">Mantenimiento</option>
+                        <option value="Servicios públicos">Servicios públicos</option>
+                        <option value="Eventos comunitarios">Eventos comunitarios</option>
+                        <option value="Materiales">Materiales</option>
+                        <option value="Transporte">Transporte</option>
+                        <option value="Papelería">Papelería</option>
+                        <option value="Refrigerios">Refrigerios</option>
+                        <option value="Otros">Otros</option>
+                    </select>
+                </div>
+
+                <div class="expense-field">
+                    <label>💰 VALOR DEL GASTO</label>
+                    <input type="number" id="valorGasto" placeholder="Valor en pesos" required min="1">
+                    <small style="color: #4a5a6a; display: block; margin-top: 4px;">
+                        ⚠️ Saldo disponible: <span id="disponibleGasto" style="font-weight: 700;">$0</span>
+                    </small>
+                </div>
+
+                <div class="expense-field">
+                    <label>👤 RESPONSABLE</label>
+                    <input type="text" id="responsableGasto" placeholder="Nombre de quien realizó el gasto" required>
+                </div>
+
+                <div class="expense-field">
+                    <label>📄 COMPROBANTE No.</label>
+                    <input type="text" id="comprobanteGasto" placeholder="Número de factura o recibo">
+                </div>
+
+                <div class="expense-field">
+                    <label>📋 OBSERVACIONES</label>
+                    <textarea id="observacionesGasto" rows="3" placeholder="Detalles adicionales del gasto"></textarea>
+                </div>
+
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                    <button id="cancelExpenseBtn" class="btn">Cancelar</button>
+                    <button id="saveExpenseBtn" class="btn btn-danger">💾 Registrar Gasto</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL DE REPORTE -->
+        <div id="reportModal" class="modal">
+            <div class="modal-content" style="max-width: 900px;">
+                <div class="modal-header">
+                    <h3 id="reportTitle">Reporte de gastos</h3>
+                    <div style="display: flex; gap: 2px;">
+                        <button id="printReportBtn" class="btn" style="padding: 4px 10px;">🖨️</button>
+                        <button class="close-btn" id="closeReportModalBtn">&times;</button>
+                    </div>
+                </div>
+                <div id="reportContent" style="overflow-x: auto;"></div>
+            </div>
+        </div>
+
+        <div style="margin-top: 24px; text-align: center; color: #6a7a8a; font-size: 0.6rem; font-weight: 500;">
+            <span>Junta de Acción Comunal Barrio Bateas · Puerto Gaitán, Meta</span>
+            <span style="margin-left: 16px;">📅 <span id="fechaActualDisplay"></span></span>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // VERIFICACIÓN DE AUTENTICACIÓN INICIAL
+        // ============================================================
+        (function verificarAutenticacion() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            const user = urlParams.get('user');
+            const mode = urlParams.get('mode');
+
+            const sessionToken = sessionStorage.getItem('session_token');
+            const usuarioActual = sessionStorage.getItem('usuario_actual');
+
+            if (!token && !sessionToken) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            if (token && !sessionToken) {
+                sessionStorage.setItem('session_token', token);
+            }
+
+            if (user && !usuarioActual) {
+                try {
+                    const usuarioInfo = {
+                        usuario: user,
+                        rol: mode === 'full' ? 'tesorera' : 'presidente',
+                        modo: mode
+                    };
+                    sessionStorage.setItem('usuario_actual', JSON.stringify(usuarioInfo));
+                } catch (e) {
+                    console.error('Error al guardar usuario:', e);
+                }
+            }
+
+            if (!sessionStorage.getItem('usuario_actual')) {
+                window.location.href = 'index.html';
+            }
+        })();
+
+        // ============================================================
+        // CONFIGURACIÓN
+        // ============================================================
+        const CONFIG = {
+            SOURCE: {
+                REPO_OWNER: 'carlos2601',
+                REPO_NAME: 'juntadeaccioncomunalbarriobateaspuertogaitanmetalilianalondo-ogallego1010101010101000111010001010010',
+                AFILIADOS_PATH: 'afiliados.json',
+                BRANCH: 'main'
+            },
+            DESTINATION: {
+                REPO_OWNER: 'carlos2601',
+                REPO_NAME: 'jacbateas',
+                CUOTA_PATH: 'data/cuota.json',
+                GASTOS_PATH: 'data/gastos.json',
+                BRANCH: 'main'
+            },
+            VALOR_CUOTA: 5000,
+            VALOR_CERTIFICADO: 20000,
+            COMISION_CERTIFICADO_PORCENTAJE: 50,
+            COSTO_PAPELERIA_POR_CERTIFICADO: 10000,
+            ADMIN_TOKEN: 'carlos2601'
+        };
+
+        let appState = {
+            afiliados: [],
+            pagos: [],
+            gastos: [],
+            githubToken: null,
+            accessTokenData: null,
+            usuarioActual: null,
+            fechaActual: new Date(),
+            selectedYear: new Date().getFullYear(),
+            filtroActual: '',
+            balanceReal: null
+        };
+
+        const dom = {
+            mainApp: document.getElementById('mainApp'),
+            accessTokenModal: document.getElementById('accessTokenModal'),
+            accessTokenInput: document.getElementById('accessTokenInput'),
+            validateAccessTokenBtn: document.getElementById('validateAccessTokenBtn'),
+            accessTokenError: document.getElementById('accessTokenError'),
+            rememberAccessTokenCheckbox: document.getElementById('rememberAccessTokenCheckbox'),
+            githubTokenModal: document.getElementById('githubTokenModal'),
+            githubTokenInput: document.getElementById('githubTokenInput'),
+            validateGithubTokenBtn: document.getElementById('validateGithubTokenBtn'),
+            githubTokenError: document.getElementById('githubTokenError'),
+            rememberGithubTokenCheckbox: document.getElementById('rememberGithubTokenCheckbox'),
+            tableBody: document.getElementById('tableBody'),
+            alertMessage: document.getElementById('alertMessage'),
+            searchInput: document.getElementById('searchInput'),
+            yearSelect: document.getElementById('yearSelect'),
+            añoActualDisplay: document.getElementById('añoActualDisplay'),
+            fechaActualDisplay: document.getElementById('fechaActualDisplay'),
+            expenseModal: document.getElementById('expenseModal'),
+            closeExpenseModalBtn: document.getElementById('closeExpenseModalBtn'),
+            cancelExpenseBtn: document.getElementById('cancelExpenseBtn'),
+            saveExpenseBtn: document.getElementById('saveExpenseBtn'),
+            reportModal: document.getElementById('reportModal'),
+            closeReportModalBtn: document.getElementById('closeReportModalBtn'),
+            printReportBtn: document.getElementById('printReportBtn'),
+            reportTitle: document.getElementById('reportTitle'),
+            reportContent: document.getElementById('reportContent'),
+            changeTokenBtn: document.getElementById('changeTokenBtn'),
+            goToTreasuryBtn: document.getElementById('goToTreasuryBtn')
+        };
+
+        // ============================================================
+        // FUNCIÓN DE VALIDACIÓN DE TOKEN DE ACCESO
+        // ============================================================
+        function validarTokenAcceso(tokenIngresado) {
+            if (tokenIngresado === CONFIG.ADMIN_TOKEN) {
+                return { valido: true, data: { token: tokenIngresado, fechaExpiracion: new Date('2099-12-31'), esAdmin: true } };
+            }
+
+            const tokens = JSON.parse(localStorage.getItem('tokens_jacbateas') || '[]');
+            const ahora = new Date();
+
+            const tokenEncontrado = tokens.find(t => {
+                if (t.token === tokenIngresado) {
+                    const fechaInicio = new Date(t.fechaInicio);
+                    const fechaExpiracion = new Date(t.fechaExpiracion);
+                    return fechaInicio <= ahora && fechaExpiracion > ahora;
+                }
+                return false;
+            });
+
+            if (tokenEncontrado) {
+                return { valido: true, data: tokenEncontrado };
+            }
+            return { valido: false };
+        }
+
+        // ============================================================
+        // PROCESAR VALIDACIÓN DEL TOKEN DE ACCESO
+        // ============================================================
+        async function procesarValidacionAccessToken() {
+            const tokenAcceso = dom.accessTokenInput.value.trim();
+
+            if (!tokenAcceso) {
+                dom.accessTokenError.style.display = 'block';
+                dom.accessTokenError.textContent = '❌ Debes ingresar un token de acceso';
+                return;
+            }
+
+            const validacion = validarTokenAcceso(tokenAcceso);
+
+            if (validacion.valido) {
+                appState.accessTokenData = validacion.data;
+
+                if (dom.rememberAccessTokenCheckbox.checked) {
+                    localStorage.setItem('jac_access_token', tokenAcceso);
+                }
+
+                iniciarMonitorTokenAcceso(validacion.data.fechaExpiracion);
+                dom.accessTokenModal.style.display = 'none';
+
+                const githubTokenGuardado = localStorage.getItem('github_token');
+                if (githubTokenGuardado) {
+                    const esValido = await validarTokenGitHub(githubTokenGuardado);
+                    if (esValido) {
+                        await cargarDatosConGithubToken(githubTokenGuardado);
+                        return;
+                    } else {
+                        localStorage.removeItem('github_token');
+                    }
+                }
+
+                dom.githubTokenModal.style.display = 'flex';
+                dom.githubTokenInput.focus();
+            } else {
+                dom.accessTokenError.style.display = 'block';
+                dom.accessTokenError.textContent = '❌ Token inválido o expirado';
+            }
+        }
+
+        // ============================================================
+        // FUNCIONES DE GITHUB
+        // ============================================================
+        async function validarTokenGitHub(token) {
+            try {
+                const url = `https://api.github.com/repos/${CONFIG.DESTINATION.REPO_OWNER}/${CONFIG.DESTINATION.REPO_NAME}/contents/${CONFIG.DESTINATION.CUOTA_PATH}`;
+                const res = await fetch(url, { headers: { 'Authorization': `token ${token}` } });
+                return res.status === 200 || res.status === 404;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function cargarDatosCuotas() {
+            const url = `https://raw.githubusercontent.com/${CONFIG.DESTINATION.REPO_OWNER}/${CONFIG.DESTINATION.REPO_NAME}/refs/heads/${CONFIG.DESTINATION.BRANCH}/${CONFIG.DESTINATION.CUOTA_PATH}`;
+            try {
+                const res = await fetch(url);
+                if (res.status === 404) return { pagos: [] };
+                return await res.json();
+            } catch {
+                return { pagos: [] };
+            }
+        }
+
+        async function cargarDatosGastos() {
+            const url = `https://raw.githubusercontent.com/${CONFIG.DESTINATION.REPO_OWNER}/${CONFIG.DESTINATION.REPO_NAME}/refs/heads/${CONFIG.DESTINATION.BRANCH}/${CONFIG.DESTINATION.GASTOS_PATH}`;
+            try {
+                const res = await fetch(url);
+                if (res.status === 404) return { gastos: [], configuracion: { comision_certificado_porcentaje: 50 } };
+                return await res.json();
+            } catch {
+                return { gastos: [], configuracion: { comision_certificado_porcentaje: 50 } };
+            }
+        }
+
+        async function guardarGastosEnGitHub() {
+            try {
+                const content = {
+                    ultima_actualizacion: new Date().toISOString(),
+                    configuracion: {
+                        comision_certificado_porcentaje: CONFIG.COMISION_CERTIFICADO_PORCENTAJE,
+                        valor_certificado: CONFIG.VALOR_CERTIFICADO,
+                        valor_cuota: CONFIG.VALOR_CUOTA,
+                        costo_papeleria_por_certificado: CONFIG.COSTO_PAPELERIA_POR_CERTIFICADO
+                    },
+                    gastos: appState.gastos
+                };
+
+                const url = `https://api.github.com/repos/${CONFIG.DESTINATION.REPO_OWNER}/${CONFIG.DESTINATION.REPO_NAME}/contents/${CONFIG.DESTINATION.GASTOS_PATH}`;
+                let sha = null;
+                try {
+                    const shaRes = await fetch(url, { headers: { 'Authorization': `token ${appState.githubToken}` } });
+                    if (shaRes.ok) {
+                        const shaData = await shaRes.json();
+                        sha = shaData.sha;
+                    }
+                } catch (e) { }
+
+                const res = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${appState.githubToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: `Gasto - ${new Date().toLocaleDateString()}`,
+                        content: btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2)))),
+                        sha,
+                        branch: CONFIG.DESTINATION.BRANCH
+                    })
+                });
+
+                if (!res.ok) throw new Error('Error al guardar');
+                return true;
+            } catch (e) {
+                throw new Error(e.message);
+            }
+        }
+
+        // ============================================================
+        // FUNCIONES DE CÁLCULO FINANCIERO
+        // ============================================================
+        function extraerPagosDeString(str, año) {
+            if (!str) return [];
+            return str.split(';').filter(p => p.trim()).map(p => {
+                const partes = p.trim().split('_');
+                return {
+                    mes: partes[0],
+                    año: parseInt(partes[1]),
+                    valor: parseInt(partes[2]),
+                    fecha: partes[3],
+                    hora: partes[4] || '00:00:00',
+                    recibo: partes[5] || 'N/A'
+                };
+            }).filter(p => p.año === año);
+        }
+
+        function extraerCertificadosDeString(str) {
+            if (!str) return [];
+            return str.split(';').filter(c => c.trim()).map(c => {
+                const partes = c.trim().split('_');
+                return {
+                    mes: partes[0],
+                    año: parseInt(partes[1]),
+                    valor: parseInt(partes[2]),
+                    fecha: partes[3],
+                    hora: partes[4] || '00:00:00',
+                    recibo: partes[5] || 'N/A'
+                };
+            });
+        }
+
+        function calcularTotalCuotas() {
+            let total = 0;
+            appState.pagos.forEach(registro => {
+                for (let año = 2024; año <= appState.fechaActual.getFullYear(); año++) {
+                    const campo = `fecha_pago_año_${año}`;
+                    if (registro[campo]) {
+                        const pagosAño = extraerPagosDeString(registro[campo], año);
+                        total += pagosAño.reduce((sum, p) => sum + p.valor, 0);
+                    }
+                }
+            });
+            return total;
+        }
+
+        function calcularTotalCertificadosBruto() {
+            let total = 0;
+            appState.pagos.forEach(registro => {
+                if (registro.certificado) {
+                    const certificados = extraerCertificadosDeString(registro.certificado);
+                    total += certificados.reduce((sum, c) => sum + c.valor, 0);
+                }
+            });
+            return total;
+        }
+
+        function contarCertificados() {
+            let count = 0;
+            appState.pagos.forEach(registro => {
+                if (registro.certificado) {
+                    const certificados = extraerCertificadosDeString(registro.certificado);
+                    count += certificados.length;
+                }
+            });
+            return count;
+        }
+
+        function contarCuotasPagadas() {
+            let count = 0;
+            appState.pagos.forEach(registro => {
+                for (let año = 2024; año <= appState.fechaActual.getFullYear(); año++) {
+                    const campo = `fecha_pago_año_${año}`;
+                    if (registro[campo]) {
+                        const pagosAño = extraerPagosDeString(registro[campo], año);
+                        count += pagosAño.length;
+                    }
+                }
+            });
+            return count;
+        }
+
+        async function calcularBalanceReal() {
+            const ingresosCuotas = calcularTotalCuotas();
+            const ingresosCertificadosBruto = calcularTotalCertificadosBruto();
+            const comisionPapeleria = ingresosCertificadosBruto * (CONFIG.COMISION_CERTIFICADO_PORCENTAJE / 100);
+            const ingresosCertificadosNeto = ingresosCertificadosBruto - comisionPapeleria;
+            const disponibleTotal = ingresosCuotas + ingresosCertificadosNeto;
+            const totalGastos = appState.gastos.reduce((sum, g) => sum + g.valor, 0);
+            const saldoTotal = disponibleTotal - totalGastos;
+
+            return {
+                ingresosCuotas,
+                ingresosCertificadosBruto,
+                comisionPapeleria,
+                ingresosCertificadosNeto,
+                disponibleTotal,
+                totalGastos,
+                saldoTotal,
+                numeroCertificados: contarCertificados(),
+                numeroCuotasPagadas: contarCuotasPagadas(),
+                numeroGastos: appState.gastos.length
+            };
+        }
+
+        async function actualizarPanelFinanciero() {
+            const balance = await calcularBalanceReal();
+            appState.balanceReal = balance;
+
+            document.getElementById('recaudoCuotas').textContent =
+                `$${balance.ingresosCuotas.toLocaleString()}`;
+
+            document.getElementById('certificadosNeto').textContent =
+                `$${balance.ingresosCertificadosNeto.toLocaleString()}`;
+            document.getElementById('certificadosBruto').textContent =
+                `$${balance.ingresosCertificadosBruto.toLocaleString()}`;
+            document.getElementById('comisionCertificados').textContent =
+                `-$${balance.comisionPapeleria.toLocaleString()}`;
+
+            document.getElementById('disponibleTotal').textContent =
+                `$${balance.disponibleTotal.toLocaleString()}`;
+
+            document.getElementById('gastosTotales').textContent =
+                `$${balance.totalGastos.toLocaleString()}`;
+            document.getElementById('numGastos').textContent = balance.numeroGastos;
+
+            const saldoElem = document.getElementById('saldoTotal');
+            saldoElem.textContent = `$${balance.saldoTotal.toLocaleString()}`;
+            saldoElem.style.color = balance.saldoTotal >= 0 ? '#1a6a3a' : '#c04040';
+
+            document.getElementById('numCertificados').textContent = balance.numeroCertificados;
+            document.getElementById('numCuotas').textContent = balance.numeroCuotasPagadas;
+        }
+
+        function actualizarResumenModal() {
+            if (!appState.balanceReal) return;
+
+            const b = appState.balanceReal;
+            document.getElementById('summaryCuotas').textContent = `$${b.ingresosCuotas.toLocaleString()}`;
+            document.getElementById('summaryCertNeto').textContent = `$${b.ingresosCertificadosNeto.toLocaleString()}`;
+            document.getElementById('summaryDisponible').textContent = `$${b.disponibleTotal.toLocaleString()}`;
+            document.getElementById('summaryGastos').textContent = `$${b.totalGastos.toLocaleString()}`;
+
+            const saldoElem = document.getElementById('summarySaldo');
+            saldoElem.textContent = `$${b.saldoTotal.toLocaleString()}`;
+            saldoElem.style.color = b.saldoTotal >= 0 ? '#1a6a3a' : '#c04040';
+
+            document.getElementById('disponibleGasto').textContent = `$${b.saldoTotal.toLocaleString()}`;
+        }
+
+        // ============================================================
+        // RENDERIZAR TABLA DE GASTOS - USA VALORES GUARDADOS, NO RECALCULA
+        // ============================================================
+        function renderizarTablaGastos() {
+            let gastosFiltrados = [...appState.gastos];
+
+            // Aplicar filtro de año
+            gastosFiltrados = gastosFiltrados.filter(g => {
+                const partes = g.fecha.split('/');
+                const añoGasto = parseInt(partes[2]);
+                return añoGasto === appState.selectedYear;
+            });
+
+            // Aplicar filtro de búsqueda
+            if (appState.filtroActual) {
+                const filtro = appState.filtroActual.toLowerCase();
+                gastosFiltrados = gastosFiltrados.filter(g =>
+                    g.concepto.toLowerCase().includes(filtro) ||
+                    g.categoria.toLowerCase().includes(filtro) ||
+                    g.responsable.toLowerCase().includes(filtro) ||
+                    (g.comprobante && g.comprobante.toLowerCase().includes(filtro))
+                );
+            }
+
+            // Ordenar por fecha (MÁS RECIENTE PRIMERO)
+            gastosFiltrados.sort((a, b) => {
+                const [diaA, mesA, añoA] = a.fecha.split('/').map(Number);
+                const [diaB, mesB, añoB] = b.fecha.split('/').map(Number);
+                const fechaA = new Date(añoA, mesA - 1, diaA);
+                const fechaB = new Date(añoB, mesB - 1, diaB);
+                return fechaB - fechaA;
+            });
+
+            let html = '';
+
+            if (gastosFiltrados.length === 0) {
+                html = `<tr><td colspan="9" style="padding: 40px; text-align: center; color: #6a7a8a;">
+                    📭 No hay gastos registrados en este período
+                </td></tr>`;
+            } else {
+                gastosFiltrados.forEach(gasto => {
+                    // ✅ USAR LOS VALORES GUARDADOS - NUNCA RECALCULAR
+                    const balanceAnterior = gasto.balance_anterior || 0;
+                    const balancePosterior = gasto.balance_posterior || 0;
+                    const balancePosteriorClass = balancePosterior >= 0 ? 'balance-positive' : 'balance-negative';
+
+                    html += `
+                        <tr>
+                            <td>${gasto.fecha}</td>
+                            <td style="text-align: left;">${gasto.concepto}</td>
+                            <td><span class="badge-expense">${gasto.categoria}</span></td>
+                            <td style="color: #c04040; font-weight: 700;">
+                                -$${gasto.valor.toLocaleString()}
+                            </td>
+                            <td style="color: #2a6a9a; font-weight: 600;">
+                                $${balanceAnterior.toLocaleString()}
+                            </td>
+                            <td class="${balancePosteriorClass}">
+                                $${balancePosterior.toLocaleString()}
+                            </td>
+                            <td>${gasto.responsable}</td>
+                            <td style="font-weight: 600;">${gasto.comprobante || '—'}</td>
+                            <td>
+                                <button onclick="eliminarGasto('${gasto.id}')" 
+                                        class="btn" style="background: #c04040; color: white; padding: 4px 10px; font-size: 0.7rem;">
+                                    🗑️
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            dom.tableBody.innerHTML = html;
+        }
+
+        // ============================================================
+        // REGISTRAR NUEVO GASTO - GUARDA SALDOS CONGELADOS
+        // ============================================================
+        async function registrarGasto() {
+            const fecha = document.getElementById('fechaGasto').value;
+            const concepto = document.getElementById('conceptoGasto').value.trim();
+            const categoria = document.getElementById('categoriaGasto').value;
+            const valor = parseInt(document.getElementById('valorGasto').value);
+            const responsable = document.getElementById('responsableGasto').value.trim();
+            const comprobante = document.getElementById('comprobanteGasto').value.trim();
+            const observaciones = document.getElementById('observacionesGasto').value.trim();
+
+            if (!fecha) return mostrarAlerta('❌ Debes seleccionar una fecha', 'error');
+            if (!concepto) return mostrarAlerta('❌ Debes escribir un concepto', 'error');
+            if (!valor || valor <= 0) return mostrarAlerta('❌ Debes ingresar un valor válido', 'error');
+            if (!responsable) return mostrarAlerta('❌ Debes indicar el responsable', 'error');
+
+            const balance = appState.balanceReal;
+
+            if (valor > balance.saldoTotal) {
+                return mostrarAlerta(
+                    `❌ Saldo insuficiente. Disponible: $${balance.saldoTotal.toLocaleString()} | ` +
+                    `Gasto: $${valor.toLocaleString()} | ` +
+                    `Faltante: $${(valor - balance.saldoTotal).toLocaleString()}`,
+                    'error'
+                );
+            }
+
+            if (valor > balance.saldoTotal * 0.8 && balance.saldoTotal > 0) {
+                const confirmar = confirm(
+                    `⚠️ Este gasto representa el ${((valor / balance.saldoTotal) * 100).toFixed(1)}% ` +
+                    `del saldo disponible ($${balance.saldoTotal.toLocaleString()}).\n\n¿Desea continuar?`
+                );
+                if (!confirmar) return;
+            }
+
+            const fechaFormateada = fecha.split('-').reverse().join('/');
+            const ahora = new Date();
+
+            // ✅ GUARDAR SALDOS CONGELADOS EN ESTE MOMENTO
+            const nuevoGasto = {
+                id: 'G' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substr(2, 4),
+                fecha: fechaFormateada,
+                hora: ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+                concepto,
+                categoria,
+                valor,
+                responsable,
+                comprobante: comprobante || 'N/A',
+                observaciones: observaciones || '',
+                fecha_registro: ahora.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+                hora_registro: ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+                balance_anterior: balance.saldoTotal,
+                balance_posterior: balance.saldoTotal - valor
+            };
+
+            const saveBtn = dom.saveExpenseBtn;
+            const originalText = saveBtn.innerHTML;
+
+            try {
+                saveBtn.innerHTML = '<span class="loading">⌛</span> Guardando...';
+                saveBtn.disabled = true;
+
+                appState.gastos.push(nuevoGasto);
+                await guardarGastosEnGitHub();
+
+                await actualizarPanelFinanciero();
+                renderizarTablaGastos();
+
+                mostrarAlerta('✅ Gasto registrado exitosamente', 'success');
+                dom.expenseModal.style.display = 'none';
+
+                document.getElementById('conceptoGasto').value = '';
+                document.getElementById('valorGasto').value = '';
+                document.getElementById('responsableGasto').value = '';
+                document.getElementById('comprobanteGasto').value = '';
+                document.getElementById('observacionesGasto').value = '';
+            } catch (e) {
+                mostrarAlerta('Error al guardar: ' + e.message, 'error');
+                appState.gastos.pop();
+            } finally {
+                saveBtn.innerHTML = originalText;
+                saveBtn.disabled = false;
+            }
+        }
+
+        async function eliminarGasto(id) {
+            const gasto = appState.gastos.find(g => g.id === id);
+            if (!gasto) return;
+
+            const confirmar = confirm(
+                `¿Está seguro de eliminar este gasto?\n\n` +
+                `Concepto: ${gasto.concepto}\n` +
+                `Valor: $${gasto.valor.toLocaleString()}\n` +
+                `Fecha: ${gasto.fecha}\n\n` +
+                `Esta acción no se puede deshacer.`
+            );
+
+            if (!confirmar) return;
+
+            try {
+                appState.gastos = appState.gastos.filter(g => g.id !== id);
+                await guardarGastosEnGitHub();
+                await actualizarPanelFinanciero();
+                renderizarTablaGastos();
+                mostrarAlerta('✅ Gasto eliminado exitosamente', 'success');
+            } catch (e) {
+                mostrarAlerta('Error al eliminar: ' + e.message, 'error');
+                const data = await cargarDatosGastos();
+                appState.gastos = data.gastos || [];
+                await actualizarPanelFinanciero();
+                renderizarTablaGastos();
+            }
+        }
+
+        // ============================================================
+        // REPORTES
+        // ============================================================
+        function generarReporte(titulo, filtroFn) {
+            let gastosFiltrados = [...appState.gastos];
+            if (filtroFn) gastosFiltrados = gastosFiltrados.filter(filtroFn);
+
+            gastosFiltrados.sort((a, b) => {
+                const [diaA, mesA, añoA] = a.fecha.split('/').map(Number);
+                const [diaB, mesB, añoB] = b.fecha.split('/').map(Number);
+                return new Date(añoB, mesB - 1, diaB) - new Date(añoA, mesA - 1, diaA);
+            });
+
+            let html = `<table style="width: 100%; border-collapse: collapse; font-size: 0.75rem;">
+                <thead><tr style="background: #1a3a5c; color: white;">
+                    <th style="padding: 10px;">Fecha</th>
+                    <th style="padding: 10px;">Concepto</th>
+                    <th style="padding: 10px;">Categoría</th>
+                    <th style="padding: 10px;">Valor</th>
+                    <th style="padding: 10px;">Saldo Ant.</th>
+                    <th style="padding: 10px;">Saldo Post.</th>
+                    <th style="padding: 10px;">Responsable</th>
+                    <th style="padding: 10px;">Comprobante</th>
+                </tr></thead><tbody>`;
+
+            if (gastosFiltrados.length === 0) {
+                html += `<tr><td colspan="8" style="padding: 40px; text-align: center;">No hay gastos en este período</td></tr>`;
+            } else {
+                let total = 0;
+                gastosFiltrados.forEach(g => {
+                    total += g.valor;
+                    html += `<tr style="border-bottom: 1px solid #d0dce0;">
+                        <td style="padding: 8px; text-align: center;">${g.fecha}</td>
+                        <td style="padding: 8px;">${g.concepto}</td>
+                        <td style="padding: 8px;"><span class="badge-expense">${g.categoria}</span></td>
+                        <td style="padding: 8px; text-align: right; color: #c04040; font-weight: 600;">
+                            $${g.valor.toLocaleString()}
+                        </td>
+                        <td style="padding: 8px; text-align: right;">$${(g.balance_anterior || 0).toLocaleString()}</td>
+                        <td style="padding: 8px; text-align: right;">$${(g.balance_posterior || 0).toLocaleString()}</td>
+                        <td style="padding: 8px;">${g.responsable}</td>
+                        <td style="padding: 8px; text-align: center;">${g.comprobante || '—'}</td>
+                    </tr>`;
+                });
+                html += `<tr style="background: #e0e8f0; font-weight: 700;">
+                    <td colspan="3" style="padding: 10px; text-align: right;">Total:</td>
+                    <td style="padding: 10px; text-align: right; color: #c04040;">$${total.toLocaleString()}</td>
+                    <td colspan="4"></td>
+                </tr>`;
+            }
+            html += `</tbody></table>`;
+
+            if (appState.balanceReal) {
+                const b = appState.balanceReal;
+                html += `<div style="margin-top: 20px; padding: 16px; background: #f5f8fa; border-radius: 12px; border: 2px solid #d0dce4;">
+                    <h4 style="color: #1a3a5c; margin-bottom: 12px;">📊 Resumen Financiero Actual</h4>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; font-size: 0.8rem;">
+                        <div>💰 Recaudo Cuotas:</div>
+                        <div style="text-align: right; color: #2a7a2a; font-weight: 600;">$${b.ingresosCuotas.toLocaleString()}</div>
+                        <div>📜 Certificados Neto:</div>
+                        <div style="text-align: right; color: #b68b40; font-weight: 600;">$${b.ingresosCertificadosNeto.toLocaleString()}</div>
+                        <div>✅ Disponible Total:</div>
+                        <div style="text-align: right; color: #2a6a9a; font-weight: 600;">$${b.disponibleTotal.toLocaleString()}</div>
+                        <div>💸 Gastos Totales:</div>
+                        <div style="text-align: right; color: #c04040; font-weight: 600;">$${b.totalGastos.toLocaleString()}</div>
+                        <div style="font-weight: 700; border-top: 2px solid #c8d4e4; padding-top: 8px;">🏦 Saldo Total:</div>
+                        <div style="text-align: right; font-weight: 700; border-top: 2px solid #c8d4e4; padding-top: 8px; color: ${b.saldoTotal >= 0 ? '#1a6a3a' : '#c04040'};">
+                            $${b.saldoTotal.toLocaleString()}
+                        </div>
+                    </div>
+                </div>`;
+            }
+
+            dom.reportTitle.textContent = titulo;
+            dom.reportContent.innerHTML = html;
+            dom.reportModal.style.display = 'flex';
+        }
+
+        function mostrarAlerta(msg, tipo = 'error') {
+            dom.alertMessage.textContent = msg;
+            dom.alertMessage.className = `alert show alert-${tipo}`;
+            setTimeout(() => dom.alertMessage.classList.remove('show'), 5000);
+        }
+
+        // ============================================================
+        // INICIALIZACIÓN
+        // ============================================================
+        async function cargarDatosConGithubToken(token) {
+            appState.githubToken = token;
+            try {
+                mostrarAlerta('📥 Cargando datos de tesorería...', 'info');
+                const datosCuotas = await cargarDatosCuotas();
+                appState.pagos = datosCuotas.pagos || [];
+
+                mostrarAlerta('📥 Cargando gastos...', 'info');
+                const datosGastos = await cargarDatosGastos();
+                appState.gastos = datosGastos.gastos || [];
+
+                dom.githubTokenModal.style.display = 'none';
+                dom.mainApp.style.display = 'block';
+
+                await actualizarPanelFinanciero();
+                renderizarTablaGastos();
+
+                mostrarAlerta('✅ Datos cargados correctamente', 'success');
+            } catch (e) {
+                mostrarAlerta('Error al cargar datos: ' + e.message, 'error');
+            }
+        }
+
+        async function inicializar() {
+            const añoActual = appState.fechaActual.getFullYear();
+            for (let i = 2024; i <= añoActual; i++) {
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.textContent = i;
+                dom.yearSelect.appendChild(opt);
+            }
+            dom.yearSelect.value = añoActual;
+            dom.fechaActualDisplay.textContent = appState.fechaActual.toLocaleDateString('es-ES', {
+                day: '2-digit', month: '2-digit', year: 'numeric'
+            });
+
+            dom.validateAccessTokenBtn.addEventListener('click', procesarValidacionAccessToken);
+            dom.validateGithubTokenBtn.addEventListener('click', procesarValidacionGithubToken);
+            dom.changeTokenBtn.addEventListener('click', cambiarToken);
+            dom.goToTreasuryBtn.addEventListener('click', () => {
+                const usuarioActual = JSON.parse(sessionStorage.getItem('usuario_actual') || '{}');
+                window.location.href = `tesoreria.html?token=${sessionStorage.getItem('session_token')}&user=${usuarioActual.usuario}&mode=${usuarioActual.modo}`;
+            });
+
+            dom.accessTokenInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') procesarValidacionAccessToken();
+            });
+            dom.githubTokenInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') procesarValidacionGithubToken();
+            });
+
+            const hoy = new Date();
+            document.getElementById('fechaGasto').value = hoy.toISOString().split('T')[0];
+
+            const tokenGuardado = localStorage.getItem('jac_access_token');
+
+            if (tokenGuardado) {
+                const validacion = validarTokenAcceso(tokenGuardado);
+
+                if (validacion.valido) {
+                    appState.accessTokenData = validacion.data;
+                    iniciarMonitorTokenAcceso(validacion.data.fechaExpiracion);
+                    dom.accessTokenModal.style.display = 'none';
+
+                    const githubToken = localStorage.getItem('github_token');
+                    if (githubToken) {
+                        const valido = await validarTokenGitHub(githubToken);
+                        if (valido) {
+                            await cargarDatosConGithubToken(githubToken);
+                            return;
+                        }
+                    }
+
+                    dom.githubTokenModal.style.display = 'flex';
+                    dom.githubTokenInput.focus();
+                    return;
+                } else {
+                    localStorage.removeItem('jac_access_token');
+                }
+            }
+
+            dom.accessTokenModal.style.display = 'flex';
+            dom.accessTokenInput.focus();
+        }
+
+        async function procesarValidacionGithubToken() {
+            const githubToken = dom.githubTokenInput.value.trim();
+            if (!githubToken) {
+                dom.githubTokenError.style.display = 'block';
+                dom.githubTokenError.textContent = '❌ Debes ingresar un token de GitHub';
+                return;
+            }
+
+            dom.validateGithubTokenBtn.disabled = true;
+            dom.validateGithubTokenBtn.innerHTML = '<span class="loading">⌛</span> Validando...';
+
+            const esValido = await validarTokenGitHub(githubToken);
+
+            if (esValido) {
+                if (dom.rememberGithubTokenCheckbox.checked) {
+                    localStorage.setItem('github_token', githubToken);
+                } else {
+                    localStorage.removeItem('github_token');
+                }
+                await cargarDatosConGithubToken(githubToken);
+            } else {
+                dom.githubTokenError.style.display = 'block';
+                dom.githubTokenError.textContent = '❌ Token de GitHub inválido. Intenta nuevamente.';
+                dom.validateGithubTokenBtn.disabled = false;
+                dom.validateGithubTokenBtn.innerHTML = 'Validar y continuar';
+            }
+        }
+
+        function cambiarToken() {
+            localStorage.removeItem('jac_access_token');
+            localStorage.removeItem('github_token');
+            sessionStorage.clear();
+            window.location.href = 'index.html';
+        }
+
+        function iniciarMonitorTokenAcceso(fechaExpiracion) {
+            // Función simplificada para este módulo
+        }
+
+        // ============================================================
+        // EVENTOS DEL PANEL
+        // ============================================================
+        function inicializarEventosPanel() {
+            dom.searchInput.addEventListener('input', (e) => {
+                appState.filtroActual = e.target.value;
+                renderizarTablaGastos();
+            });
+
+            dom.yearSelect.addEventListener('change', (e) => {
+                appState.selectedYear = parseInt(e.target.value);
+                dom.añoActualDisplay.textContent = appState.selectedYear;
+                renderizarTablaGastos();
+            });
+
+            document.getElementById('newExpenseBtn').addEventListener('click', () => {
+                actualizarResumenModal();
+                const hoy = new Date();
+                document.getElementById('fechaGasto').value = hoy.toISOString().split('T')[0];
+                dom.expenseModal.style.display = 'flex';
+            });
+
+            dom.closeExpenseModalBtn.addEventListener('click', () => {
+                dom.expenseModal.style.display = 'none';
+            });
+            dom.cancelExpenseBtn.addEventListener('click', () => {
+                dom.expenseModal.style.display = 'none';
+            });
+            dom.saveExpenseBtn.addEventListener('click', registrarGasto);
+
+            window.addEventListener('click', (e) => {
+                if (e.target === dom.expenseModal) dom.expenseModal.style.display = 'none';
+                if (e.target === dom.reportModal) dom.reportModal.style.display = 'none';
+            });
+
+            document.getElementById('expensesTodayBtn').addEventListener('click', () => {
+                const hoy = appState.fechaActual.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                generarReporte(`Gastos del día ${hoy}`, g => g.fecha === hoy);
+            });
+
+            document.getElementById('expensesMonthBtn').addEventListener('click', () => {
+                const mesActual = appState.fechaActual.getMonth();
+                const añoActual = appState.fechaActual.getFullYear();
+                const nombreMes = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'][mesActual];
+                generarReporte(`Gastos de ${nombreMes} ${añoActual}`, g => {
+                    const [dia, mes, año] = g.fecha.split('/').map(Number);
+                    return (mes - 1) === mesActual && año === añoActual;
+                });
+            });
+
+            document.getElementById('expensesYearBtn').addEventListener('click', () => {
+                generarReporte(`Gastos del año ${appState.fechaActual.getFullYear()}`, g => {
+                    const [dia, mes, año] = g.fecha.split('/').map(Number);
+                    return año === appState.fechaActual.getFullYear();
+                });
+            });
+
+            document.getElementById('expensesAllBtn').addEventListener('click', () => {
+                generarReporte('Todos los gastos');
+            });
+
+            dom.printReportBtn.addEventListener('click', () => {
+                const w = window.open('', '_blank');
+                w.document.write(`<html><head><title>${dom.reportTitle.textContent}</title>
+                    <style>body{font-family:'Inter',Arial;padding:40px;}table{border-collapse:collapse;width:100%;}
+                    th{background:#1a3a5c;color:white;padding:10px;}td{padding:8px;border:1px solid #ddd;}
+                    .badge-expense{background:#ffe0e0;color:#c04040;padding:4px 12px;border-radius:100px;}</style>
+                    </head><body><h1 style="color:#1a3a5c;">JAC Bateas - ${dom.reportTitle.textContent}</h1>
+                    <p>Fecha: ${new Date().toLocaleDateString('es-ES')}</p>${dom.reportContent.innerHTML}</body></html>`);
+                w.document.close();
+                setTimeout(() => w.print(), 300);
+            });
+
+            dom.closeReportModalBtn.addEventListener('click', () => {
+                dom.reportModal.style.display = 'none';
+            });
+
+            document.getElementById('logoutTempBtn').addEventListener('click', () => {
+                window.location.href = 'index.html';
+            });
+
+            document.getElementById('logoutFullBtn').addEventListener('click', () => {
+                sessionStorage.clear();
+                localStorage.removeItem('github_token');
+                localStorage.removeItem('jac_access_token');
+                window.location.href = 'index.html';
+            });
+        }
+
+        inicializar();
+        inicializarEventosPanel();
+    </script>
+</body>
+
+</html>
