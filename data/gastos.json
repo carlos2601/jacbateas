@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-04-27T05:46:14.109Z",
+  "ultima_actualizacion": "2026-04-27T05:50:05.436Z",
   "configuracion": {
     "comision_certificado_porcentaje": 50,
     "valor_certificado": 20000,
@@ -51,6 +51,21 @@
       "hora_registro": "00:46:14",
       "balance_anterior": 1735000,
       "balance_posterior": 1660000
+    },
+    {
+      "id": "GMOGS2T8A",
+      "fecha": "26/04/2026",
+      "hora": "00:50:05",
+      "concepto": "perofoneo",
+      "categoria": "Otros",
+      "valor": 100000,
+      "responsable": "presidente",
+      "comprobante": "N/A",
+      "observaciones": "",
+      "fecha_registro": "27/04/2026",
+      "hora_registro": "00:50:05",
+      "balance_anterior": 1660000,
+      "balance_posterior": 1560000
     }
   ]
 }
