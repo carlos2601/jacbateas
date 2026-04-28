@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-04-27T...",
+  "ultima_actualizacion": "2026-04-28T06:40:24.196Z",
   "fechas": {
     "fecha1": "2026-01-15",
     "fecha2": "2026-04-20",
@@ -12,5 +12,19 @@
     "87654321_asamblea1": "falto",
     "87654321_asamblea2": "falto",
     "87654321_asamblea3": "pendiente"
+  },
+  "años": {
+    "2026": {
+      "fechas": {
+        "fecha1": "",
+        "fecha2": "",
+        "fecha3": ""
+      },
+      "registros": {
+        "4438681_asamblea1": "asistio",
+        "4438681_asamblea2": "asistio",
+        "4438681_asamblea3": "asistio"
+      }
+    }
   }
 }
