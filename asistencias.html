@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>JAC Bateas · Control de Asistencia Asambleas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #2d6a2d 0%, #1a4a2a 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5px;
+        }
+
+        .app {
+            max-width: 1400px;
+            width: 100%;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 15px 35px rgba(30, 74, 44, 0.08);
+            padding: 5px;
+            border: 1px solid rgba(200, 220, 200, 0.3);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2px;
+            padding: 12px 16px;
+            border-bottom: 2px solid #d0e6d0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .logo-area h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1a4a2a;
+        }
+
+        .year-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f2f9f2;
+            padding: 6px 18px;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            color: #1a4a2a;
+            border: 1px solid #c0e0c0;
+            font-weight: 500;
+        }
+
+        .year-badge select {
+            border: none;
+            background: transparent;
+            padding: 4px 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #1a4a2a;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .btn {
+            border: none;
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.15s;
+            background: white;
+            color: #1e293b;
+            border: 1px solid #d0e0d0;
+            height: 34px;
+        }
+
+        .btn:hover {
+            background: #f0f8f0;
+            border-color: #a0c0a0;
+        }
+
+        .btn-primary {
+            background: #1a4a2a;
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #2a6a3a;
+        }
+
+        .btn-success {
+            background: #1e7a4a;
+            color: white;
+            border: none;
+        }
+
+        .btn-danger {
+            background: #c04040;
+            color: white;
+            border: none;
+        }
+
+        .btn-warning {
+            background: #ffd966;
+            color: #1a4a2a;
+            border: none;
+        }
+
+        .btn-secondary {
+            background: #4a6b4a;
+            color: white;
+            border: none;
+        }
+
+        .action-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 2px;
+            align-items: center;
+            background: #1a4a2a;
+            padding: 12px 16px;
+            border-radius: 20px;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 180px;
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 1.5px solid #d8ecd8;
+            border-radius: 10px;
+            padding: 0 10px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 8px 6px;
+            border: none;
+            background: transparent;
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 12px 4px;
+            border-radius: 12px;
+            border: 1px solid #b8d8b8;
+            min-height: 90px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .stat-card.depurar {
+            border-top: 4px solid #c04040;
+        }
+
+        .stat-card.aprobado {
+            border-top: 4px solid #2a9d2a;
+        }
+
+        .stat-card.total {
+            border-top: 4px solid #1a4a2a;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: #4a6b4a;
+            text-transform: uppercase;
+            letter-spacing: 0.2px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a3a2a;
+        }
+
+        .stat-desc {
+            font-size: 0.55rem;
+            color: #6a8b6a;
+            margin-top: 4px;
+        }
+
+        .table-section {
+            background: #2b831c;
+            border-radius: 20px;
+            border: 3px solid #2b831c;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: #caddce;
+            border-bottom: 2px solid #c8e4c8;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .table-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #1a4a2a;
+        }
+
+        .legend {
+            display: flex;
+            gap: 14px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            max-height: 55vh;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.7rem;
+        }
+
+        thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        th {
+            background: #1a4a2a;
+            color: white;
+            font-weight: 600;
+            padding: 10px 6px;
+            text-align: center;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+        th.sortable {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        th.sortable:hover {
+            background: #2a5a3a;
+        }
+
+        td {
+            padding: 6px 6px;
+            border-bottom: 1px solid #a7da9b;
+            vertical-align: middle;
+            text-align: center;
+            background: white;
+            font-size: 12px;
+            font-weight: 500;
+            color: #1a2a1a;
+        }
+
+        tr:hover td {
+            background: #f5f5f5;
+        }
+
+        .registro-num {
+            font-weight: 700;
+            color: #1a4a2a;
+            font-size: 0.8rem;
+        }
+
+        .checkbox-container {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .check-box {
+            width: 26px;
+            height: 26px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            transition: all 0.1s;
+            border: 2px solid #a0c0a0;
+            background: #f0f8f0;
+            user-select: none;
+        }
+
+        .check-box.active {
+            background: #e4ffe4;
+            border: 2px solid #2a7a2a;
+        }
+
+        .check-box.active::after {
+            content: "✓";
+            color: #2a7a2a;
+        }
+
+        .check-box.excusa-active {
+            background: #fff9e6;
+            border: 2px solid #b68b40;
+        }
+
+        .check-box.excusa-active::after {
+            content: "E";
+            color: #b68b40;
+            font-size: 11px;
+        }
+
+        .check-box:hover {
+            transform: scale(1.15);
+        }
+
+        .badge {
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        .badge-depurar {
+            background: #ffe4e4;
+            color: #c04040;
+            border: 1px solid #c04040;
+        }
+
+        .badge-aprobado {
+            background: #e4ffe4;
+            color: #1a7a3a;
+            border: 1px solid #2a9d2a;
+        }
+
+        .btn-acta {
+            background: #c04040;
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-acta:hover {
+            background: #a03030;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            gap: 6px;
+            background: #caddce;
+            border-top: 2px solid #b8d8b8;
+            flex-wrap: wrap;
+        }
+
+        .page-btn {
+            min-width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            border: 1px solid #a0c0a0;
+            background: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: #1a4a2a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 8px;
+        }
+
+        .page-btn:hover {
+            background: #e0f0e0;
+        }
+
+        .page-btn.active {
+            background: #1a4a2a;
+            color: white;
+            border-color: #1a4a2a;
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .floating-save-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #c04040;
+            color: white;
+            border: none;
+            padding: 16px 24px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(192, 64, 64, 0.4);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .floating-save-btn:hover {
+            background: #a03030;
+            transform: translateY(-3px);
+        }
+
+        .floating-save-btn.saved {
+            background: #2a9d2a;
+        }
+
+        /* ===== MODAL CON SCROLL ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 74, 42, 0.5);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            max-width: 750px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 40, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 2px solid #c8e4c8;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 15;
+            border-radius: 24px 24px 0 0;
+        }
+
+        .modal-header h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a4a2a;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6a8b6a;
+            padding: 0 8px;
+        }
+
+        .close-btn:hover {
+            color: #c04040;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .field-group {
+            margin-bottom: 16px;
+        }
+
+        .field-group label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #1a4a2a;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .field-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #d0e4d0;
+            border-radius: 10px;
+            font-size: 0.85rem;
+        }
+
+        .alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: none;
+            z-index: 10002;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #e4ffe4;
+            color: #1a4a2a;
+            border-left: 6px solid #2a8e5a;
+        }
+
+        .alert-error {
+            background: #ffe4e4;
+            color: #8a2a2a;
+            border-left: 6px solid #c04040;
+        }
+
+        .alert-info {
+            background: #e4f0ff;
+            color: #2a4a6a;
+            border-left: 6px solid #4a8ac0;
+        }
+
+        /* ===== ACTA DE DEPURACIÓN (estilo para imprimir) ===== */
+        .acta-print {
+            background: white;
+            padding: 25px;
+            font-family: 'Times New Roman', Times, serif;
+            line-height: 1.5;
+            font-size: 11pt;
+        }
+
+        .acta-print h2 {
+            text-align: center;
+            color: #1a4a2a;
+            margin-bottom: 5px;
+            font-size: 18pt;
+        }
+
+        .acta-print h3 {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 14pt;
+        }
+
+        .acta-print h4 {
+            color: #1a4a2a;
+            margin: 15px 0 10px;
+            font-size: 12pt;
+        }
+
+        .acta-print p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+
+        .acta-print table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 10pt;
+        }
+
+        .acta-print table th,
+        .acta-print table td {
+            border: 1px solid #000;
+            padding: 6px;
+            text-align: center;
+        }
+
+        .acta-print table th {
+            background: #f0f0f0;
+        }
+
+        .acta-print .firmas {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 50px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .acta-print .firma {
+            text-align: center;
+            width: 200px;
+        }
+
+        .acta-print .linea {
+            border-top: 1px solid #000;
+            margin-top: 40px;
+            padding-top: 5px;
+        }
+
+        .acta-print .apelacion {
+            background: #fff9e6;
+            padding: 12px;
+            border-left: 4px solid #ffd966;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .acta-print .fundamento-legal {
+            background: #f0f8f0;
+            padding: 12px;
+            border-left: 4px solid #1a4a2a;
+            margin: 15px 0;
+            font-size: 9pt;
+        }
+
+        .loading {
+            animation: spin 0.8s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 900px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 600px) {
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app" id="mainApp" style="display: none;">
+        <div class="header">
+            <div class="logo-area">
+                <h1>📋 Control de Asistencia - JAC Bateas Sector 3</h1>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <div class="year-badge">
+                    <span>📅 Año</span>
+                    <select id="yearSelect">
+                        <option value="2025">2025</option>
+                        <option value="2026" selected>2026</option>
+                        <option value="2027">2027</option>
+                        <option value="2028">2028</option>
+                    </select>
+                </div>
+                <button id="configAsambleasBtn" class="btn btn-warning">⚙️ Fechas</button>
+                <button id="changeTokenBtn" class="btn btn-secondary">🔄 Cambiar Token</button>
+            </div>
+        </div>
+
+        <div id="alertMessage" class="alert"></div>
+
+        <div class="action-bar">
+            <div class="search-box">
+                <span style="color: #6a8b6a;">🔍</span>
+                <input type="text" id="searchInput" placeholder="Buscar por cédula, nombre o registro...">
+            </div>
+            <button id="filterDepurarBtn" class="btn btn-danger">⚠️ Depurar (2+ faltas)</button>
+            <button id="filterTodosBtn" class="btn btn-primary">👥 Todos</button>
+            <button id="printAllActasBtn" class="btn" style="background: #ffd966; color: #1a4a2a;">🖨️ Actas</button>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card total">
+                <div class="stat-label">👥 Total Afiliados</div>
+                <div class="stat-value" id="totalAfiliados">0</div>
+                <div class="stat-desc">registros válidos</div>
+            </div>
+            <div class="stat-card aprobado">
+                <div class="stat-label">✅ Aprobados</div>
+                <div class="stat-value" id="totalAprobados">0</div>
+                <div class="stat-desc">0-1 faltas (Art. 24, Ley 2166)</div>
+            </div>
+            <div class="stat-card depurar">
+                <div class="stat-label">❌ A Depurar</div>
+                <div class="stat-value" id="totalDepurar">0</div>
+                <div class="stat-desc">2+ faltas sin excusa (Art. 141)</div>
+            </div>
+        </div>
+
+        <div class="table-section">
+            <div class="table-header">
+                <div class="table-title">📋 Ley 2166 de 2021 · Año <span id="añoActualDisplay">2026</span></div>
+                <div class="legend">
+                    <div class="legend-item"><span style="color: #2a7a2a; font-size: 16px;">☑</span> Asistió</div>
+                    <div class="legend-item"><span style="color: #b68b40; font-weight: 700;">E</span> Excusa Justificada</div>
+                    <div class="legend-item"><span style="color: #c04040;">☐</span> Falta (sin excusa)</div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table id="dataTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">Reg.</th>
+                            <th class="sortable" id="sortCedula" style="min-width: 100px;">Cédula <span id="cedulaArrow">⇅</span></th>
+                            <th class="sortable" id="sortNombre" style="min-width: 180px;">Nombre <span id="nombreArrow">▼</span></th>
+                            <th style="min-width: 110px;">Celular</th>
+                            <th>1ra Asamblea<br><span id="fechaAsamblea1">—</span></th>
+                            <th>2da Asamblea<br><span id="fechaAsamblea2">—</span></th>
+                            <th>3ra Asamblea<br><span id="fechaAsamblea3">—</span></th>
+                            <th>Resultado</th>
+                            <th style="width: 70px;">Acta</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+            <div class="pagination">
+                <button class="page-btn" id="firstPageBtn">««</button>
+                <button class="page-btn" id="prevPageBtn">«</button>
+                <div id="pageNumbers" style="display: flex; gap: 4px;"></div>
+                <button class="page-btn" id="nextPageBtn">»</button>
+                <button class="page-btn" id="lastPageBtn">»»</button>
+                <span class="page-info" id="pageInfo"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PARA INGRESAR TOKEN DE GITHUB -->
+    <div id="githubTokenModal" class="modal" style="display: flex; align-items: center; justify-content: center;">
+        <div class="modal-content" style="max-width: 450px;">
+            <div class="modal-header">
+                <h3>🔐 Configurar Token de GitHub</h3>
+                <button class="close-btn" id="closeTokenModalBtn" style="font-size: 1.8rem;">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="field-group">
+                    <label>📌 TOKEN DE ACCESO PERSONAL (GitHub)</label>
+                    <input type="password" id="githubTokenInput" placeholder="Ingresa tu token de GitHub" autofocus>
+                    <small style="display: block; margin-top: 8px; font-size: 0.7rem; color: #6a8b6a;">
+                        🔑 El token debe tener permisos <strong>repo</strong> (escritura).<br>
+                        Se guardará en tu navegador para futuras sesiones.
+                    </small>
+                </div>
+                <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
+                    <button id="saveTokenBtn" class="btn btn-success">💾 Guardar y Continuar</button>
+                </div>
+                <div id="tokenError" style="color: #c04040; font-size: 0.75rem; margin-top: 12px; display: none;">
+                    ❌ Token inválido. Verifica que tenga permisos 'repo' y que sea correcto.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PARA FECHAS -->
+    <div id="configModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>⚙️ Fechas de Asambleas <span id="añoConfig">2026</span></h3>
+                <button class="close-btn" id="closeConfigModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="field-group">
+                    <label>📅 FECHA 1RA ASAMBLEA</label>
+                    <input type="date" id="fecha1Input">
+                </div>
+                <div class="field-group">
+                    <label>📅 FECHA 2DA ASAMBLEA</label>
+                    <input type="date" id="fecha2Input">
+                </div>
+                <div class="field-group">
+                    <label>📅 FECHA 3RA ASAMBLEA</label>
+                    <input type="date" id="fecha3Input">
+                </div>
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                    <button id="cancelConfigBtn" class="btn">Cancelar</button>
+                    <button id="saveConfigBtn" class="btn btn-success">💾 Guardar Fechas</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PARA ACTA DE DEPURACIÓN (CON SCROLL) -->
+    <div id="actaModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📄 Acta de Depuración - Comité de Conciliadores</h3>
+                <div style="display: flex; gap: 8px;">
+                    <button id="printActaBtn" class="btn btn-primary" style="background: #1a4a2a;">🖨️ Imprimir</button>
+                    <button class="close-btn" id="closeActaModalBtn">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body" id="actaContent"></div>
+        </div>
+    </div>
+
+    <button id="floatingSaveBtn" class="floating-save-btn">
+        <span>💾</span> Guardar Cambios
+    </button>
+
+    <script>
+        // ==================== CONFIGURACIÓN ====================
+        const AFILIADOS_URL = 'https://raw.githubusercontent.com/carlos2601/juntadeaccioncomunalbarriobateaspuertogaitanmetalilianalondo-ogallego1010101010101000111010001010010/refs/heads/main/afiliados.json';
+        const ASISTENCIA_API_URL = 'https://api.github.com/repos/carlos2601/jacbateas/contents/data/asistencia.json';
+        const ASISTENCIA_RAW_URL = 'https://raw.githubusercontent.com/carlos2601/jacbateas/refs/heads/main/data/asistencia.json';
+
+        let githubToken = localStorage.getItem('github_token');
+        let appState = {
+            afiliados: [],
+            asistencia: {},
+            fechasAsambleas: { fecha1: '', fecha2: '', fecha3: '' },
+            cambiosPendientes: false,
+            filtroActual: '',
+            mostrandoDepurar: false,
+            currentPage: 1,
+            totalPages: 1,
+            ordenActual: 'nombre',
+            selectedYear: new Date().getFullYear()
+        };
+
+        // ==================== FUNCIONES DE GITHUB ====================
+        async function validarTokenGitHub(token) {
+            try {
+                const res = await fetch(ASISTENCIA_API_URL, {
+                    headers: { 'Authorization': `token ${token}` }
+                });
+                return res.status === 200 || res.status === 404;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function cargarAsistencia() {
+            try {
+                const res = await fetch(ASISTENCIA_RAW_URL);
+                if (res.status === 404) return { años: {} };
+                if (!res.ok) throw new Error('Error al cargar');
+                return await res.json();
+            } catch (e) {
+                return { años: {} };
+            }
+        }
+
+        async function guardarAsistencia() {
+            if (!githubToken) {
+                mostrarAlerta('❌ No hay token de GitHub configurado', 'error');
+                return false;
+            }
+
+            try {
+                const dataActual = await cargarAsistencia();
+                const año = appState.selectedYear.toString();
+
+                if (!dataActual.años) dataActual.años = {};
+                if (!dataActual.años[año]) dataActual.años[año] = {};
+
+                dataActual.años[año] = {
+                    fechas: appState.fechasAsambleas,
+                    registros: appState.asistencia
+                };
+                dataActual.ultima_actualizacion = new Date().toISOString();
+
+                let sha = null;
+                try {
+                    const shaRes = await fetch(ASISTENCIA_API_URL, {
+                        headers: { 'Authorization': `token ${githubToken}` }
+                    });
+                    if (shaRes.ok) {
+                        const shaData = await shaRes.json();
+                        sha = shaData.sha;
+                    }
+                } catch (e) {}
+
+                const contenido = btoa(unescape(encodeURIComponent(JSON.stringify(dataActual, null, 2))));
+                const res = await fetch(ASISTENCIA_API_URL, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${githubToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: `Asistencia ${año} - ${new Date().toLocaleDateString()}`,
+                        content: contenido,
+                        sha: sha,
+                        branch: 'main'
+                    })
+                });
+
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.message || 'Error al guardar');
+                }
+
+                appState.cambiosPendientes = false;
+                actualizarBotonFlotante();
+                mostrarAlerta('✅ Asistencia guardada correctamente', 'success');
+                return true;
+            } catch (e) {
+                mostrarAlerta('❌ Error al guardar: ' + e.message, 'error');
+                return false;
+            }
+        }
+
+        async function cargarAfiliados() {
+            const res = await fetch(AFILIADOS_URL);
+            if (!res.ok) throw new Error('Error al cargar afiliados');
+            const data = await res.json();
+            const vistos = new Set();
+            const afiliadosLimpios = [];
+            data.forEach(af => {
+                if (!af.cedula || !af.nombre) return;
+                const cedulaLimpia = af.cedula.toString().trim();
+                if (!vistos.has(cedulaLimpia)) {
+                    vistos.add(cedulaLimpia);
+                    afiliadosLimpios.push({
+                        registro: af.registro || 0,
+                        cedula: cedulaLimpia,
+                        nombre: af.nombre.toString().trim(),
+                        celular: af.celular ? af.celular.toString().trim() : '—',
+                        fecha: af.fecha || ''
+                    });
+                }
+            });
+            return afiliadosLimpios;
+        }
+
+        // ==================== FUNCIONES DE ASISTENCIA ====================
+        function obtenerEstadoAsistencia(cedula, numAsamblea) {
+            const key = `${cedula}_asamblea${numAsamblea}`;
+            return appState.asistencia[key] || 'ninguno';
+        }
+
+        function marcarAsistencia(cedula, numAsamblea, tipo) {
+            const key = `${cedula}_asamblea${numAsamblea}`;
+            const actual = appState.asistencia[key] || 'ninguno';
+            if (actual === tipo) {
+                delete appState.asistencia[key];
+            } else {
+                appState.asistencia[key] = tipo;
+            }
+            appState.cambiosPendientes = true;
+            actualizarBotonFlotante();
+            renderizarTabla();
+            calcularEstadisticas();
+        }
+
+        function contarFaltas(cedula) {
+            let faltas = 0;
+            for (let i = 1; i <= 3; i++) {
+                if (obtenerEstadoAsistencia(cedula, i) === 'ninguno') faltas++;
+            }
+            return faltas;
+        }
+
+        function calcularEstadisticas() {
+            let depurar = 0, aprobados = 0;
+            appState.afiliados.forEach(af => {
+                if (contarFaltas(af.cedula) >= 2) depurar++;
+                else aprobados++;
+            });
+            document.getElementById('totalAfiliados').textContent = appState.afiliados.length;
+            document.getElementById('totalAprobados').textContent = aprobados;
+            document.getElementById('totalDepurar').textContent = depurar;
+        }
+
+        function obtenerAfiliadosFiltrados() {
+            let filtrados = [...appState.afiliados];
+            if (appState.mostrandoDepurar) {
+                filtrados = filtrados.filter(af => contarFaltas(af.cedula) >= 2);
+            }
+            if (appState.filtroActual) {
+                const f = appState.filtroActual.toLowerCase();
+                filtrados = filtrados.filter(af =>
+                    af.cedula.toLowerCase().includes(f) ||
+                    af.nombre.toLowerCase().includes(f)
+                );
+            }
+            if (appState.ordenActual === 'cedula') {
+                filtrados.sort((a, b) => parseInt(a.cedula) - parseInt(b.cedula));
+            } else {
+                filtrados.sort((a, b) => a.nombre.localeCompare(b.nombre));
+            }
+            return filtrados;
+        }
+
+        function renderizarTabla() {
+            const filtrados = obtenerAfiliadosFiltrados();
+            const total = filtrados.length;
+            appState.totalPages = Math.max(1, Math.ceil(total / 20));
+            if (appState.currentPage > appState.totalPages) appState.currentPage = appState.totalPages;
+            const inicio = (appState.currentPage - 1) * 20;
+            const pagina = filtrados.slice(inicio, inicio + 20);
+            
+            let html = '';
+            pagina.forEach(af => {
+                const faltas = contarFaltas(af.cedula);
+                const resultado = faltas >= 2 ? 'depurar' : 'aprobado';
+                html += `<tr>
+                    <td class="registro-num">${af.registro || '—'}</td>
+                    <td style="font-weight: 600;">${af.cedula}</td>
+                    <td style="text-align: left;">${af.nombre}</td>
+                    <td>${af.celular}</td>
+                    ${renderCeldaAsamblea(af.cedula, 1)}
+                    ${renderCeldaAsamblea(af.cedula, 2)}
+                    ${renderCeldaAsamblea(af.cedula, 3)}
+                    <td><span class="badge ${resultado === 'depurar' ? 'badge-depurar' : 'badge-aprobado'}">${resultado === 'depurar' ? '❌ DEPURAR' : '✅ APROBADO'}</span></td>
+                    <td>${resultado === 'depurar' ? `<button class="btn-acta" onclick="window.generarActaDepuracion('${af.cedula}')">📄 Acta</button>` : '—'}</td>
+                </tr>`;
+            });
+            document.getElementById('tableBody').innerHTML = html;
+            
+            let pagesHtml = '';
+            for (let i = 1; i <= Math.min(appState.totalPages, 7); i++) {
+                pagesHtml += `<button class="page-btn ${i === appState.currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+            }
+            document.getElementById('pageNumbers').innerHTML = pagesHtml;
+            document.getElementById('pageInfo').textContent = `Pág. ${appState.currentPage} de ${appState.totalPages}`;
+            
+            document.querySelectorAll('.page-btn[data-page]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    appState.currentPage = parseInt(e.target.dataset.page);
+                    renderizarTabla();
+                });
+            });
+        }
+
+        function renderCeldaAsamblea(cedula, num) {
+            const estado = obtenerEstadoAsistencia(cedula, num);
+            return `<td><div class="checkbox-container">
+                <div class="check-box ${estado === 'asistio' ? 'active' : ''}" onclick="window.marcarAsistencia('${cedula}', ${num}, 'asistio')" title="Asistió"></div>
+                <div class="check-box ${estado === 'excusa' ? 'excusa-active' : ''}" onclick="window.marcarAsistencia('${cedula}', ${num}, 'excusa')" title="Excusa Justificada"></div>
+            </div></td>`;
+        }
+
+        function actualizarBotonFlotante() {
+            const btn = document.getElementById('floatingSaveBtn');
+            if (appState.cambiosPendientes) {
+                btn.classList.remove('saved');
+                btn.innerHTML = '<span>💾</span> Guardar Cambios';
+            } else {
+                btn.classList.add('saved');
+                btn.innerHTML = '<span>✅</span> Todo Guardado';
+            }
+        }
+
+        function mostrarAlerta(msg, tipo = 'error') {
+            const alertDiv = document.getElementById('alertMessage');
+            alertDiv.textContent = msg;
+            alertDiv.className = `alert show alert-${tipo}`;
+            setTimeout(() => alertDiv.classList.remove('show'), 4000);
+        }
+
+        // ==================== GENERAR ACTA CON TEXTO LEGAL ====================
+        window.generarActaDepuracion = function(cedula) {
+            const afiliado = appState.afiliados.find(a => a.cedula === cedula);
+            if (!afiliado) return;
+            const faltas = contarFaltas(cedula);
+            const detalle = [];
+            for (let i = 1; i <= 3; i++) {
+                const estado = obtenerEstadoAsistencia(cedula, i);
+                const fecha = appState.fechasAsambleas['fecha' + i] || '';
+                const fechaFormateada = fecha ? fecha.split('-').reverse().join('/') : 'No programada';
+                let textoEstado = estado === 'asistio' ? 'ASISTIÓ' : (estado === 'excusa' ? 'EXCUSA JUSTIFICADA' : 'FALTÓ SIN EXCUSA');
+                detalle.push({ numero: i, fecha: fechaFormateada, estado: textoEstado, esFalta: estado === 'ninguno' });
+            }
+            const fechaActual = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
+            const año = appState.selectedYear;
+
+            let html = `
+                <div class="acta-print" id="actaImprimible">
+                    <h2>JUNTA DE ACCIÓN COMUNAL<br>ASENTAMIENTO HUMANO BATEAS SECTOR 3</h2>
+                    <p style="text-align: center; font-weight: bold;">Puerto Gaitán, Meta - Personería Jurídica N° ___ de 2025</p>
+                    <hr style="border: 1px solid #1a4a2a; margin: 15px 0;">
+                    <h3>ACTA DE PROCESO DECLARATIVO DE DEPURACIÓN</h3>
+                    <p style="text-align: center;">(Pérdida de calidad de afiliado sin sanción - Artículo 141 Ley 2166 de 2021)</p>
+                    
+                    <p><strong>Fecha de elaboración:</strong> ${fechaActual}</p>
+                    <p><strong>Registro N°:</strong> ${afiliado.registro || '—'}</p>
+                    <p><strong>Afiliado(a):</strong> ${afiliado.nombre}</p>
+                    <p><strong>Cédula de Ciudadanía:</strong> ${afiliado.cedula}</p>
+                    <p><strong>Celular:</strong> ${afiliado.celular}</p>
+                    
+                    <div class="fundamento-legal">
+                        <strong>📜 FUNDAMENTO LEGAL (Ley 2166 de 2021 y Estatutos JAC Bateas):</strong><br><br>
+                        <strong>Artículo 24, numeral 12:</strong> "Que el afiliado no haya concurrido a tres (3) asambleas generales, durante un año consecutivo o cinco en distintos años, durante el periodo de elección de dignatarios correspondiente, para lo cual se tendrá en cuenta los listados de asistencia a las asambleas."<br><br>
+                        <strong>Artículo 141 (Proceso de depuración declarativo):</strong> "Proceso mediante el cual se declara la pérdida de la calidad de afiliado sin que implique sanción... que el afiliado no haya concurrido a tres asambleas generales, durante un año consecutivo..."<br><br>
+                        <strong>Artículo 24, numeral 5:</strong> "Por no residencia, hechos que se comprobará con la visita de CCC a la residencia."<br><br>
+                        <strong>Artículo 24, numeral 6:</strong> "Retiro automático por inactividad absoluta durante seis (6) meses en las actividades que desarrolle la junta de acción comunal."
+                    </div>
+                    
+                    <h4>📋 HISTORIAL DE ASISTENCIA - AÑO ${año}:</h4>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr><th>Asamblea</th><th>Fecha Programada</th><th>Estado</th></tr>
+                        </thead>
+                        <tbody>`;
+            detalle.forEach(d => {
+                html += `<tr>
+                    <td>${d.numero}ra Asamblea</td>
+                    <td>${d.fecha}</td>
+                    <td style="color: ${d.esFalta ? '#c04040' : '#1a4a2a'}; font-weight: bold;">${d.estado}</td>
+                </tr>`;
+            });
+            html += `
+                        </tbody>
+                    </table>
+                    
+                    <p><strong>Total de faltas sin excusa justificada:</strong> <span style="color: #c04040; font-weight: bold;">${faltas} de 3 asambleas</span></p>
+                    
+                    <h4>⚖️ CONSIDERANDO:</h4>
+                    <p>Que la <strong>Comisión de Convivencia y Conciliación (CCC)</strong> de la Junta de Acción Comunal Asentamiento Humano Bateas Sector 3, en cumplimiento de sus funciones establecidas en el Artículo 50 de la Ley 2166 de 2021, procedió a revisar el historial de asistencia del(la) señor(a) <strong>${afiliado.nombre}</strong>.</p>
+                    
+                    <p>De conformidad con el <strong>Artículo 141 de la Ley 2166 de 2021</strong>, se ha verificado que el(la) afiliado(a) incurrió en <strong>${faltas} inasistencias sin excusa justificada</strong> a las asambleas generales del año ${año}, configurándose así la causal de pérdida de la calidad de afiliado sin que ello constituya sanción, sino como un proceso declarativo de depuración.</p>
+                    
+                    <h4>✅ RESUELVE:</h4>
+                    <p><strong>PRIMERO:</strong> Declarar la <strong>PÉRDIDA DE LA CALIDAD DE AFILIADO</strong> del(la) señor(a) <strong>${afiliado.nombre}</strong>, identificado con cédula N° <strong>${afiliado.cedula}</strong>, por acumular ${faltas} inasistencias sin excusa justificada a las asambleas generales del año ${año}, conforme al Artículo 141 numeral 2 de la Ley 2166 de 2021.</p>
+                    
+                    <p><strong>SEGUNDO:</strong> Ordenar al <strong>Secretario(a) General</strong> de la Junta proceder con la <strong>actualización del libro de afiliados</strong>, realizando la anotación correspondiente en la casilla de observaciones, dejando constancia de la desafiliación por inasistencia a asambleas.</p>
+                    
+                    <p><strong>TERCERO:</strong> Notificar al(la) afiliado(a) el contenido del presente Auto Declarativo, informándole que cuenta con <strong>5 días hábiles</strong> para interponer los recursos de <strong>reposición y apelación</strong> ante esta Comisión de Convivencia y Conciliación, de conformidad con el procedimiento establecido en el Artículo 173 de los estatutos.</p>
+                    
+                    <div class="apelacion">
+                        <strong>⚠️ RECURSOS LEGALES:</strong>
+                        <p style="margin-top: 8px;">Contra esta decisión procede el recurso de <strong>REPOSICIÓN</strong> ante la Comisión de Convivencia y Conciliación de la JAC y subsidiariamente el recurso de <strong>APELACIÓN</strong> ante la Comisión de Convivencia y Conciliación de ASOJUNTAS del municipio de Puerto Gaitán, dentro de los <strong>cinco (5) días hábiles</strong> siguientes a la notificación.</p>
+                        <p style="margin-top: 8px;">La no interposición de los recursos en el término legal dará como resultado la <strong>FIRMEZA</strong> del presente Auto Declarativo, ordenándose la exclusión definitiva del libro de afiliados.</p>
+                    </div>
+                    
+                    <p><strong>CUARTO:</strong> Una vez en firme esta decisión, remitir copia del proceso y constancia de firmeza a la <strong>Gerencia de Acción Comunal y Participación Ciudadana de la Gobernación del Meta</strong>, para la actualización en el aplicativo informático colaborativo (ORSO) y en el Registro Único Comunal (RUC) del Ministerio del Interior.</p>
+                    
+                    <div class="firmas">
+                        <div class="firma">
+                            <div class="linea"></div>
+                            <strong>Comité de Conciliadores (CCC)</strong><br>
+                            <span style="font-size: 9px;">Artículo 50 Ley 2166 de 2021</span>
+                        </div>
+                        <div class="firma">
+                            <div class="linea"></div>
+                            <strong>Secretario(a) General</strong><br>
+                            <span style="font-size: 9px;">Artículo 67 Estatutos</span>
+                        </div>
+                    </div>
+                    
+                    <p style="margin-top: 30px; font-size: 9px; text-align: center; color: #666;">
+                        <strong>Junta de Acción Comunal Asentamiento Humano Bateas Sector 3</strong><br>
+                        Ley 2166 del 18 de diciembre de 2021 - Decreto Reglamentario 1501 de 2023<br>
+                        Puerto Gaitán, Meta - ${fechaActual}
+                    </p>
+                </div>`;
+            document.getElementById('actaContent').innerHTML = html;
+            document.getElementById('actaModal').style.display = 'flex';
+        };
+
+        function imprimirTodasLasActas() {
+            const depurados = appState.afiliados.filter(af => contarFaltas(af.cedula) >= 2);
+            if (depurados.length === 0) {
+                mostrarAlerta('✅ No hay afiliados para depurar', 'info');
+                return;
+            }
+            const fechaActual = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
+            const año = appState.selectedYear;
+            let todasLasActas = '';
+            depurados.forEach((af, index) => {
+                const faltas = contarFaltas(af.cedula);
+                todasLasActas += `
+                    <div class="acta-print" style="page-break-after: always;">
+                        <h2>JUNTA DE ACCIÓN COMUNAL BARRIO BATEAS</h2>
+                        <p style="text-align: center;">Puerto Gaitán, Meta</p>
+                        <hr><h3>ACTA DE DEPURACIÓN N° ${index + 1} · Año ${año}</h3>
+                        <p><strong>Registro:</strong> ${af.registro || '—'} | <strong>Cédula:</strong> ${af.cedula}</p>
+                        <p><strong>Afiliado(a):</strong> ${af.nombre}</p>
+                        <p><strong>Faltas sin excusa:</strong> ${faltas} de 3 asambleas</p>
+                        <div class="fundamento-legal">
+                            <strong>Fundamento Legal:</strong> Artículo 141 Ley 2166 de 2021 - El afiliado que no haya concurrido a tres (3) asambleas generales en un año consecutivo incurre en causal de pérdida de calidad de afiliado.
+                        </div>
+                        <p>La Comisión de Convivencia y Conciliación resuelve la <strong>DEPURACIÓN</strong> según Ley 2166/2021.</p>
+                        <div class="apelacion">
+                            <strong>⚠️ DERECHO A APELACIÓN:</strong> 5 días hábiles para presentar recurso de reposición y apelación ante el Comité de Conciliadores.
+                        </div>
+                        <div class="firmas">
+                            <div class="firma"><div class="linea"></div>Comité Conciliadores (CCC)</div>
+                            <div class="firma"><div class="linea"></div>Secretario(a) General</div>
+                        </div>
+                    </div>`;
+            });
+            const ventana = window.open('', '_blank');
+            ventana.document.write(`<html><head><title>Actas de Depuración ${año} - JAC Bateas</title>
+                <style>
+                    body{font-family:'Times New Roman',serif;padding:30px;line-height:1.5;}
+                    .acta-print{max-width:700px;margin:0 auto 30px;}
+                    .acta-print h2{color:#1a4a2a;text-align:center;}
+                    .acta-print table{width:100%;border-collapse:collapse;margin:10px 0;}
+                    .acta-print table th,.acta-print table td{border:1px solid #000;padding:8px;text-align:center;}
+                    .acta-print .fundamento-legal{background:#f0f8f0;padding:10px;border-left:4px solid #1a4a2a;margin:15px 0;}
+                    .acta-print .apelacion{background:#fff9e6;padding:10px;border-left:4px solid #ffd966;margin:15px 0;}
+                    .acta-print .firmas{display:flex;justify-content:space-around;margin-top:40px;}
+                    .acta-print .linea{border-top:1px solid #000;margin-top:40px;padding-top:5px;width:180px;}
+                    @media print{.acta-print{page-break-after:always;}}
+                </style>
+                </head><body>${todasLasActas}</body></html>`);
+            ventana.document.close();
+            setTimeout(() => ventana.print(), 500);
+        }
+
+        async function cambiarAño(año) {
+            if (appState.cambiosPendientes && !confirm('⚠️ Hay cambios sin guardar. ¿Cambiar año sin guardar?')) {
+                document.getElementById('yearSelect').value = appState.selectedYear;
+                return;
+            }
+            appState.selectedYear = parseInt(año);
+            const dataAsistencia = await cargarAsistencia();
+            const datosAño = (dataAsistencia.años && dataAsistencia.años[año]) || {};
+            appState.fechasAsambleas = datosAño.fechas || { fecha1: '', fecha2: '', fecha3: '' };
+            appState.asistencia = datosAño.registros || {};
+            appState.cambiosPendientes = false;
+            const f = (d) => d ? d.split('-').reverse().join('/') : '—';
+            document.getElementById('fechaAsamblea1').textContent = f(appState.fechasAsambleas.fecha1);
+            document.getElementById('fechaAsamblea2').textContent = f(appState.fechasAsambleas.fecha2);
+            document.getElementById('fechaAsamblea3').textContent = f(appState.fechasAsambleas.fecha3);
+            document.getElementById('añoActualDisplay').textContent = año;
+            document.getElementById('añoConfig').textContent = año;
+            calcularEstadisticas();
+            renderizarTabla();
+            actualizarBotonFlotante();
+            mostrarAlerta(`📅 Año ${año} cargado`, 'info');
+        }
+
+        // ==================== INICIALIZACIÓN ====================
+        async function inicializarConToken(token) {
+            githubToken = token;
+            localStorage.setItem('github_token', token);
+            
+            try {
+                mostrarAlerta('📥 Cargando datos...', 'info');
+                appState.afiliados = await cargarAfiliados();
+                
+                const dataAsistencia = await cargarAsistencia();
+                const año = appState.selectedYear.toString();
+                const datosAño = (dataAsistencia.años && dataAsistencia.años[año]) || {};
+                appState.fechasAsambleas = datosAño.fechas || { fecha1: '', fecha2: '', fecha3: '' };
+                appState.asistencia = datosAño.registros || {};
+                
+                const f = (d) => d ? d.split('-').reverse().join('/') : '—';
+                document.getElementById('fechaAsamblea1').textContent = f(appState.fechasAsambleas.fecha1);
+                document.getElementById('fechaAsamblea2').textContent = f(appState.fechasAsambleas.fecha2);
+                document.getElementById('fechaAsamblea3').textContent = f(appState.fechasAsambleas.fecha3);
+                document.getElementById('añoActualDisplay').textContent = año;
+                document.getElementById('añoConfig').textContent = año;
+                document.getElementById('yearSelect').value = año;
+                
+                calcularEstadisticas();
+                renderizarTabla();
+                document.getElementById('mainApp').style.display = 'block';
+                document.getElementById('githubTokenModal').style.display = 'none';
+                mostrarAlerta(`✅ ${appState.afiliados.length} afiliados cargados`, 'success');
+            } catch (e) {
+                mostrarAlerta('Error: ' + e.message, 'error');
+            }
+        }
+
+        async function guardarToken() {
+            const token = document.getElementById('githubTokenInput').value.trim();
+            if (!token) {
+                document.getElementById('tokenError').style.display = 'block';
+                return;
+            }
+            document.getElementById('tokenError').style.display = 'none';
+            const btn = document.getElementById('saveTokenBtn');
+            btn.innerHTML = '<span class="loading">⌛</span> Validando...';
+            btn.disabled = true;
+            
+            const valido = await validarTokenGitHub(token);
+            if (valido) {
+                await inicializarConToken(token);
+            } else {
+                document.getElementById('tokenError').style.display = 'block';
+                document.getElementById('tokenError').textContent = '❌ Token inválido. Verifica los permisos "repo".';
+                btn.innerHTML = '💾 Guardar y Continuar';
+                btn.disabled = false;
+            }
+        }
+
+        // ==================== EVENTOS ====================
+        document.getElementById('saveTokenBtn').addEventListener('click', guardarToken);
+        document.getElementById('closeTokenModalBtn').addEventListener('click', () => {
+            document.getElementById('githubTokenModal').style.display = 'none';
+        });
+        document.getElementById('githubTokenInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') guardarToken();
+        });
+        
+        document.getElementById('changeTokenBtn').addEventListener('click', () => {
+            localStorage.removeItem('github_token');
+            location.reload();
+        });
+        
+        document.getElementById('configAsambleasBtn').addEventListener('click', () => {
+            document.getElementById('fecha1Input').value = appState.fechasAsambleas.fecha1 || '';
+            document.getElementById('fecha2Input').value = appState.fechasAsambleas.fecha2 || '';
+            document.getElementById('fecha3Input').value = appState.fechasAsambleas.fecha3 || '';
+            document.getElementById('configModal').style.display = 'flex';
+        });
+        
+        document.getElementById('closeConfigModalBtn').addEventListener('click', () => document.getElementById('configModal').style.display = 'none');
+        document.getElementById('cancelConfigBtn').addEventListener('click', () => document.getElementById('configModal').style.display = 'none');
+        document.getElementById('saveConfigBtn').addEventListener('click', async () => {
+            appState.fechasAsambleas.fecha1 = document.getElementById('fecha1Input').value;
+            appState.fechasAsambleas.fecha2 = document.getElementById('fecha2Input').value;
+            appState.fechasAsambleas.fecha3 = document.getElementById('fecha3Input').value;
+            appState.cambiosPendientes = true;
+            const f = (d) => d ? d.split('-').reverse().join('/') : '—';
+            document.getElementById('fechaAsamblea1').textContent = f(appState.fechasAsambleas.fecha1);
+            document.getElementById('fechaAsamblea2').textContent = f(appState.fechasAsambleas.fecha2);
+            document.getElementById('fechaAsamblea3').textContent = f(appState.fechasAsambleas.fecha3);
+            await guardarAsistencia();
+            document.getElementById('configModal').style.display = 'none';
+        });
+        
+        document.getElementById('closeActaModalBtn').addEventListener('click', () => document.getElementById('actaModal').style.display = 'none');
+        document.getElementById('printActaBtn').addEventListener('click', () => {
+            const contenido = document.getElementById('actaImprimible');
+            if (contenido) {
+                const ventana = window.open('', '_blank');
+                ventana.document.write(`<html><head><title>Acta de Depuración</title>
+                    <style>
+                        body{font-family:'Times New Roman',serif;padding:30px;line-height:1.5;}
+                        .acta-print{max-width:700px;margin:0 auto;}
+                        .acta-print h2{color:#1a4a2a;text-align:center;}
+                        .acta-print table{width:100%;border-collapse:collapse;margin:10px 0;}
+                        .acta-print table th,.acta-print table td{border:1px solid #000;padding:8px;text-align:center;}
+                        .acta-print .fundamento-legal{background:#f0f8f0;padding:10px;border-left:4px solid #1a4a2a;margin:15px 0;}
+                        .acta-print .apelacion{background:#fff9e6;padding:10px;border-left:4px solid #ffd966;margin:15px 0;}
+                        .acta-print .firmas{display:flex;justify-content:space-around;margin-top:40px;}
+                        .acta-print .linea{border-top:1px solid #000;margin-top:40px;padding-top:5px;width:180px;}
+                        @media print{body{padding:10px;}}
+                    </style>
+                    </head><body>${contenido.outerHTML}</body></html>`);
+                ventana.document.close();
+                setTimeout(() => ventana.print(), 500);
+            }
+        });
+        
+        document.getElementById('floatingSaveBtn').addEventListener('click', async () => {
+            if (appState.cambiosPendientes) {
+                const btn = document.getElementById('floatingSaveBtn');
+                btn.disabled = true;
+                btn.innerHTML = '<span class="loading">⌛</span> Guardando...';
+                await guardarAsistencia();
+                btn.disabled = false;
+                actualizarBotonFlotante();
+            }
+        });
+        
+        document.getElementById('filterDepurarBtn').addEventListener('click', () => {
+            appState.mostrandoDepurar = true;
+            appState.currentPage = 1;
+            renderizarTabla();
+        });
+        
+        document.getElementById('filterTodosBtn').addEventListener('click', () => {
+            appState.mostrandoDepurar = false;
+            document.getElementById('searchInput').value = '';
+            appState.filtroActual = '';
+            appState.currentPage = 1;
+            renderizarTabla();
+        });
+        
+        document.getElementById('printAllActasBtn').addEventListener('click', imprimirTodasLasActas);
+        
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            appState.filtroActual = e.target.value;
+            appState.currentPage = 1;
+            renderizarTabla();
+        });
+        
+        document.getElementById('sortCedula').addEventListener('click', () => {
+            appState.ordenActual = appState.ordenActual === 'cedula' ? 'nombre' : 'cedula';
+            appState.currentPage = 1;
+            renderizarTabla();
+        });
+        
+        document.getElementById('sortNombre').addEventListener('click', () => {
+            appState.ordenActual = 'nombre';
+            appState.currentPage = 1;
+            renderizarTabla();
+        });
+        
+        document.getElementById('yearSelect').addEventListener('change', (e) => cambiarAño(e.target.value));
+        
+        document.getElementById('firstPageBtn').addEventListener('click', () => { appState.currentPage = 1; renderizarTabla(); });
+        document.getElementById('prevPageBtn').addEventListener('click', () => { if (appState.currentPage > 1) { appState.currentPage--; renderizarTabla(); } });
+        document.getElementById('nextPageBtn').addEventListener('click', () => { if (appState.currentPage < appState.totalPages) { appState.currentPage++; renderizarTabla(); } });
+        document.getElementById('lastPageBtn').addEventListener('click', () => { appState.currentPage = appState.totalPages; renderizarTabla(); });
+        
+        // Cerrar modales al hacer clic fuera
+        window.addEventListener('click', (e) => {
+            const configModal = document.getElementById('configModal');
+            const actaModal = document.getElementById('actaModal');
+            const tokenModal = document.getElementById('githubTokenModal');
+            if (e.target === configModal) configModal.style.display = 'none';
+            if (e.target === actaModal) actaModal.style.display = 'none';
+            if (e.target === tokenModal) tokenModal.style.display = 'none';
+        });
+        
+        window.marcarAsistencia = marcarAsistencia;
+        
+        const tokenGuardado = localStorage.getItem('github_token');
+        if (tokenGuardado) {
+            inicializarConToken(tokenGuardado);
+        }
+    </script>
+</body>
+
+</html>
