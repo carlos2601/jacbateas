@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-05-02T06:06:21.255Z",
+  "ultima_actualizacion": "2026-05-02T06:07:46.784Z",
   "configuracion": {
     "comision_certificado_porcentaje": 50,
     "valor_certificado": 20000,
@@ -66,6 +66,21 @@
       "hora_registro": "01:04:28",
       "balance_anterior": 442500,
       "balance_posterior": 382500
+    },
+    {
+      "id": "GMONXWTI6dgee",
+      "fecha": "26/04/2026",
+      "hora": "01:07:46",
+      "concepto": "DESAYUNOS",
+      "categoria": "Refrigerios",
+      "valor": 147500,
+      "responsable": "PRESIDENTE",
+      "comprobante": "N/A",
+      "observaciones": "",
+      "fecha_registro": "02/05/2026",
+      "hora_registro": "01:07:46",
+      "balance_anterior": 1840000,
+      "balance_posterior": 1692500
     }
   ]
 }
