@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-05-02T06:01:14.089Z",
+  "ultima_actualizacion": "2026-05-02T06:02:14.681Z",
   "configuracion": {
     "comision_certificado_porcentaje": 50,
     "valor_certificado": 20000,
@@ -36,6 +36,21 @@
       "hora_registro": "01:01:14",
       "balance_anterior": 2135000,
       "balance_posterior": 2035000
+    },
+    {
+      "id": "GMONXPP92kbyz",
+      "fecha": "02/05/2026",
+      "hora": "01:02:14",
+      "concepto": "DESAYUNOS TRIBUNAL DE GARANTIAS",
+      "categoria": "Eventos comunitarios",
+      "valor": 1457500,
+      "responsable": "PRESIDENTE",
+      "comprobante": "N/A",
+      "observaciones": "",
+      "fecha_registro": "02/05/2026",
+      "hora_registro": "01:02:14",
+      "balance_anterior": 2035000,
+      "balance_posterior": 577500
     }
   ]
 }
