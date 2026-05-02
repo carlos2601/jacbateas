@@ -1,10 +1,26 @@
 {
-  "ultima_actualizacion": "2026-04-27T05:52:49.587Z",
+  "ultima_actualizacion": "2026-05-02T05:59:45.318Z",
   "configuracion": {
     "comision_certificado_porcentaje": 50,
     "valor_certificado": 20000,
     "valor_cuota": 5000,
     "costo_papeleria_por_certificado": 10000
   },
-  "gastos": []
+  "gastos": [
+    {
+      "id": "GMONXMHZZufb6",
+      "fecha": "26/03/2026",
+      "hora": "00:59:45",
+      "concepto": "PERIFONEO",
+      "categoria": "Eventos comunitarios",
+      "valor": 100000,
+      "responsable": "PRESIDENTE",
+      "comprobante": "N/A",
+      "observaciones": "",
+      "fecha_registro": "02/05/2026",
+      "hora_registro": "00:59:45",
+      "balance_anterior": 2235000,
+      "balance_posterior": 2135000
+    }
+  ]
 }
