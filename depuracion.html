@@ -20,7 +20,7 @@
             --text: #1a2a1a;
             --text-secondary: #5a7a5a;
             --bg: #f2f5f2;
-            --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+            --card-shadow: 0 4px 24px #1e7a4a;
             --radius: 16px;
             --radius-sm: 10px;
             --header-bg: linear-gradient(135deg, #1a3a2a 0%, #2a5a3e 100%);
@@ -39,7 +39,7 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            padding: 16px;
+            padding: 0px;
         }
 
         .app {
@@ -49,15 +49,15 @@
             border-radius: var(--radius);
             box-shadow: 0 8px 40px rgba(15, 61, 42, 0.1);
             overflow: hidden;
-            margin-top: 8px;
-            margin-bottom: 80px;
+            margin-top: 0px;
+            margin-bottom: 5px;
         }
 
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 18px 24px;
+            padding: 10px 24px;
             background: var(--header-bg);
             flex-wrap: wrap;
             gap: 12px;
@@ -204,7 +204,7 @@
         }
 
         .search-box {
-            flex: 0 0 280px;
+            flex: 0 0 350px;
             min-width: 150px;
             display: flex;
             align-items: center;
@@ -230,14 +230,15 @@
             color: var(--text);
         }
 
+
         .action-bar {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
             align-items: center;
-            padding: 14px 20px;
-            background: var(--bg);
-            border-bottom: 1px solid #dce4dc;
+            padding: 10px 20px;
+            background: #55c38a;
+            border-bottom: 3px solid #0a2919;
         }
 
         .action-bar-right {
@@ -248,8 +249,8 @@
         }
 
         .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            display: flex;
+            justify-content: center;
             gap: 10px;
             margin: 16px 20px;
             text-align: center;
@@ -257,15 +258,16 @@
 
         .stat-card {
             background: white;
-            padding: 16px 8px;
+            padding: 20px 28px;
             border-radius: var(--radius-sm);
-            border: 1px solid #e4ece4;
+            border: 2px solid #1a3a2a;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            position: relative;
             overflow: hidden;
             box-shadow: var(--card-shadow);
+            min-width: 300px;
+            max-width: 500px;
         }
 
         .stat-card::before {
@@ -286,7 +288,7 @@
         }
 
         .stat-card.depurar::before {
-            background: linear-gradient(90deg, var(--danger), #e06050);
+            background: linear-gradient(90deg, #1a3a2a, #1a3a2a);
         }
 
         .stat-label {
@@ -299,7 +301,7 @@
         }
 
         .stat-value {
-            font-size: 1.6rem;
+            font-size: 1.3rem;
             font-weight: 800;
             color: var(--text);
             letter-spacing: -0.5px;
@@ -324,7 +326,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 16px;
+            padding: 5px 16px;
             background: var(--primary-light);
             border-bottom: 1px solid #d8e4d8;
             flex-wrap: wrap;
@@ -375,6 +377,7 @@
 
         table {
             width: 100%;
+            table-layout: fixed;
             border-collapse: collapse;
             font-size: 0.7rem;
         }
@@ -407,12 +410,12 @@
         }
 
         td {
-            padding: 7px 8px;
-            border-bottom: 1px solid #e8eee8;
+            padding: 5px 9px;
+            border-bottom: 1px solid #979e97;
             vertical-align: middle;
             text-align: center;
-            background: white;
-            font-size: 11.5px;
+            background: rgb(229, 233, 230);
+            font-size: 12.5px;
             font-weight: 500;
             color: var(--text);
             transition: background 0.1s;
@@ -450,8 +453,8 @@
             font-size: 12px;
             font-weight: 700;
             transition: all 0.15s;
-            border: 2px solid #c0d0c0;
-            background: #f8fbf8;
+            border: 2px solid #1e7a4a;
+            background: #ffffff;
             user-select: none;
         }
 
@@ -849,7 +852,7 @@
     <div class="app" id="mainApp" style="display: none;">
         <div class="header">
             <div class="logo-area">
-                <h1>📋 JAC Bateas Sector 3 <span>Ley 2166</span></h1>
+                <h1>📋 JAC del Barrio Bateas Sector 3 <span>Ley 2166</span></h1>
                 <div id="headerClock"
                     style="font-size:0.72rem;color:rgba(255,255,255,0.85);font-weight:700;margin-top:4px;"></div>
             </div>
@@ -881,7 +884,9 @@
             <button id="filterTodosBtn" class="btn btn-outline">👥 Todos</button>
             <div class="action-bar-right">
                 <button id="pdfExportBtn" class="btn" style="background: #4a6b8a; color: white;">📄 PDF</button>
-                <button id="openActaSearchBtn" class="btn" style="background: #ffd966; color: #1a4a2a;">📋
+                <button id="reportesBtn" class="btn" style="background: #5a7a9a; color: white;" onclick="abrirReportes()">📊 Reportes</button>
+                <button id="openActaSearchBtn" class="btn" style="background: #ffd966; color: #1a4a2a;"
+                    onclick="abrirActaSearch()">📋
                     Actas</button>
                 <button id="saveBarBtn" class="btn btn-success">💾 Guardar</button>
             </div>
@@ -1010,7 +1015,9 @@
                 <div style="display: flex; gap: 8px;">
                     <button id="printActaBtn" class="btn" style="background: var(--primary); color: white;">🖨️
                         Imprimir</button>
-                    <button class="close-btn" id="closeActaModalBtn">&times;</button>
+                    <button id="pdfActaBtn" class="btn" style="background: #8a2a1a; color: white;">📄 PDF
+                        (Cédula)</button>
+                    <button class="close-btn" id="closeActaModalBtn" onclick="document.getElementById('actaModal').style.display='none'">&times;</button>
                 </div>
             </div>
             <div class="modal-body" id="actaContent"></div>
@@ -1022,12 +1029,18 @@
         <div class="modal-content" style="max-width: 550px;">
             <div class="modal-header">
                 <h3>📄 Buscar Afiliado para Acta de Depuración</h3>
-                <button class="close-btn" id="closeActaSearchModalBtn">&times;</button>
+                <button class="close-btn" id="closeActaSearchModalBtn" onclick="cerrarActaSearch()">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="field-group">
-                    <label>🔍 BUSCAR POR NOMBRE O CÉDULA</label>
-                    <input type="text" id="actaSearchInput" placeholder="Escribe nombre o cédula..." autofocus>
+                <div class="field-group" style="display:flex;gap:8px;align-items:end;">
+                    <div style="flex:1;">
+                        <label>🔍 BUSCAR POR NOMBRE O CÉDULA</label>
+                        <input type="text" id="actaSearchInput" placeholder="Escribe nombre o cédula..." autofocus
+                            oninput="buscarActa(this.value)">
+                    </div>
+                    <button class="btn btn-primary"
+                        onclick="buscarActa(document.getElementById('actaSearchInput').value)"
+                        style="height:44px;white-space:nowrap;">🔍 Buscar</button>
                 </div>
                 <div id="actaSearchResults" style="max-height: 400px; overflow-y: auto;"></div>
                 <div id="actaSearchEmpty"
@@ -1040,6 +1053,22 @@
 
     <!-- hidden, save button is in action-bar -->
 
+    <!-- MODAL DE REPORTES -->
+    <div id="reportesModal" class="modal">
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="modal-header">
+                <h3>📊 Reporte de Afiliados en Depuración</h3>
+                <div style="display: flex; gap: 8px;">
+                    <button id="printReporteBtn" class="btn" style="background: var(--primary); color: white;" onclick="imprimirReporte()">🖨️ Imprimir</button>
+                    <button class="close-btn" onclick="document.getElementById('reportesModal').style.display='none'">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body" style="padding:10px 0;">
+                <div id="reporteContent" style="max-height: 500px; overflow-y: auto; padding: 0 20px;"></div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // ==================== CONFIGURACIÓN ====================
         const AFILIADOS_URL = 'https://raw.githubusercontent.com/carlos2601/juntadeaccioncomunalbarriobateaspuertogaitanmetalilianalondo-ogallego1010101010101000111010001010010/refs/heads/main/afiliados.json';
@@ -1047,6 +1076,8 @@
         const ASISTENCIA_RAW_URL = 'https://raw.githubusercontent.com/carlos2601/jacbateas/refs/heads/main/data/asistencia.json';
 
         let githubToken = localStorage.getItem('github_token');
+        let currentActaCedula = '';
+        let currentActaNombre = '';
         let appState = {
             afiliados: [],
             asistencia: {},
@@ -1356,6 +1387,8 @@
         window.generarActaDepuracion = function (cedula) {
             const afiliado = appState.afiliados.find(a => a.cedula === cedula);
             if (!afiliado) return;
+            currentActaCedula = String(cedula).replace(/\./g, '');
+            currentActaNombre = afiliado.nombre || '';
             const faltas = contarFaltas(cedula);
             const totalEsp = totalElegibles(cedula);
             const detalle = [];
@@ -1375,7 +1408,7 @@
                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Escudo_Acci%C3%B3n_Comunal_Colombia.svg/500px-Escudo_Acci%C3%B3n_Comunal_Colombia.svg.png" style="height:80px;width:auto;margin-left:20px;">
                         <div>
-                            <h2 style="margin:0;color:#1a4a2a;text-align:center;font-size:14pt;">JUNTA DE ACCIÓN COMUNAL<br>BATEAS SECTOR 3</h2>
+                            <h2 style="margin:0;color:#1a4a2a;text-align:center;font-size:14pt;">JUNTA DE ACCIÓN COMUNAL<br>DEL BARRIO BATEAS SECTOR 3</h2>
                             <p style="margin:4px 0 0;text-align:center;font-weight:bold;font-size:10pt;">Puerto Gaitán, Meta - Personería Jurídica No. 451 del 31 de Octubre de 2.025</p>
                             <p style="margin:2px 0 0;text-align:center;font-size:9pt;">Manzana 59 Casa 10, Barrio Bateas Sector 3 | 📞 320 863 2489 | ✉ juntacomunalsector3bateas@gmail.com</p>
                         </div>
@@ -1419,7 +1452,7 @@
                     <p style="margin-bottom:40px;"><strong>Total de faltas sin excusa justificada:</strong> <span style="color: #c04040; font-weight: bold;">${faltas} de ${totalEsp} asambleas elegibles</span></p>
                     
                     <h4>⚖️ CONSIDERANDO:</h4>
-                    <p>Que la <strong>Comisión de Convivencia y Conciliación (CCC)</strong> de la Junta de Acción Comunal Bateas Sector 3, en cumplimiento de sus funciones establecidas en el Artículo 50 de la Ley 2166 de 2021, procedió a revisar el historial de asistencia del(la) señor(a) <strong>${afiliado.nombre}</strong>.</p>
+                    <p>Que la <strong>Comisión de Convivencia y Conciliación (CCC)</strong> de la Junta de Acción Comunal del Barrio Bateas Sector 3, en cumplimiento de sus funciones establecidas en el Artículo 50 de la Ley 2166 de 2021, procedió a revisar el historial de asistencia del(la) señor(a) <strong>${afiliado.nombre}</strong>.</p>
                     
                     <p>De conformidad con el <strong>Artículo 141 de la Ley 2166 de 2021</strong>, se ha verificado que el(la) afiliado(a) incurrió en <strong>${faltas} inasistencias sin excusa justificada</strong> a las asambleas generales del año ${año}, configurándose así la causal de pérdida de la calidad de afiliado sin que ello constituya sanción, sino como un proceso declarativo de depuración.</p>
                     
@@ -1456,8 +1489,8 @@
                         </div>
                     </div>
                     
-                    <p style="margin-top: 15px; font-size:12px; text-align: center; color: #000000;">
-                        <strong>Junta de Acción Comunal Bateas Sector 3</strong><br>
+                    <p style="margin-top: 4px; font-size:9px; text-align: center; color: #000000;">
+                        <strong>Junta de Acción Comunal del Barrio Bateas Sector 3</strong><br>
                         Ley 2166 del 18 de diciembre de 2021 - Decreto Reglamentario 1501 de 2023<br>
                         Puerto Gaitán, Meta - ${fechaActual}
                     </p>
@@ -1578,7 +1611,7 @@
 </style>
 </head>
 <body>
-    <h1>JUNTA DE ACCIÓN COMUNAL<br>ASENTAMIENTO HUMANO BATEAS SECTOR 3</h1>
+    <h1>JUNTA DE ACCIÓN COMUNAL<br>DEL BARRIO BATEAS SECTOR 3</h1>
     <h2>${titulo} - AÑO ${año}</h2>
     <p class="info"><strong>Fecha de corte: ${fecha}</strong> | Fechas asambleas: ${fec1} / ${fec2} / ${fec3} | Total registros: ${filtrados.length}</p>
     <table>
@@ -1602,7 +1635,7 @@
         <div class="firma"><div class="linea"></div>Presidente JAC</div>
         <div class="firma"><div class="linea"></div>Secretario(a) General</div>
     </div>
-    <p style="text-align:center;font-size:8pt;color:#999;margin-top:20px;">Ley 2166 de 2021 - JAC Bateas Sector 3, Puerto Gaitán, Meta</p>
+    <p style="text-align:center;font-size:8pt;color:#999;margin-top:20px;">Ley 2166 de 2021 - JAC del Barrio Bateas Sector 3, Puerto Gaitán, Meta</p>
 </body>
 </html>`;
 
@@ -1744,6 +1777,7 @@
                         .acta-print .fundamento-legal{background:#f0f8f0;padding:8px 12px;border-left:4px solid #1a4a2a;margin:10px 0;font-size:10pt;}
                         .acta-print .apelacion{background:#fff9e6;padding:8px 12px;border-left:4px solid #ffd966;margin:10px 0;font-size:10pt;}
                         .acta-print .apelacion p{text-align:justify;}
+                        .acta-print p{text-align:justify;}
                         .acta-print .firmas{display:flex;justify-content:center;gap:40px;margin-top:30px;}
                         .acta-print .firma-item{text-align:center;}
                         .acta-print .linea{border-top:1px solid #000;width:200px;margin:0 auto 4px;}
@@ -1760,6 +1794,7 @@
                             .acta-print table th, .acta-print table td{padding:18px 8px !important;}
                             .acta-print .firmas{display:flex;justify-content:center;gap:40px;margin-top:75px;padding-top:10px;}
                             .acta-print p{margin:7px 0;font-size:11.5pt;line-height:1.5;}
+                            .acta-print p:last-of-type{margin:1px 0;font-size:7.5pt;line-height:1.15;}
                             .acta-print .firma-item{margin:0 20px;}
                         }
                     </style>
@@ -1798,46 +1833,55 @@
             renderizarTabla();
         });
 
-        document.getElementById('openActaSearchBtn').addEventListener('click', () => {
+        function abrirActaSearch() {
             const modal = document.getElementById('actaSearchModal');
             document.getElementById('actaSearchInput').value = '';
             document.getElementById('actaSearchResults').innerHTML = '';
             document.getElementById('actaSearchEmpty').style.display = 'none';
             modal.style.display = 'flex';
             document.getElementById('actaSearchInput').focus();
-            // show all depurados by default
-            const depurados = appState.afiliados.filter(af => contarFaltas(af.cedula) >= 2);
-            mostrarResultadosActa(depurados);
-        });
-        document.getElementById('closeActaSearchModalBtn').addEventListener('click', () => document.getElementById('actaSearchModal').style.display = 'none');
-        document.getElementById('actaSearchInput').addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase().trim();
-            const depurados = appState.afiliados.filter(af => contarFaltas(af.cedula) >= 2);
-            if (!term) { mostrarResultadosActa(depurados); return; }
-            const filtrados = depurados.filter(af =>
-                af.nombre.toLowerCase().includes(term) || af.cedula.includes(term)
-            );
-            mostrarResultadosActa(filtrados);
-        });
+            buscarActa('');
+        }
+        function cerrarActaSearch() { document.getElementById('actaSearchModal').style.display = 'none'; }
+        function buscarActa(valor) {
+            try {
+                if (!appState || !appState.afiliados || appState.afiliados.length === 0) {
+                    document.getElementById('actaSearchResults').innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-secondary);font-size:0.85rem;">⏳ Cargando datos, espere un momento...</div>';
+                    document.getElementById('actaSearchEmpty').style.display = 'none';
+                    return;
+                }
+                const term = (valor || '').toString().toLowerCase().trim();
+                const todos = appState.afiliados.filter(af => {
+                    try { return contarFaltas(af.cedula) >= 2; }
+                    catch (e) { return false; }
+                });
+                if (!term) { mostrarResultadosActa(todos); return; }
+                const filtrados = todos.filter(af =>
+                    (af.nombre || '').toLowerCase().includes(term) || String(af.cedula || '').includes(term)
+                );
+                mostrarResultadosActa(filtrados);
+            } catch (e) { mostrarResultadosActa([]); }
+        }
         function mostrarResultadosActa(lista) {
             const container = document.getElementById('actaSearchResults');
             const empty = document.getElementById('actaSearchEmpty');
-            if (lista.length === 0) {
+            if (!container || !empty) return;
+            if (!lista || lista.length === 0) {
                 container.innerHTML = '';
                 empty.style.display = 'block';
                 return;
             }
             empty.style.display = 'none';
             container.innerHTML = lista.map(af => `
-                <div class="acta-search-item">
-                    <div class="acta-search-info">
-                        <div class="acta-search-name">${af.nombre}</div>
-                        <div class="acta-search-cc">C.C. ${af.cedula} · ${af.comuna || ''} ${af.vereda || ''}</div>
-                        <div class="acta-search-faltas">Faltas: ${contarFaltas(af.cedula)} de ${asambleasElegibles(af.cedula).length} asambleas</div>
+                    <div class="acta-search-item">
+                        <div class="acta-search-info">
+                            <div class="acta-search-name">${af.nombre || ''}</div>
+                            <div class="acta-search-cc">C.C. ${af.cedula || ''} · ${af.comuna || ''} ${af.vereda || ''}</div>
+                            <div class="acta-search-faltas">Faltas: ${contarFaltas(af.cedula)} de ${getAsambleasElegibles(af).length} asambleas</div>
+                        </div>
+                        <button class="btn" style="background: var(--danger); color: white; white-space: nowrap;" onclick="window.generarActaDepuracion('${af.cedula}'); cerrarActaSearch();">📄 Generar Acta</button>
                     </div>
-                    <button class="btn" style="background: var(--danger); color: white; white-space: nowrap;" onclick="window.generarActaDepuracion('${af.cedula}'); document.getElementById('actaSearchModal').style.display='none';">📄 Generar Acta</button>
-                </div>
-            `).join('');
+                `).join('');
         }
 
         document.getElementById('pdfExportBtn').addEventListener('click', exportarPDF);
@@ -1903,6 +1947,229 @@
         const tokenGuardado = localStorage.getItem('github_token');
         if (tokenGuardado) {
             inicializarConToken(tokenGuardado);
+        }
+
+        // ==================== REPORTES ====================
+        function abrirReportes() {
+            const modal = document.getElementById('reportesModal');
+            const container = document.getElementById('reporteContent');
+            if (!appState.afiliados || appState.afiliados.length === 0) {
+                container.innerHTML = '<p style="text-align:center;padding:30px;color:var(--text-secondary);">⏳ Cargando datos...</p>';
+                modal.style.display = 'flex';
+                return;
+            }
+            const depurados = appState.afiliados
+                .filter(af => contarFaltas(af.cedula) >= 2)
+                .sort((a, b) => String(a.cedula).localeCompare(String(b.cedula), undefined, { numeric: true }));
+            if (depurados.length === 0) {
+                container.innerHTML = '<p style="text-align:center;padding:30px;color:var(--text-secondary);">✅ No hay afiliados en depuración.</p>';
+                modal.style.display = 'flex';
+                return;
+            }
+
+            const f1 = appState.fechasAsambleas.fecha1 ? appState.fechasAsambleas.fecha1.split('-').reverse().join('/') : '—';
+            const f2 = appState.fechasAsambleas.fecha2 ? appState.fechasAsambleas.fecha2.split('-').reverse().join('/') : '—';
+            const f3 = appState.fechasAsambleas.fecha3 ? appState.fechasAsambleas.fecha3.split('-').reverse().join('/') : '—';
+
+            const mitad = Math.ceil(depurados.length / 2);
+            const izq = depurados.slice(0, mitad);
+            const der = depurados.slice(mitad);
+
+            function hacerTabla(lista) {
+                let t = `<table style="width:100%;border-collapse:collapse;font-size:0.6rem;">
+                    <thead>
+                        <tr>
+                            <th style="border:1px solid #555;padding:2px 4px;text-align:center;font-weight:700;background:#1e4a3a;color:#fff;">Cédula</th>
+                            <th style="border:1px solid #555;padding:2px 4px;text-align:center;font-weight:700;background:#1e4a3a;color:#fff;">1ra Asamblea<br><span style="font-weight:400;font-size:0.55rem;color:#d4e8d4;">${f1}</span></th>
+                            <th style="border:1px solid #555;padding:2px 4px;text-align:center;font-weight:700;background:#1e4a3a;color:#fff;">2da Asamblea<br><span style="font-weight:400;font-size:0.55rem;color:#d4e8d4;">${f2}</span></th>
+                            <th style="border:1px solid #555;padding:2px 4px;text-align:center;font-weight:700;background:#1e4a3a;color:#fff;">3ra Asamblea<br><span style="font-weight:400;font-size:0.55rem;color:#d4e8d4;">${f3}</span></th>
+                            <th style="border:1px solid #555;padding:2px 4px;text-align:center;font-weight:700;background:#1e4a3a;color:#fff;">Resultado</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+                lista.forEach(af => {
+                    const elegibles = getAsambleasElegibles(af);
+                    const txt = (e, num) => {
+                        if (!elegibles.includes(num)) return '—';
+                        return e === 'asistio' ? '✓ Asistió' : e === 'excusa' ? 'E Excusa' : '✗ Faltó';
+                    };
+                    const e1 = obtenerEstadoAsistencia(af.cedula, 1);
+                    const e2 = obtenerEstadoAsistencia(af.cedula, 2);
+                    const e3 = obtenerEstadoAsistencia(af.cedula, 3);
+                    t += `<tr>
+                        <td style="border:1px solid #888;padding:1px 4px;text-align:center;white-space:nowrap;">${af.cedula}</td>
+                        <td style="border:1px solid #888;padding:1px 4px;text-align:center;white-space:nowrap;">${txt(e1, 1)}</td>
+                        <td style="border:1px solid #888;padding:1px 4px;text-align:center;white-space:nowrap;">${txt(e2, 2)}</td>
+                        <td style="border:1px solid #888;padding:1px 4px;text-align:center;white-space:nowrap;">${txt(e3, 3)}</td>
+                        <td style="border:1px solid #888;padding:1px 4px;text-align:center;white-space:nowrap;font-weight:700;color:#cc0000;">DEPURAR</td>
+                    </tr>`;
+                });
+                t += '</tbody></table>';
+                return t;
+            }
+
+            let html = '<div style="display:flex;gap:6px;">';
+            html += '<div style="flex:1;">' + hacerTabla(izq) + '</div>';
+            html += '<div style="flex:1;">' + hacerTabla(der) + '</div>';
+            html += '</div>';
+            html += `<p style="text-align:right;font-size:0.6rem;color:var(--text-secondary);margin-top:4px;">Total: ${depurados.length} afiliados en depuración</p>`;
+            container.innerHTML = html;
+            modal.style.display = 'flex';
+        }
+
+        function imprimirReporte() {
+            const contenido = document.getElementById('reporteContent');
+            if (!contenido || contenido.innerHTML.trim() === '') return;
+            const ventana = window.open('', '_blank');
+            ventana.document.write(`<html><head><title>Reporte Depuración</title>
+                <style>
+                    body{font-family:'Times New Roman',serif;margin:0;padding:0;font-size:7pt;}
+                    table.rep{width:100%;border-collapse:collapse;}
+                    thead.rep{display:table-header-group;}
+                    thead.rep h2{text-align:center;color:#1e4a3a;margin:0;padding-top:8px;font-size:14pt;}
+                    thead.rep h3{text-align:center;margin:0 0 4px;font-size:12pt;font-weight:normal;}
+                    .dos{display:flex;gap:6px;}
+                    .dos>div{flex:1;}
+                    table.data{width:100%;border-collapse:collapse;}
+                    table.data th,table.data td{border:1px solid #555;padding:1px 3px;text-align:center;white-space:nowrap;}
+                    table.data th{font-weight:700;background:#1e4a3a;color:#fff;}
+                    table.data th span{font-weight:400;color:#d4e8d4;}
+                    table.data td:last-child{font-weight:700;color:#cc0000;}
+                    @page{margin:8mm 5mm 12mm 5mm;
+                        @bottom-center{content:"Página " counter(page);font-weight:700;font-size:8pt;color:#333;}
+                    }
+                    @media print{body{padding:0;}}
+                </style>
+                </head><body>
+                <table class="rep">
+                    <thead class="rep">
+                        <tr><td>
+                            <h2>JAC del Barrio Bateas Sector 3</h2>
+                            <h3>Reporte de Afiliados en Depuración</h3>
+                        </td></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>
+                            ${contenido.innerHTML}
+                        </td></tr>
+                    </tbody>
+                </table>
+                </body></html>`);
+            ventana.document.close();
+            setTimeout(() => ventana.print(), 500);
+        }
+
+        // ==================== PDF CON CONTRASEÑA ====================
+        document.getElementById('pdfActaBtn').addEventListener('click', async function() {
+            if (!currentActaCedula) { mostrarAlerta('❌ Genera primero el acta', 'error'); return; }
+            const btn = this;
+            const original = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '⏳ Cargando librerías...';
+
+            try {
+                if (typeof html2canvas === 'undefined') {
+                    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
+                }
+                if (typeof jspdf === 'undefined') {
+                    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+                }
+
+                btn.innerHTML = '⏳ Renderizando acta...';
+                const elemento = document.getElementById('actaImprimible');
+                if (!elemento) { mostrarAlerta('❌ No hay acta', 'error'); return; }
+
+                elemento.style.width = '750px';
+                elemento.style.margin = '0 auto';
+                elemento.style.padding = '20px 40px 40px';
+                elemento.style.background = 'white';
+                elemento.style.color = '#000';
+
+                const canvas = await html2canvas(elemento, { scale: 2.5, useCORS: true, backgroundColor: '#ffffff' });
+
+                elemento.style.width = '';
+                elemento.style.margin = '';
+                elemento.style.padding = '';
+                elemento.style.background = '';
+                elemento.style.color = '';
+
+                btn.innerHTML = '⏳ Generando PDF...';
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const pw = pdf.internal.pageSize.getWidth();
+                const ph = pdf.internal.pageSize.getHeight();
+                const margin = 8;
+                const imgW = pw - margin * 2;
+                const pageImgH = ph - margin * 2;
+                const pixelsPerMm = canvas.width / imgW;
+                const pagePixels = pageImgH * pixelsPerMm;
+
+                let srcY = 0;
+                let pageNum = 0;
+                while (srcY < canvas.height) {
+                    const h = Math.min(pagePixels, canvas.height - srcY);
+                    const tempCanvas = document.createElement('canvas');
+                    tempCanvas.width = canvas.width;
+                    tempCanvas.height = h;
+                    const ctx = tempCanvas.getContext('2d');
+                    ctx.drawImage(canvas, 0, srcY, canvas.width, h, 0, 0, canvas.width, h);
+                    const pageData = tempCanvas.toDataURL('image/jpeg', 0.92);
+                    if (pageNum > 0) pdf.addPage();
+                    pdf.addImage(pageData, 'JPEG', margin, margin, imgW, (h / pixelsPerMm));
+                    pdf.setFont('helvetica', 'bold');
+                    pdf.setFontSize(8);
+                    pdf.setTextColor(50);
+                    pdf.text(`Página ${pageNum + 1}`, pw - margin, ph - 4, { align: 'right' });
+                    srcY += h;
+                    pageNum++;
+                }
+
+                btn.innerHTML = '⏳ Aplicando contraseña...';
+                let finalBytes = pdf.output('arraybuffer');
+                let encryptOk = false;
+                try {
+                    await loadScript('https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.js');
+                    await new Promise(r => setTimeout(r, 500));
+                    if (typeof PDFLib !== 'undefined' && PDFLib.PDFDocument) {
+                        const doc = await PDFLib.PDFDocument.load(finalBytes);
+                        if (typeof doc.encrypt === 'function') {
+                            await doc.encrypt({ userPassword: currentActaCedula, ownerPassword: currentActaCedula });
+                            finalBytes = await doc.save();
+                            encryptOk = true;
+                        }
+                    }
+                } catch(e) {}
+                if (!encryptOk) {
+                    mostrarAlerta('⚠️ No se pudo aplicar contraseña. El PDF se descargará sin protección.', 'error');
+                }
+
+                const blob = new Blob([finalBytes], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `Acta_${currentActaNombre.replace(/\s+/g, '_')}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                setTimeout(() => URL.revokeObjectURL(url), 5000);
+
+                mostrarAlerta(`✅ PDF descargado. Contraseña: ${currentActaCedula}`, 'info');
+            } catch(e) {
+                mostrarAlerta('❌ Error: ' + e.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = original;
+            }
+        });
+
+        function loadScript(src) {
+            return new Promise((resolve, reject) => {
+                const s = document.createElement('script');
+                s.src = src;
+                s.onload = resolve;
+                s.onerror = () => reject(new Error('Error al cargar ' + src));
+                document.head.appendChild(s);
+            });
         }
     </script>
 </body>
