@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
-    <title>JAC Bateas · Control de Asistencia Asambleas</title>
+    <title>Sistema Digital de Asistencia de Asambleas · JAC Bateas Sector 3</title>
     <style>
         :root {
             --primary: #1e4a3a;
@@ -54,8 +54,8 @@
         }
 
         .header {
+            position: relative;
             display: flex;
-            justify-content: space-between;
             align-items: center;
             padding: 10px 24px;
             background: var(--header-bg);
@@ -88,8 +88,12 @@
         }
 
         .header-controls {
+            position: absolute;
+            right: 24px;
+            top: 50%;
+            transform: translateY(-50%);
             display: flex;
-            gap: 8px;
+            gap: 6px;
             align-items: center;
             flex-wrap: wrap;
         }
@@ -97,12 +101,12 @@
         .year-badge {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 3px;
             background: rgba(255, 255, 255, 0.12);
             backdrop-filter: blur(8px);
-            padding: 6px 14px;
+            padding: 3px 8px;
             border-radius: 100px;
-            font-size: 0.8rem;
+            font-size: 0.65rem;
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.15);
             font-weight: 500;
@@ -111,8 +115,8 @@
         .year-badge select {
             border: none;
             background: transparent;
-            padding: 2px 6px;
-            font-size: 0.8rem;
+            padding: 1px 4px;
+            font-size: 0.65rem;
             font-weight: 600;
             color: white;
             outline: none;
@@ -127,16 +131,16 @@
             background: rgba(255, 255, 255, 0.12);
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 6px 14px;
+            padding: 3px 10px;
             border-radius: 100px;
             font-weight: 600;
-            font-size: 0.72rem;
+            font-size: 0.65rem;
             cursor: pointer;
             transition: all 0.2s;
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            height: 32px;
+            gap: 3px;
+            height: 26px;
         }
 
         .btn-header:hover {
@@ -204,7 +208,7 @@
         }
 
         .search-box {
-            flex: 0 0 350px;
+            flex: 0 0 250px;
             min-width: 150px;
             display: flex;
             align-items: center;
@@ -635,7 +639,7 @@
         .modal-content {
             background: white;
             border-radius: 24px;
-            max-width: 750px;
+            max-width: 1300px;
             width: 100%;
             max-height: 85vh;
             overflow-y: auto;
@@ -852,9 +856,10 @@
     <div class="app" id="mainApp" style="display: none;">
         <div class="header">
             <div class="logo-area">
-                <h1>📋 JAC del Barrio Bateas Sector 3 <span>Ley 2166</span></h1>
+                <h1>Sistema Digital de Asistencia de Asambleas Barrio Bateas Sector 3 JAC</span>
+                </h1>
                 <div id="headerClock"
-                    style="font-size:0.72rem;color:rgba(255,255,255,0.85);font-weight:700;margin-top:4px;"></div>
+                    style="font-size:0.72rem;color:rgba(255,255,255,0.85);font-weight:900;margin-top:5px;"></div>
             </div>
             <div class="header-controls">
                 <div class="year-badge">
@@ -878,13 +883,18 @@
                 <span style="color: #6a8b6a;">🔍</span>
                 <input type="text" id="searchInput" placeholder="Buscar por cédula, nombre o registro...">
             </div>
-            <button id="filterAprobadosBtn" class="btn" style="background: #2a9d2a; color: white;">✅ Aprobados</button>
-            <button id="filterUnaFaltaBtn" class="btn" style="background: #e6a817; color: #1a4a2a;">⚠️ 1 Falta</button>
-            <button id="filterDepurarBtn" class="btn btn-danger">❌ Depurados</button>
-            <button id="filterTodosBtn" class="btn btn-outline">👥 Todos</button>
             <div class="action-bar-right">
+                <button id="filterTodosBtn" class="btn btn-outline">👥 Todos</button>
+                <button id="filterAprobadosBtn" class="btn" style="background: #2a9d2a; color: white;">✅
+                    Aprobados</button>
+                <button id="filterUnaFaltaBtn" class="btn" style="background: #e6a817; color: #1a4a2a;">⚠️ 1
+                    Falta</button>
+                <button id="filterDepurarBtn" class="btn btn-danger">❌ Depurados</button>
                 <button id="pdfExportBtn" class="btn" style="background: #4a6b8a; color: white;">📄 PDF</button>
-                <button id="reportesBtn" class="btn" style="background: #5a7a9a; color: white;" onclick="abrirReportes()">📊 Reportes</button>
+                <button id="reportesBtn" class="btn" style="background: #7a5a9a; color: white;"
+                    onclick="abrirReporte('depurados')">📊 Reportes Depurados</button>
+                <button id="reporteAprobadosBtn" class="btn" style="background: #3a8a5a; color: white;"
+                    onclick="abrirReporte('aprobados')">✅ Reporte Aprobados</button>
                 <button id="openActaSearchBtn" class="btn" style="background: #ffd966; color: #1a4a2a;"
                     onclick="abrirActaSearch()">📋
                     Actas</button>
@@ -914,29 +924,29 @@
             <div class="table-header">
                 <div class="table-title">📋 Ley 2166 de 2021 · Año <span id="añoActualDisplay">2026</span></div>
                 <div class="legend">
-                    <div class="legend-item"><span style="color: #2a7a2a; font-size: 16px;">☑</span> Asistió</div>
-                    <div class="legend-item"><span style="color: #b68b40; font-weight: 700;">E</span> Excusa Justificada
+                    <div class="legend-item"><span style="color: #2a7a2a; font-size: 16px;">☑</span> <strong
+                            style="color:#222;">Asistió</strong></div>
+                    <div class="legend-item"><span style="color: #b68b40; font-weight: 700;">E</span> <strong
+                            style="color:#222;">Excusa Justificada</strong>
                     </div>
-                    <div class="legend-item"><span style="color: #c04040;">☐</span> Falta (sin excusa)</div>
+                    <div class="legend-item"><span style="color: #c04040;">☐</span> <strong style="color:#222;">Falta
+                            (sin excusa)</strong></div>
                 </div>
             </div>
             <div class="table-responsive">
                 <table id="dataTable">
                     <thead>
-                        <tr>
-                            <th class="sortable" id="sortRegistro" style="width: 50px;">Reg. <span
+                        <tr id="headerRow">
+                            <th class="sortable" id="sortRegistro" style="width:50px;">Reg. <span
                                     id="registroArrow">⇅</span></th>
-                            <th class="sortable" id="sortCedula" style="min-width: 100px;">Cédula <span
+                            <th class="sortable" id="sortCedula" style="min-width:100px;">Cédula <span
                                     id="cedulaArrow">⇅</span></th>
-                            <th class="sortable" id="sortNombre" style="min-width: 180px;">Nombre <span
+                            <th class="sortable" id="sortNombre" style="min-width:180px;">Nombre <span
                                     id="nombreArrow">▼</span></th>
-                            <th style="min-width: 110px;">Celular</th>
-                            <th style="min-width: 100px;">F. Afiliación</th>
-                            <th>1ra Asamblea<br><span id="fechaAsamblea1">—</span></th>
-                            <th>2da Asamblea<br><span id="fechaAsamblea2">—</span></th>
-                            <th>3ra Asamblea<br><span id="fechaAsamblea3">—</span></th>
+                            <th style="min-width:110px;">Celular</th>
+                            <th style="min-width:100px;">F. Afiliación</th>
                             <th>Resultado</th>
-                            <th style="width: 70px;">Acta</th>
+                            <th style="width:70px;">Acta</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody"></tbody>
@@ -987,18 +997,9 @@
                 <button class="close-btn" id="closeConfigModalBtn">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="field-group">
-                    <label>📅 FECHA 1RA ASAMBLEA</label>
-                    <input type="date" id="fecha1Input">
-                </div>
-                <div class="field-group">
-                    <label>📅 FECHA 2DA ASAMBLEA</label>
-                    <input type="date" id="fecha2Input">
-                </div>
-                <div class="field-group">
-                    <label>📅 FECHA 3RA ASAMBLEA</label>
-                    <input type="date" id="fecha3Input">
-                </div>
+                <div id="fechasContainer"></div>
+                <button id="agregarFechaBtn" class="btn"
+                    style="background:#e8f0e8;color:#1a4a2a;width:100%;margin:8px 0;">+ Agregar nueva fecha</button>
                 <div style="display: flex; gap: 12px; justify-content: flex-end;">
                     <button id="cancelConfigBtn" class="btn">Cancelar</button>
                     <button id="saveConfigBtn" class="btn btn-success">💾 Guardar Fechas</button>
@@ -1017,7 +1018,8 @@
                         Imprimir</button>
                     <button id="pdfActaBtn" class="btn" style="background: #8a2a1a; color: white;">📄 PDF
                         (Cédula)</button>
-                    <button class="close-btn" id="closeActaModalBtn" onclick="document.getElementById('actaModal').style.display='none'">&times;</button>
+                    <button class="close-btn" id="closeActaModalBtn"
+                        onclick="document.getElementById('actaModal').style.display='none'">&times;</button>
                 </div>
             </div>
             <div class="modal-body" id="actaContent"></div>
@@ -1055,12 +1057,14 @@
 
     <!-- MODAL DE REPORTES -->
     <div id="reportesModal" class="modal">
-        <div class="modal-content" style="max-width: 900px;">
+        <div class="modal-content" style="max-width: 1200px; width: 95%;">
             <div class="modal-header">
-                <h3>📊 Reporte de Afiliados en Depuración</h3>
+                <h3 id="reporteModalTitle">📊 Reporte de Afiliados en Depuración</h3>
                 <div style="display: flex; gap: 8px;">
-                    <button id="printReporteBtn" class="btn" style="background: var(--primary); color: white;" onclick="imprimirReporte()">🖨️ Imprimir</button>
-                    <button class="close-btn" onclick="document.getElementById('reportesModal').style.display='none'">&times;</button>
+                    <button id="printReporteBtn" class="btn" style="background: var(--primary); color: white;"
+                        onclick="imprimirReporte()">🖨️ Imprimir</button>
+                    <button class="close-btn"
+                        onclick="document.getElementById('reportesModal').style.display='none'">&times;</button>
                 </div>
             </div>
             <div class="modal-body" style="padding:10px 0;">
@@ -1082,6 +1086,7 @@
             afiliados: [],
             asistencia: {},
             fechasAsambleas: { fecha1: '', fecha2: '', fecha3: '' },
+            numAsambleas: 3,
             cambiosPendientes: false,
             filtroActual: '',
             filtroEstado: 'todos',
@@ -1210,11 +1215,12 @@
         }
 
         function getAsambleasElegibles(afiliado) {
-            if (!afiliado || !afiliado.fecha) return [1, 2, 3];
+            const n = appState.numAsambleas;
+            if (!afiliado || !afiliado.fecha) return Array.from({ length: n }, (_, i) => i + 1);
             const fechaAfiliacion = parseFecha(afiliado.fecha);
-            if (!fechaAfiliacion) return [1, 2, 3];
+            if (!fechaAfiliacion) return Array.from({ length: n }, (_, i) => i + 1);
             const elegibles = [];
-            for (let i = 1; i <= 3; i++) {
+            for (let i = 1; i <= n; i++) {
                 const fechaAsambleaStr = appState.fechasAsambleas['fecha' + i];
                 if (!fechaAsambleaStr) { elegibles.push(i); continue; }
                 const fechaAsamblea = parseFecha(fechaAsambleaStr);
@@ -1245,7 +1251,8 @@
 
         function contarFaltas(cedula) {
             const afiliado = appState.afiliados.find(a => a.cedula === cedula);
-            const elegibles = afiliado ? getAsambleasElegibles(afiliado) : [1, 2, 3];
+            const n = appState.numAsambleas;
+            const elegibles = afiliado ? getAsambleasElegibles(afiliado) : Array.from({ length: n }, (_, i) => i + 1);
             let faltas = 0;
             for (const i of elegibles) {
                 if (obtenerEstadoAsistencia(cedula, i) === 'ninguno') faltas++;
@@ -1255,7 +1262,7 @@
 
         function totalElegibles(cedula) {
             const afiliado = appState.afiliados.find(a => a.cedula === cedula);
-            return afiliado ? getAsambleasElegibles(afiliado).length : 3;
+            return afiliado ? getAsambleasElegibles(afiliado).length : appState.numAsambleas;
         }
 
         function calcularEstadisticas() {
@@ -1316,9 +1323,7 @@
                     <td style="text-align: left;">${af.nombre}</td>
                     <td>${af.celular}</td>
                     <td style="font-size: 10px; color: #4a6b4a;">${af.fecha || '—'}</td>
-                    ${renderCeldaAsamblea(af.cedula, 1)}
-                    ${renderCeldaAsamblea(af.cedula, 2)}
-                    ${renderCeldaAsamblea(af.cedula, 3)}
+                    ${Array.from({ length: appState.numAsambleas }, (_, i) => renderCeldaAsamblea(af.cedula, i + 1)).join('')}
                     <td><span class="badge ${resultado === 'depurar' ? 'badge-depurar' : 'badge-aprobado'}">${resultado === 'depurar' ? '❌ DEPURAR' : '✅ APROBADO'}</span></td>
                     <td>${resultado === 'depurar' ? `<button class="btn-acta" onclick="window.generarActaDepuracion('${af.cedula}')">📄 Acta</button>` : '—'}</td>
                 </tr>`;
@@ -1347,9 +1352,71 @@
             }
         }
 
+        function eliminarFecha(num) {
+            const n = appState.numAsambleas;
+            if (n <= 2) { alert('Debe haber al menos 2 asambleas.'); return; }
+            for (let i = num; i < n; i++) {
+                appState.fechasAsambleas['fecha' + i] = appState.fechasAsambleas['fecha' + (i + 1)] || '';
+            }
+            delete appState.fechasAsambleas['fecha' + n];
+            appState.numAsambleas--;
+            renderFechasInputs();
+            reconstruirHeaderAsambleas();
+            renderizarTabla();
+        }
+
         function esElegible(cedula, numAsamblea) {
             const afiliado = appState.afiliados.find(a => a.cedula === cedula);
             return afiliado ? getAsambleasElegibles(afiliado).includes(numAsamblea) : true;
+        }
+
+        function reconstruirHeaderAsambleas() {
+            const n = appState.numAsambleas || 3;
+            const headerRow = document.getElementById('headerRow');
+            if (!headerRow) return;
+            headerRow.querySelectorAll('.col-asamblea').forEach(el => el.remove());
+            const cells = Array.from(headerRow.children);
+            const resultadoTh = cells.find(th => th.textContent.trim() === 'Resultado');
+            if (!resultadoTh) return;
+            const fixedCols = 50 + 100 + 180 + 110 + 100 + 70;
+            const avail = Math.max(50, Math.floor((980 - fixedCols) / n));
+            for (let i = 1; i <= n; i++) {
+                const th = document.createElement('th');
+                th.className = 'col-asamblea';
+                const ord = i === 1 ? '1ra' : i === 2 ? '2da' : i === 3 ? '3ra' : i + 'ta';
+                const fecha = appState.fechasAsambleas['fecha' + i] || '—';
+                const f = fecha !== '—' ? fecha.split('-').reverse().join('/') : '—';
+                th.innerHTML = `${ord} Asamblea<br><span style="font-weight:400;font-size:0.55rem;color:#d4e8d4;">${f}</span>`;
+                th.style.width = avail + 'px';
+                headerRow.insertBefore(th, resultadoTh);
+            }
+        }
+
+        function actualizarHeaderFechas() {
+            const n = appState.numAsambleas || 3;
+            for (let i = 1; i <= n; i++) {
+                const span = document.getElementById('fechaAsamblea' + i);
+                if (span) {
+                    const f = appState.fechasAsambleas['fecha' + i];
+                    span.textContent = f ? f.split('-').reverse().join('/') : '—';
+                }
+            }
+        }
+
+        function renderFechasInputs() {
+            const container = document.getElementById('fechasContainer');
+            if (!container) return;
+            const n = appState.numAsambleas || 3;
+            let html = '';
+            for (let i = 1; i <= n; i++) {
+                const ord = i === 1 ? '1RA' : i === 2 ? '2DA' : i === 3 ? '3RA' : i + 'TA';
+                const val = appState.fechasAsambleas['fecha' + i] || '';
+                html += `<div class="field-group">
+                    <label>📅 FECHA ${ord} ASAMBLEA <button class="btn" style="background:#fde8e8;color:#b33;padding:1px 6px;font-size:0.6rem;float:right;" onclick="eliminarFecha(${i})">✕</button></label>
+                    <input type="date" id="fechaInput${i}" value="${val}">
+                </div>`;
+            }
+            container.innerHTML = html;
         }
 
         function renderCeldaAsamblea(cedula, num) {
@@ -1392,7 +1459,7 @@
             const faltas = contarFaltas(cedula);
             const totalEsp = totalElegibles(cedula);
             const detalle = [];
-            for (let i = 1; i <= 3; i++) {
+            for (let i = 1; i <= appState.numAsambleas; i++) {
                 const elegible = esElegible(cedula, i);
                 const estado = obtenerEstadoAsistencia(cedula, i);
                 const fecha = appState.fechasAsambleas['fecha' + i] || '';
@@ -1440,7 +1507,7 @@
                         <tbody>`;
             detalle.forEach(d => {
                 html += `<tr>
-                    <td style="padding:12px 8px;font-size:11pt;font-weight:700;color:#1a2a1a;">${d.numero}ra Asamblea</td>
+                    <td style="padding:12px 8px;font-size:11pt;font-weight:700;color:#1a2a1a;">${d.numero}${d.numero === 1 ? 'ra' : d.numero === 2 ? 'da' : d.numero === 3 ? 'ra' : 'ta'} Asamblea</td>
                     <td style="padding:12px 8px;font-size:11pt;font-weight:700;color:#1a2a1a;">${d.fecha}</td>
                     <td style="padding:12px 8px;font-size:11pt;font-weight:800;color: ${d.esFalta ? '#b83020' : '#0f6a3a'};">${d.estado}</td>
                 </tr>`;
@@ -1475,21 +1542,21 @@
                         <div class="firma-item">
                             <div class="linea"></div>
                             <strong>Carlos Alberto Quiñones M.</strong><br>
-                            <span style="font-size: 9px;">Conciliador 1</span>
+                            <span style="display:block;font-size:9px;text-align:center;">Conciliador 1</span>
                         </div>
                         <div class="firma-item">
                             <div class="linea"></div>
                             <strong>Diana Paola Cardenas</strong><br>
-                            <span style="font-size: 9px;">Conciliador 2</span>
+                            <span style="display:block;font-size:9px;text-align:center;">Conciliador 2</span>
                         </div>
                         <div class="firma-item">
                             <div class="linea"></div>
                             <strong>Judith Sobeida Ruiz Alvarado</strong><br>
-                            <span style="font-size: 9px;">Conciliador 3</span>
+                            <span style="display:block;font-size:9px;text-align:center;">Conciliador 3</span>
                         </div>
                     </div>
-                    
-                    <p style="margin-top: 4px; font-size:9px; text-align: center; color: #000000;">
+                    <br><br>
+                    <p style="margin-top: 4px; font-size:12px; text-align: center; color: #000000;">
                         <strong>Junta de Acción Comunal del Barrio Bateas Sector 3</strong><br>
                         Ley 2166 del 18 de diciembre de 2021 - Decreto Reglamentario 1501 de 2023<br>
                         Puerto Gaitán, Meta - ${fechaActual}
@@ -1566,26 +1633,25 @@
             const año = appState.selectedYear;
             const fecha = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
 
-            const f = (d) => d ? d.split('-').reverse().join('/') : '—';
-            const fec1 = f(appState.fechasAsambleas.fecha1);
-            const fec2 = f(appState.fechasAsambleas.fecha2);
-            const fec3 = f(appState.fechasAsambleas.fecha3);
+            const n = appState.numAsambleas;
+            const fecs = [];
+            for (let i = 1; i <= n; i++) fecs.push(f(appState.fechasAsambleas['fecha' + i]));
 
             let filas = '';
             filtrados.forEach(af => {
                 const faltas = contarFaltas(af.cedula);
-                const e1 = esElegible(af.cedula, 1) ? (obtenerEstadoAsistencia(af.cedula, 1) === 'asistio' ? 'SI' : obtenerEstadoAsistencia(af.cedula, 1) === 'excusa' ? 'EXC' : 'NO') : '—';
-                const e2 = esElegible(af.cedula, 2) ? (obtenerEstadoAsistencia(af.cedula, 2) === 'asistio' ? 'SI' : obtenerEstadoAsistencia(af.cedula, 2) === 'excusa' ? 'EXC' : 'NO') : '—';
-                const e3 = esElegible(af.cedula, 3) ? (obtenerEstadoAsistencia(af.cedula, 3) === 'asistio' ? 'SI' : obtenerEstadoAsistencia(af.cedula, 3) === 'excusa' ? 'EXC' : 'NO') : '—';
+                let colsAsam = '';
+                for (let i = 1; i <= n; i++) {
+                    const e = esElegible(af.cedula, i) ? (obtenerEstadoAsistencia(af.cedula, i) === 'asistio' ? 'SI' : obtenerEstadoAsistencia(af.cedula, i) === 'excusa' ? 'EXC' : 'NO') : '—';
+                    colsAsam += `<td style="text-align:center;padding:5px 4px;border:1px solid #999;font-size:9pt;">${e}</td>`;
+                }
                 const resultado = faltas >= 2 ? 'DEPURAR' : 'APROBADO';
                 filas += `<tr>
                     <td style="text-align:center;padding:5px 4px;border:1px solid #999;font-size:9pt;">${af.registro || '—'}</td>
                     <td style="text-align:center;padding:5px 4px;border:1px solid #999;font-size:9pt;">${af.cedula}</td>
                     <td style="text-align:left;padding:5px 4px;border:1px solid #999;font-size:9pt;">${af.nombre}</td>
                     <td style="text-align:center;padding:5px 4px;border:1px solid #999;font-size:9pt;">${af.fecha || '—'}</td>
-                    <td style="text-align:center;padding:5px 4px;border:1px solid #999;font-size:9pt;">${e1}</td>
-                    <td style="text-align:center;padding:5px 4px;border:1px solid #999;font-size:9pt;">${e2}</td>
-                    <td style="text-align:center;padding:5px 4px;border:1px solid #999;font-size:9pt;">${e3}</td>
+                    ${colsAsam}
                     <td style="text-align:center;padding:5px 4px;border:1px solid #999;font-size:9pt;font-weight:700;">${resultado}</td>
                 </tr>`;
             });
@@ -1611,9 +1677,9 @@
 </style>
 </head>
 <body>
-    <h1>JUNTA DE ACCIÓN COMUNAL<br>DEL BARRIO BATEAS SECTOR 3</h1>
+    <h1>SISTEMA DIGITAL DE ASISTENCIA DE ASAMBLEAS<br>JUNTA DE ACCIÓN COMUNAL DEL BARRIO BATEAS SECTOR 3</h1>
     <h2>${titulo} - AÑO ${año}</h2>
-    <p class="info"><strong>Fecha de corte: ${fecha}</strong> | Fechas asambleas: ${fec1} / ${fec2} / ${fec3} | Total registros: ${filtrados.length}</p>
+    <p class="info"><strong>Fecha de corte: ${fecha}</strong> | Fechas asambleas: ${fecs.join(' / ')} | Total registros: ${filtrados.length}</p>
     <table>
         <thead>
             <tr>
@@ -1621,9 +1687,7 @@
                 <th>Cédula</th>
                 <th>Nombre</th>
                 <th>F. Afiliación</th>
-                <th>1ra Asam.</th>
-                <th>2da Asam.</th>
-                <th>3ra Asam.</th>
+                ${Array.from({ length: n }, (_, i) => `<th>${i + 1}ra Asam.</th>`).join('')}
                 <th>Resultado</th>
             </tr>
         </thead>
@@ -1654,12 +1718,15 @@
             const dataAsistencia = await cargarAsistencia();
             const datosAño = (dataAsistencia.años && dataAsistencia.años[año]) || {};
             appState.fechasAsambleas = datosAño.fechas || { fecha1: '', fecha2: '', fecha3: '' };
+            const fechasKeys = Object.keys(appState.fechasAsambleas).filter(k => k.startsWith('fecha'));
+            appState.numAsambleas = Math.max(3, fechasKeys.length);
+            // ensure all fecha slots up to numAsambleas exist
+            for (let i = 1; i <= appState.numAsambleas; i++) {
+                if (!appState.fechasAsambleas['fecha' + i]) appState.fechasAsambleas['fecha' + i] = '';
+            }
             appState.asistencia = datosAño.registros || {};
             appState.cambiosPendientes = false;
-            const f = (d) => d ? d.split('-').reverse().join('/') : '—';
-            document.getElementById('fechaAsamblea1').textContent = f(appState.fechasAsambleas.fecha1);
-            document.getElementById('fechaAsamblea2').textContent = f(appState.fechasAsambleas.fecha2);
-            document.getElementById('fechaAsamblea3').textContent = f(appState.fechasAsambleas.fecha3);
+            reconstruirHeaderAsambleas();
             document.getElementById('añoActualDisplay').textContent = año;
             document.getElementById('añoConfig').textContent = año;
             calcularEstadisticas();
@@ -1681,12 +1748,14 @@
                 const año = appState.selectedYear.toString();
                 const datosAño = (dataAsistencia.años && dataAsistencia.años[año]) || {};
                 appState.fechasAsambleas = datosAño.fechas || { fecha1: '', fecha2: '', fecha3: '' };
+                const fechasKeys = Object.keys(appState.fechasAsambleas).filter(k => k.startsWith('fecha'));
+                appState.numAsambleas = Math.max(3, fechasKeys.length);
+                for (let i = 1; i <= appState.numAsambleas; i++) {
+                    if (!appState.fechasAsambleas['fecha' + i]) appState.fechasAsambleas['fecha' + i] = '';
+                }
                 appState.asistencia = datosAño.registros || {};
 
-                const f = (d) => d ? d.split('-').reverse().join('/') : '—';
-                document.getElementById('fechaAsamblea1').textContent = f(appState.fechasAsambleas.fecha1);
-                document.getElementById('fechaAsamblea2').textContent = f(appState.fechasAsambleas.fecha2);
-                document.getElementById('fechaAsamblea3').textContent = f(appState.fechasAsambleas.fecha3);
+                reconstruirHeaderAsambleas();
                 document.getElementById('añoActualDisplay').textContent = año;
                 document.getElementById('añoConfig').textContent = año;
                 document.getElementById('yearSelect').value = año;
@@ -1738,23 +1807,28 @@
         });
 
         document.getElementById('configAsambleasBtn').addEventListener('click', () => {
-            document.getElementById('fecha1Input').value = appState.fechasAsambleas.fecha1 || '';
-            document.getElementById('fecha2Input').value = appState.fechasAsambleas.fecha2 || '';
-            document.getElementById('fecha3Input').value = appState.fechasAsambleas.fecha3 || '';
+            renderFechasInputs();
             document.getElementById('configModal').style.display = 'flex';
         });
 
         document.getElementById('closeConfigModalBtn').addEventListener('click', () => document.getElementById('configModal').style.display = 'none');
         document.getElementById('cancelConfigBtn').addEventListener('click', () => document.getElementById('configModal').style.display = 'none');
+
+        document.getElementById('agregarFechaBtn').addEventListener('click', () => {
+            appState.numAsambleas++;
+            appState.fechasAsambleas['fecha' + appState.numAsambleas] = '';
+            renderFechasInputs();
+            reconstruirHeaderAsambleas();
+            renderizarTabla();
+        });
+
         document.getElementById('saveConfigBtn').addEventListener('click', async () => {
-            appState.fechasAsambleas.fecha1 = document.getElementById('fecha1Input').value;
-            appState.fechasAsambleas.fecha2 = document.getElementById('fecha2Input').value;
-            appState.fechasAsambleas.fecha3 = document.getElementById('fecha3Input').value;
+            for (let i = 1; i <= appState.numAsambleas; i++) {
+                const input = document.getElementById('fechaInput' + i);
+                if (input) appState.fechasAsambleas['fecha' + i] = input.value;
+            }
             appState.cambiosPendientes = true;
-            const f = (d) => d ? d.split('-').reverse().join('/') : '—';
-            document.getElementById('fechaAsamblea1').textContent = f(appState.fechasAsambleas.fecha1);
-            document.getElementById('fechaAsamblea2').textContent = f(appState.fechasAsambleas.fecha2);
-            document.getElementById('fechaAsamblea3').textContent = f(appState.fechasAsambleas.fecha3);
+            reconstruirHeaderAsambleas();
             await guardarAsistencia();
             document.getElementById('configModal').style.display = 'none';
         });
@@ -1780,7 +1854,7 @@
                         .acta-print p{text-align:justify;}
                         .acta-print .firmas{display:flex;justify-content:center;gap:40px;margin-top:30px;}
                         .acta-print .firma-item{text-align:center;}
-                        .acta-print .linea{border-top:1px solid #000;width:200px;margin:0 auto 4px;}
+                        .acta-print .linea{border-top:2px solid #000;width:200px;margin:0 auto 4px;}
                         @media print{
                             @page{margin:15mm 15mm 15mm 15mm;@bottom-right{content:"Página " counter(page);font-size:9pt;color:#555;font-family:'Times New Roman',serif;}}
                             body{margin:0;padding:0;}
@@ -1949,40 +2023,64 @@
             inicializarConToken(tokenGuardado);
         }
 
+        // Rebuild assembly columns on load
+        setTimeout(() => {
+            if (appState.afiliados.length === 0) {
+                reconstruirHeaderAsambleas();
+            }
+        }, 100);
+
         // ==================== REPORTES ====================
-        function abrirReportes() {
+        function abrirReporte(tipo) {
             const modal = document.getElementById('reportesModal');
+            const title = document.getElementById('reporteModalTitle');
             const container = document.getElementById('reporteContent');
+            const esDepurados = tipo === 'depurados';
+            const filtro = esDepurados
+                ? af => contarFaltas(af.cedula) >= 2
+                : af => contarFaltas(af.cedula) < 2;
+            const titulo = esDepurados ? 'Reporte de Afiliados en Depuración' : 'Reporte de Afiliados Aprobados';
+            const textoVacio = esDepurados ? '✅ No hay afiliados en depuración.' : '✅ Todos los afiliados están aprobados.';
+            const textoTotal = esDepurados ? 'afiliados en depuración' : 'afiliados aprobados';
+            const resultadoTexto = esDepurados ? 'DEPURAR' : 'APROBADO';
+            const resultadoColor = esDepurados ? '#cc0000' : '#1a7a3a';
+
+            title.textContent = '📊 ' + titulo;
             if (!appState.afiliados || appState.afiliados.length === 0) {
                 container.innerHTML = '<p style="text-align:center;padding:30px;color:var(--text-secondary);">⏳ Cargando datos...</p>';
                 modal.style.display = 'flex';
                 return;
             }
-            const depurados = appState.afiliados
-                .filter(af => contarFaltas(af.cedula) >= 2)
+            const filtrados = appState.afiliados
+                .filter(filtro)
                 .sort((a, b) => String(a.cedula).localeCompare(String(b.cedula), undefined, { numeric: true }));
-            if (depurados.length === 0) {
-                container.innerHTML = '<p style="text-align:center;padding:30px;color:var(--text-secondary);">✅ No hay afiliados en depuración.</p>';
+            if (filtrados.length === 0) {
+                container.innerHTML = `<p style="text-align:center;padding:30px;color:var(--text-secondary);">${textoVacio}</p>`;
                 modal.style.display = 'flex';
                 return;
             }
 
-            const f1 = appState.fechasAsambleas.fecha1 ? appState.fechasAsambleas.fecha1.split('-').reverse().join('/') : '—';
-            const f2 = appState.fechasAsambleas.fecha2 ? appState.fechasAsambleas.fecha2.split('-').reverse().join('/') : '—';
-            const f3 = appState.fechasAsambleas.fecha3 ? appState.fechasAsambleas.fecha3.split('-').reverse().join('/') : '—';
+            const n = appState.numAsambleas;
+            const fecs = [];
+            for (let i = 1; i <= n; i++) {
+                fecs.push(appState.fechasAsambleas['fecha' + i] ? appState.fechasAsambleas['fecha' + i].split('-').reverse().join('/') : '—');
+            }
 
-            const mitad = Math.ceil(depurados.length / 2);
-            const izq = depurados.slice(0, mitad);
-            const der = depurados.slice(mitad);
+            const mitad = Math.ceil(filtrados.length / 2);
+            const izq = filtrados.slice(0, mitad);
+            const der = filtrados.slice(mitad);
 
             function hacerTabla(lista) {
+                const ord = (i) => i === 1 ? '1ra' : i === 2 ? '2da' : i === 3 ? '3ra' : i + 'ta';
+                let colsTh = '';
+                for (let i = 1; i <= n; i++) {
+                    colsTh += `<th style="border:1px solid #555;padding:2px 4px;text-align:center;font-weight:700;background:#1e4a3a;color:#fff;">${ord(i)} Asamblea<br><span style="font-weight:400;font-size:0.55rem;color:#d4e8d4;">${fecs[i - 1]}</span></th>`;
+                }
                 let t = `<table style="width:100%;border-collapse:collapse;font-size:0.6rem;">
                     <thead>
                         <tr>
                             <th style="border:1px solid #555;padding:2px 4px;text-align:center;font-weight:700;background:#1e4a3a;color:#fff;">Cédula</th>
-                            <th style="border:1px solid #555;padding:2px 4px;text-align:center;font-weight:700;background:#1e4a3a;color:#fff;">1ra Asamblea<br><span style="font-weight:400;font-size:0.55rem;color:#d4e8d4;">${f1}</span></th>
-                            <th style="border:1px solid #555;padding:2px 4px;text-align:center;font-weight:700;background:#1e4a3a;color:#fff;">2da Asamblea<br><span style="font-weight:400;font-size:0.55rem;color:#d4e8d4;">${f2}</span></th>
-                            <th style="border:1px solid #555;padding:2px 4px;text-align:center;font-weight:700;background:#1e4a3a;color:#fff;">3ra Asamblea<br><span style="font-weight:400;font-size:0.55rem;color:#d4e8d4;">${f3}</span></th>
+                            ${colsTh}
                             <th style="border:1px solid #555;padding:2px 4px;text-align:center;font-weight:700;background:#1e4a3a;color:#fff;">Resultado</th>
                         </tr>
                     </thead>
@@ -1993,15 +2091,14 @@
                         if (!elegibles.includes(num)) return '—';
                         return e === 'asistio' ? '✓ Asistió' : e === 'excusa' ? 'E Excusa' : '✗ Faltó';
                     };
-                    const e1 = obtenerEstadoAsistencia(af.cedula, 1);
-                    const e2 = obtenerEstadoAsistencia(af.cedula, 2);
-                    const e3 = obtenerEstadoAsistencia(af.cedula, 3);
+                    let colsDatos = '';
+                    for (let i = 1; i <= n; i++) {
+                        colsDatos += `<td style="border:1px solid #888;padding:1px 4px;text-align:center;white-space:nowrap;">${txt(obtenerEstadoAsistencia(af.cedula, i), i)}</td>`;
+                    }
                     t += `<tr>
                         <td style="border:1px solid #888;padding:1px 4px;text-align:center;white-space:nowrap;">${af.cedula}</td>
-                        <td style="border:1px solid #888;padding:1px 4px;text-align:center;white-space:nowrap;">${txt(e1, 1)}</td>
-                        <td style="border:1px solid #888;padding:1px 4px;text-align:center;white-space:nowrap;">${txt(e2, 2)}</td>
-                        <td style="border:1px solid #888;padding:1px 4px;text-align:center;white-space:nowrap;">${txt(e3, 3)}</td>
-                        <td style="border:1px solid #888;padding:1px 4px;text-align:center;white-space:nowrap;font-weight:700;color:#cc0000;">DEPURAR</td>
+                        ${colsDatos}
+                        <td style="border:1px solid #888;padding:1px 4px;text-align:center;white-space:nowrap;font-weight:700;color:${resultadoColor};">${resultadoTexto}</td>
                     </tr>`;
                 });
                 t += '</tbody></table>';
@@ -2012,7 +2109,7 @@
             html += '<div style="flex:1;">' + hacerTabla(izq) + '</div>';
             html += '<div style="flex:1;">' + hacerTabla(der) + '</div>';
             html += '</div>';
-            html += `<p style="text-align:right;font-size:0.6rem;color:var(--text-secondary);margin-top:4px;">Total: ${depurados.length} afiliados en depuración</p>`;
+            html += `<p style="text-align:right;font-size:0.6rem;color:var(--text-secondary);margin-top:4px;">Total: ${filtrados.length} ${textoTotal}</p>`;
             container.innerHTML = html;
             modal.style.display = 'flex';
         }
@@ -2020,6 +2117,7 @@
         function imprimirReporte() {
             const contenido = document.getElementById('reporteContent');
             if (!contenido || contenido.innerHTML.trim() === '') return;
+            const titulo = document.getElementById('reporteModalTitle').textContent.replace('📊 ', '');
             const ventana = window.open('', '_blank');
             ventana.document.write(`<html><head><title>Reporte Depuración</title>
                 <style>
@@ -2034,7 +2132,6 @@
                     table.data th,table.data td{border:1px solid #555;padding:1px 3px;text-align:center;white-space:nowrap;}
                     table.data th{font-weight:700;background:#1e4a3a;color:#fff;}
                     table.data th span{font-weight:400;color:#d4e8d4;}
-                    table.data td:last-child{font-weight:700;color:#cc0000;}
                     @page{margin:8mm 5mm 12mm 5mm;
                         @bottom-center{content:"Página " counter(page);font-weight:700;font-size:8pt;color:#333;}
                     }
@@ -2045,7 +2142,7 @@
                     <thead class="rep">
                         <tr><td>
                             <h2>JAC del Barrio Bateas Sector 3</h2>
-                            <h3>Reporte de Afiliados en Depuración</h3>
+                            <h3>${titulo}</h3>
                         </td></tr>
                     </thead>
                     <tbody>
@@ -2060,7 +2157,7 @@
         }
 
         // ==================== PDF CON CONTRASEÑA ====================
-        document.getElementById('pdfActaBtn').addEventListener('click', async function() {
+        document.getElementById('pdfActaBtn').addEventListener('click', async function () {
             if (!currentActaCedula) { mostrarAlerta('❌ Genera primero el acta', 'error'); return; }
             const btn = this;
             const original = btn.innerHTML;
@@ -2138,7 +2235,7 @@
                             encryptOk = true;
                         }
                     }
-                } catch(e) {}
+                } catch (e) { }
                 if (!encryptOk) {
                     mostrarAlerta('⚠️ No se pudo aplicar contraseña. El PDF se descargará sin protección.', 'error');
                 }
@@ -2154,7 +2251,7 @@
                 setTimeout(() => URL.revokeObjectURL(url), 5000);
 
                 mostrarAlerta(`✅ PDF descargado. Contraseña: ${currentActaCedula}`, 'info');
-            } catch(e) {
+            } catch (e) {
                 mostrarAlerta('❌ Error: ' + e.message, 'error');
             } finally {
                 btn.disabled = false;
