@@ -1,7 +1,8 @@
 {
   "registros": {
     "4438681_2026": "asamblea1_asistio,asamblea2_asistio,asamblea3_asistio",
-    "42775182_2026": "asamblea1_asistio,asamblea2_asistio,asamblea3_asistio"
+    "42775182_2026": "asamblea1_asistio,asamblea2_asistio,asamblea3_asistio",
+    "1125550926_2026": "asamblea1_asistio,asamblea3_asistio"
   },
   "fechas": {
     "2026": {
@@ -10,5 +11,5 @@
       "fecha3": "2026-04-26"
     }
   },
-  "ultima_actualizacion": "2026-05-29T19:52:16.991Z"
+  "ultima_actualizacion": "2026-05-29T20:00:01.563Z"
 }
