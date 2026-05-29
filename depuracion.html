@@ -35,22 +35,18 @@
 
         body {
             background: linear-gradient(160deg, #e8f0e8 0%, #d0e0d0 50%, #e0ecd0 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 0px;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
         }
 
         .app {
             max-width: 1440px;
             width: 100%;
+            margin: 0 auto;
             background: white;
-            border-radius: var(--radius);
             box-shadow: 0 8px 40px rgba(15, 61, 42, 0.1);
-            overflow: hidden;
-            margin-top: 0px;
-            margin-bottom: 5px;
+            height: 100vh;
         }
 
         .header {
@@ -359,10 +355,14 @@
             gap: 4px;
         }
 
+        .firma-option:hover {
+            background: #e8f4e8;
+        }
+
         .table-responsive {
             overflow-x: auto;
-            max-height: 58vh;
             overflow-y: auto;
+            max-height: 400px;
         }
 
         .table-responsive::-webkit-scrollbar {
@@ -931,6 +931,37 @@
                     </div>
                     <div class="legend-item"><span style="color: #c04040;">☐</span> <strong style="color:#222;">Falta
                             (sin excusa)</strong></div>
+                    <div class="legend-item" style="position:relative;">
+                        <button id="firmasDropdownBtn" class="btn"
+                            style="background:#e8f0e8;color:#1a4a2a;padding:2px 8px;font-size:0.6rem;border:1px solid #c8d8c8;cursor:pointer;border-radius:4px;">✍️
+                            Firmas ▾</button>
+                        <div id="firmasDropdownMenu"
+                            style="display:none;position:absolute;top:100%;right:0;background:#fff;border:1px solid #ccc;border-radius:6px;padding:4px 0;z-index:100;min-width:200px;box-shadow:0 4px 12px rgba(0,0,0,0.15);">
+                            <div class="firma-option" data-value="1"
+                                style="padding:6px 12px;cursor:pointer;font-size:0.7rem;white-space:nowrap;"
+                                onclick="seleccionarFirmas('1')">Carlos Alberto Quiñones M. (Conc. 1)</div>
+                            <div class="firma-option" data-value="2"
+                                style="padding:6px 12px;cursor:pointer;font-size:0.7rem;white-space:nowrap;"
+                                onclick="seleccionarFirmas('2')">Diana Paola Cardenas (Conc. 2)</div>
+                            <div class="firma-option" data-value="3"
+                                style="padding:6px 12px;cursor:pointer;font-size:0.7rem;white-space:nowrap;"
+                                onclick="seleccionarFirmas('3')">Judith Sobeida Ruiz A. (Conc. 3)</div>
+                            <div style="border-top:1px solid #eee;"></div>
+                            <div class="firma-option" data-value="1-2"
+                                style="padding:6px 12px;cursor:pointer;font-size:0.7rem;white-space:nowrap;"
+                                onclick="seleccionarFirmas('1-2')">Conciliador 1 y 2</div>
+                            <div class="firma-option" data-value="2-3"
+                                style="padding:6px 12px;cursor:pointer;font-size:0.7rem;white-space:nowrap;"
+                                onclick="seleccionarFirmas('2-3')">Conciliador 2 y 3</div>
+                            <div class="firma-option" data-value="1-3"
+                                style="padding:6px 12px;cursor:pointer;font-size:0.7rem;white-space:nowrap;"
+                                onclick="seleccionarFirmas('1-3')">Conciliador 1 y 3</div>
+                            <div style="border-top:1px solid #eee;"></div>
+                            <div class="firma-option" data-value="1-2-3"
+                                style="padding:6px 12px;cursor:pointer;font-size:0.7rem;white-space:nowrap;font-weight:700;"
+                                onclick="seleccionarFirmas('1-2-3')">Todos los conciliadores</div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="table-responsive">
@@ -1082,6 +1113,7 @@
         let githubToken = localStorage.getItem('github_token');
         let currentActaCedula = '';
         let currentActaNombre = '';
+        let firmasSeleccion = '1-2-3'; // default: todos los conciliadores
         let appState = {
             afiliados: [],
             asistencia: {},
@@ -1110,14 +1142,24 @@
         }
 
         async function cargarAsistencia() {
-            try {
-                const res = await fetch(ASISTENCIA_RAW_URL);
-                if (res.status === 404) return { años: {} };
-                if (!res.ok) throw new Error('Error al cargar');
-                return await res.json();
-            } catch (e) {
-                return { años: {} };
+            if (githubToken) {
+                try {
+                    const res = await fetch(ASISTENCIA_API_URL, {
+                        headers: { 'Authorization': `token ${githubToken}` }
+                    });
+                    if (res.status === 404) return {};
+                    if (res.ok) {
+                        const data = await res.json();
+                        return JSON.parse(atob(data.content));
+                    }
+                } catch (e) {}
             }
+            try {
+                const res = await fetch(ASISTENCIA_RAW_URL + '?t=' + Date.now());
+                if (res.status === 404) return {};
+                if (res.ok) return await res.json();
+            } catch (e) {}
+            return {};
         }
 
         async function guardarAsistencia() {
@@ -1130,13 +1172,26 @@
                 const dataActual = await cargarAsistencia();
                 const año = appState.selectedYear.toString();
 
-                if (!dataActual.años) dataActual.años = {};
-                if (!dataActual.años[año]) dataActual.años[año] = {};
+                if (!dataActual.registros) dataActual.registros = {};
+                if (!dataActual.fechas) dataActual.fechas = {};
 
-                dataActual.años[año] = {
-                    fechas: appState.fechasAsambleas,
-                    registros: appState.asistencia
-                };
+                // remove old entries for this year from registros
+                Object.keys(dataActual.registros).forEach(k => {
+                    if (k.endsWith('_' + año)) delete dataActual.registros[k];
+                });
+                // merge current registros
+                Object.assign(dataActual.registros, appState.asistencia);
+                // sort registros by key (cedula numeric ascending)
+                const sortedKeys = Object.keys(dataActual.registros).sort((a, b) => {
+                    const cedA = parseInt(a.split('_')[0]), cedB = parseInt(b.split('_')[0]);
+                    if (cedA !== cedB) return cedA - cedB;
+                    return a.localeCompare(b);
+                });
+                const sortedRegs = {};
+                sortedKeys.forEach(k => sortedRegs[k] = dataActual.registros[k]);
+                dataActual.registros = sortedRegs;
+                // save fechas per year
+                dataActual.fechas[año] = appState.fechasAsambleas;
                 dataActual.ultima_actualizacion = new Date().toISOString();
 
                 let sha = null;
@@ -1150,7 +1205,9 @@
                     }
                 } catch (e) { }
 
-                const contenido = btoa(unescape(encodeURIComponent(JSON.stringify(dataActual, null, 2))));
+                const ordenado = { fechas: dataActual.fechas, registros: dataActual.registros };
+                if (dataActual.ultima_actualizacion) ordenado.ultima_actualizacion = dataActual.ultima_actualizacion;
+                const contenido = btoa(unescape(encodeURIComponent(JSON.stringify(ordenado, null, 2))));
                 const res = await fetch(ASISTENCIA_API_URL, {
                     method: 'PUT',
                     headers: {
@@ -1230,18 +1287,90 @@
             return elegibles;
         }
 
+        function migrarAsistencia(registros, año) {
+            if (!registros || typeof registros !== 'object') return {};
+            const keys = Object.keys(registros);
+            if (keys.length === 0) return {};
+            const r = {};
+            // old flat: "12345_asamblea1"
+            if (keys[0].includes('_asamblea')) {
+                const temp = {};
+                keys.forEach(k => {
+                    const [ced, asam] = k.split('_asamblea');
+                    if (ced && asam) {
+                        if (!temp[ced]) temp[ced] = [];
+                        const num = parseInt(asam);
+                        while (temp[ced].length < num) temp[ced].push('');
+                        temp[ced][num - 1] = registros[k];
+                    }
+                });
+                Object.keys(temp).forEach(ced => {
+                    const parts = temp[ced].map((v, i) => v ? `asamblea${i+1}_${v}` : '').filter(Boolean);
+                    if (parts.length > 0) r[ced + '_' + año] = parts.join(',');
+                });
+                return r;
+            }
+            // nested object: { ced: { asamblea1: "asistio" } }
+            const vals = Object.values(registros);
+            if (vals.length > 0 && typeof vals[0] === 'object' && vals[0] !== null && !Array.isArray(vals[0])) {
+                Object.keys(registros).forEach(ced => {
+                    const obj = registros[ced];
+                    const parts = [];
+                    for (let i = 1; i <= 4; i++) {
+                        if (obj['asamblea' + i]) parts.push(`asamblea${i}_${obj['asamblea' + i]}`);
+                    }
+                    if (parts.length > 0) r[ced + '_' + año] = parts.join(',');
+                });
+                return r;
+            }
+            // flat cedula -> "asistio,asistio" (current format)
+            Object.keys(registros).forEach(ced => {
+                if (ced.includes('_')) {
+                    // already has year suffix, keep as-is
+                    r[ced] = registros[ced];
+                } else {
+                    const parts = registros[ced].split(',').map((v, i) => v ? `asamblea${i+1}_${v}` : '').filter(Boolean);
+                    if (parts.length > 0) r[ced + '_' + año] = parts.join(',');
+                }
+            });
+            return r;
+        }
+
+        function keyAsistencia(cedula) {
+            return String(cedula).replace(/\./g, '') + '_' + appState.selectedYear;
+        }
+
+        function parseAsambleasStr(str) {
+            if (!str) return {};
+            const obj = {};
+            str.split(',').forEach(part => {
+                const m = part.match(/^asamblea(\d+)_(.+)$/);
+                if (m) obj[parseInt(m[1])] = m[2];
+            });
+            return obj;
+        }
+
         function obtenerEstadoAsistencia(cedula, numAsamblea) {
-            const key = `${cedula}_asamblea${numAsamblea}`;
-            return appState.asistencia[key] || 'ninguno';
+            const val = appState.asistencia[keyAsistencia(cedula)];
+            if (!val) return 'ninguno';
+            const partes = parseAsambleasStr(val);
+            return partes[numAsamblea] || 'ninguno';
         }
 
         function marcarAsistencia(cedula, numAsamblea, tipo) {
-            const key = `${cedula}_asamblea${numAsamblea}`;
-            const actual = appState.asistencia[key] || 'ninguno';
-            if (actual === tipo) {
-                delete appState.asistencia[key];
+            const k = keyAsistencia(cedula);
+            const partes = parseAsambleasStr(appState.asistencia[k]);
+            if (partes[numAsamblea] === tipo) {
+                delete partes[numAsamblea];
             } else {
-                appState.asistencia[key] = tipo;
+                partes[numAsamblea] = tipo;
+            }
+            const nums = Object.keys(partes).map(Number).sort((a, b) => a - b);
+            const arr = nums.map(n => `asamblea${n}_${partes[n]}`);
+            if (arr.length === 0) {
+                delete appState.asistencia[k];
+            } else {
+                appState.asistencia[k] = arr.join(',');
             }
             appState.cambiosPendientes = true;
             actualizarBotonFlotante();
@@ -1305,13 +1434,12 @@
 
         function renderizarTabla() {
             const filtrados = obtenerAfiliadosFiltrados();
-            const sinPaginacion = appState.filtroEstado === 'todos';
+            const sinPaginacion = true;
             const total = filtrados.length;
-            const pageSize = sinPaginacion ? total : 20;
-            appState.totalPages = sinPaginacion ? 1 : Math.max(1, Math.ceil(total / 20));
-            if (appState.currentPage > appState.totalPages) appState.currentPage = appState.totalPages;
-            const inicio = sinPaginacion ? 0 : (appState.currentPage - 1) * 20;
-            const pagina = filtrados.slice(inicio, inicio + pageSize);
+            appState.totalPages = 1;
+            appState.currentPage = 1;
+            const inicio = 0;
+            const pagina = filtrados;
 
             let html = '';
             pagina.forEach(af => {
@@ -1329,6 +1457,9 @@
                 </tr>`;
             });
             document.getElementById('tableBody').innerHTML = html;
+            if (document.getElementById('mainApp').style.display !== 'none') {
+                ajustarAlturaTabla();
+            }
             actualizarArrows();
 
             const paginationEl = document.querySelector('.pagination');
@@ -1349,6 +1480,16 @@
                         renderizarTabla();
                     });
                 });
+            }
+        }
+
+        function ajustarAlturaTabla() {
+            const thead = document.querySelector('#dataTable thead');
+            const tbody = document.querySelector('#dataTable tbody');
+            if (thead && tbody && tbody.rows.length > 0) {
+                const rowHeight = tbody.rows[0].offsetHeight;
+                const headerHeight = thead.offsetHeight;
+                document.querySelector('.table-responsive').style.maxHeight = (headerHeight + rowHeight * 6) + 'px';
             }
         }
 
@@ -1450,7 +1591,47 @@
             setTimeout(() => alertDiv.classList.remove('show'), 4000);
         }
 
+        // ==================== SELECCIÓN DE FIRMAS ====================
+        function seleccionarFirmas(val) {
+            firmasSeleccion = val;
+            const btn = document.getElementById('firmasDropdownBtn');
+            const labels = { '1': 'Carlos Quiñones', '2': 'Diana Cardenas', '3': 'Judith Ruiz', '1-2': 'Conc. 1 y 2', '2-3': 'Conc. 2 y 3', '1-3': 'Conc. 1 y 3', '1-2-3': 'Todos' };
+            btn.innerHTML = '✍️ ' + labels[val] + ' ▾';
+            document.getElementById('firmasDropdownMenu').style.display = 'none';
+            btn.style.background = '#d4e8d4';
+            setTimeout(() => btn.style.background = '#e8f0e8', 400);
+        }
+
+        document.addEventListener('click', function (e) {
+            const menu = document.getElementById('firmasDropdownMenu');
+            const btn = document.getElementById('firmasDropdownBtn');
+            if (menu && btn && !btn.contains(e.target) && !menu.contains(e.target)) {
+                menu.style.display = 'none';
+            }
+        });
+
+        document.getElementById('firmasDropdownBtn').addEventListener('click', function (e) {
+            e.stopPropagation();
+            const menu = document.getElementById('firmasDropdownMenu');
+            menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+        });
+
         // ==================== GENERAR ACTA CON TEXTO LEGAL ====================
+        function generarFirmasActa() {
+            const conc = [
+                { nombre: 'Carlos Alberto Quiñones M.', cargo: 'Conciliador 1' },
+                { nombre: 'Diana Paola Cardenas', cargo: 'Conciliador 2' },
+                { nombre: 'Judith Sobeida Ruiz Alvarado', cargo: 'Conciliador 3' }
+            ];
+            const map = { '1': [0], '2': [1], '3': [2], '1-2': [0, 1], '2-3': [1, 2], '1-3': [0, 2], '1-2-3': [0, 1, 2] };
+            const idxs = map[firmasSeleccion] || [0, 1, 2];
+            return idxs.map(i => `<div class="firma-item">
+                <div class="linea"></div>
+                <strong>${conc[i].nombre}</strong><br>
+                <span style="display:block;font-size:9px;text-align:center;">${conc[i].cargo}</span>
+            </div>`).join('');
+        }
+
         window.generarActaDepuracion = function (cedula) {
             const afiliado = appState.afiliados.find(a => a.cedula === cedula);
             if (!afiliado) return;
@@ -1472,16 +1653,16 @@
 
             let html = `
                 <div class="acta-print" id="actaImprimible">
-                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Escudo_Acci%C3%B3n_Comunal_Colombia.svg/500px-Escudo_Acci%C3%B3n_Comunal_Colombia.svg.png" style="height:80px;width:auto;margin-left:20px;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Escudo_Acci%C3%B3n_Comunal_Colombia.svg/500px-Escudo_Acci%C3%B3n_Comunal_Colombia.svg.png" style="height:65px;width:auto;margin-left:15px;">
                         <div>
                             <h2 style="margin:0;color:#1a4a2a;text-align:center;font-size:14pt;">JUNTA DE ACCIÓN COMUNAL<br>DEL BARRIO BATEAS SECTOR 3</h2>
-                            <p style="margin:4px 0 0;text-align:center;font-weight:bold;font-size:10pt;">Puerto Gaitán, Meta - Personería Jurídica No. 451 del 31 de Octubre de 2.025</p>
-                            <p style="margin:2px 0 0;text-align:center;font-size:9pt;">Manzana 59 Casa 10, Barrio Bateas Sector 3 | 📞 320 863 2489 | ✉ juntacomunalsector3bateas@gmail.com</p>
+                            <p style="margin:4px 0 0;text-align:center;font-weight:bold;font-size:9pt;">Puerto Gaitán, Meta - Personería Jurídica No. 451 del 31 de Octubre de 2.025</p>
+                            <p style="margin:3px 0 0;text-align:center;font-size:8pt;">Manzana 59 Casa 10, Barrio Bateas Sector 3 | 📞 320 863 2489 | ✉ juntacomunalsector3bateas@gmail.com</p>
                         </div>
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Escudo_de_Puerto_Gait%C3%A1n.svg/960px-Escudo_de_Puerto_Gait%C3%A1n.svg.png" style="height:80px;width:auto;margin-right:20px;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Escudo_de_Puerto_Gait%C3%A1n.svg/960px-Escudo_de_Puerto_Gait%C3%A1n.svg.png" style="height:65px;width:auto;margin-right:15px;">
                     </div>
-                    <hr style="border: 1px solid #1a4a2a; margin: 15px 0;">
+                    <hr style="border: 1px solid #1a4a2a; margin: 12px 0;">
                     <h3>ACTA DE PROCESO DECLARATIVO DE DEPURACIÓN</h3>
                     <p style="text-align: center;">(Pérdida de calidad de afiliado sin sanción - Artículo 141 Ley 2166 de 2021)</p>
                     
@@ -1502,14 +1683,14 @@
                     <h4>📋 HISTORIAL DE ASISTENCIA - AÑO ${año}:</h4>
                     <table style="width: 100%; border-collapse: collapse;">
                         <thead>
-                            <tr><th style="padding:12px 8px;font-size:11pt;font-weight:900;color:#0a3a1a;">Asamblea</th><th style="padding:12px 8px;font-size:11pt;font-weight:900;color:#0a3a1a;">Fecha Programada</th><th style="padding:12px 8px;font-size:11pt;font-weight:900;color:#0a3a1a;">Estado</th></tr>
+                            <tr><th style="padding:10px 12px;font-size:12pt;font-weight:900;color:#0a3a1a;">Asamblea</th><th style="padding:10px 12px;font-size:12pt;font-weight:900;color:#0a3a1a;">Fecha Programada</th><th style="padding:10px 12px;font-size:12pt;font-weight:900;color:#0a3a1a;">Estado</th></tr>
                         </thead>
                         <tbody>`;
             detalle.forEach(d => {
                 html += `<tr>
-                    <td style="padding:12px 8px;font-size:11pt;font-weight:700;color:#1a2a1a;">${d.numero}${d.numero === 1 ? 'ra' : d.numero === 2 ? 'da' : d.numero === 3 ? 'ra' : 'ta'} Asamblea</td>
-                    <td style="padding:12px 8px;font-size:11pt;font-weight:700;color:#1a2a1a;">${d.fecha}</td>
-                    <td style="padding:12px 8px;font-size:11pt;font-weight:800;color: ${d.esFalta ? '#b83020' : '#0f6a3a'};">${d.estado}</td>
+                    <td style="padding:10px 12px;font-size:12pt;font-weight:700;color:#1a2a1a;">${d.numero}${d.numero === 1 ? 'ra' : d.numero === 2 ? 'da' : d.numero === 3 ? 'ra' : 'ta'} Asamblea</td>
+                    <td style="padding:10px 12px;font-size:12pt;font-weight:700;color:#1a2a1a;">${d.fecha}</td>
+                    <td style="padding:10px 12px;font-size:12pt;font-weight:800;color: ${d.esFalta ? '#b83020' : '#0f6a3a'};">${d.estado}</td>
                 </tr>`;
             });
             html += `
@@ -1539,21 +1720,7 @@
                     <p><strong>CUARTO:</strong> Una vez en firme esta decisión, remitir copia del proceso y constancia de firmeza a la <strong>Gerencia de Acción Comunal y Participación Ciudadana de la Gobernación del Meta</strong>, para la actualización en el aplicativo informático colaborativo (ORSO) y en el Registro Único Comunal (RUC) del Ministerio del Interior.</p>
                     <br><br>
                     <div class="firmas">
-                        <div class="firma-item">
-                            <div class="linea"></div>
-                            <strong>Carlos Alberto Quiñones M.</strong><br>
-                            <span style="display:block;font-size:9px;text-align:center;">Conciliador 1</span>
-                        </div>
-                        <div class="firma-item">
-                            <div class="linea"></div>
-                            <strong>Diana Paola Cardenas</strong><br>
-                            <span style="display:block;font-size:9px;text-align:center;">Conciliador 2</span>
-                        </div>
-                        <div class="firma-item">
-                            <div class="linea"></div>
-                            <strong>Judith Sobeida Ruiz Alvarado</strong><br>
-                            <span style="display:block;font-size:9px;text-align:center;">Conciliador 3</span>
-                        </div>
+                        ${generarFirmasActa()}
                     </div>
                     <br><br>
                     <p style="margin-top: 4px; font-size:12px; text-align: center; color: #000000;">
@@ -1599,16 +1766,18 @@
             const ventana = window.open('', '_blank');
             ventana.document.write(`<html><head><title>Actas de Depuración ${año} - JAC Bateas</title>
                 <style>
-                    body{font-family:'Times New Roman',serif;padding:30px;line-height:1.5;}
-                    .acta-print{max-width:700px;margin:0 auto 30px;}
-                    .acta-print h2{color:#1a4a2a;text-align:center;}
-                    .acta-print table{width:100%;border-collapse:collapse;margin:10px 0;}
-                    .acta-print table th,.acta-print table td{border:1px solid #000;padding:8px;text-align:center;}
-                    .acta-print .fundamento-legal{background:#f0f8f0;padding:10px;border-left:4px solid #1a4a2a;margin:15px 0;}
-                    .acta-print .apelacion{background:#fff9e6;padding:10px;border-left:4px solid #ffd966;margin:15px 0;}
-                    .acta-print .firmas{display:flex;justify-content:space-around;margin-top:40px;}
-                    .acta-print .linea{border-top:1px solid #000;margin-top:40px;padding-top:5px;width:180px;}
-                    @media print{.acta-print{page-break-after:always;}}
+                    body{font-family:'Times New Roman',serif;padding:15px;line-height:1.3;font-size:10pt;}
+                    .acta-print{max-width:700px;margin:0 auto 15px;}
+                    .acta-print h2{color:#1a4a2a;text-align:center;font-size:13pt;margin-bottom:4px;}
+                    .acta-print h3{text-align:center;font-size:11pt;margin:4px 0;}
+                    .acta-print table{width:100%;border-collapse:collapse;margin:6px 0;}
+                    .acta-print table th,.acta-print table td{border:1px solid #000;padding:4px 6px;text-align:center;font-size:9pt;}
+                    .acta-print .fundamento-legal{background:#f0f8f0;padding:5px 8px;border-left:3px solid #1a4a2a;margin:6px 0;font-size:9pt;}
+                    .acta-print .apelacion{background:#fff9e6;padding:5px 8px;border-left:3px solid #ffd966;margin:6px 0;font-size:9pt;}
+                    .acta-print .firmas{display:flex;justify-content:space-around;margin-top:15px;}
+                    .acta-print .firma{text-align:center;font-size:9pt;}
+                    .acta-print .linea{border-top:1px solid #000;width:160px;margin:0 auto 3px;}
+                    @media print{body{padding:0;}.acta-print{page-break-after:always;}.acta-print p{margin:3px 0;}}
                 </style>
                 </head><body>${todasLasActas}</body></html>`);
             ventana.document.close();
@@ -1716,15 +1885,23 @@
             }
             appState.selectedYear = parseInt(año);
             const dataAsistencia = await cargarAsistencia();
-            const datosAño = (dataAsistencia.años && dataAsistencia.años[año]) || {};
-            appState.fechasAsambleas = datosAño.fechas || { fecha1: '', fecha2: '', fecha3: '' };
+            // load fechas for this year (from flat fechas or legacy años)
+            appState.fechasAsambleas = (dataAsistencia.fechas && dataAsistencia.fechas[año]) ||
+                (dataAsistencia.años && dataAsistencia.años[año] && dataAsistencia.años[año].fechas) ||
+                { fecha1: '', fecha2: '', fecha3: '' };
             const fechasKeys = Object.keys(appState.fechasAsambleas).filter(k => k.startsWith('fecha'));
             appState.numAsambleas = Math.max(3, fechasKeys.length);
-            // ensure all fecha slots up to numAsambleas exist
             for (let i = 1; i <= appState.numAsambleas; i++) {
                 if (!appState.fechasAsambleas['fecha' + i]) appState.fechasAsambleas['fecha' + i] = '';
             }
-            appState.asistencia = datosAño.registros || {};
+            // load registros from flat structure or legacy años
+            const regsLegacy = dataAsistencia.años && dataAsistencia.años[año] && dataAsistencia.años[año].registros;
+            const regsFlat = dataAsistencia.registros || {};
+            appState.asistencia = regsLegacy ? migrarAsistencia(regsLegacy, año) : {};
+            // merge flat entries for this year into appState.asistencia
+            Object.keys(regsFlat).forEach(k => {
+                if (k.endsWith('_' + año)) appState.asistencia[k] = regsFlat[k];
+            });
             appState.cambiosPendientes = false;
             reconstruirHeaderAsambleas();
             document.getElementById('añoActualDisplay').textContent = año;
@@ -1746,14 +1923,20 @@
 
                 const dataAsistencia = await cargarAsistencia();
                 const año = appState.selectedYear.toString();
-                const datosAño = (dataAsistencia.años && dataAsistencia.años[año]) || {};
-                appState.fechasAsambleas = datosAño.fechas || { fecha1: '', fecha2: '', fecha3: '' };
+                appState.fechasAsambleas = (dataAsistencia.fechas && dataAsistencia.fechas[año]) ||
+                    (dataAsistencia.años && dataAsistencia.años[año] && dataAsistencia.años[año].fechas) ||
+                    { fecha1: '', fecha2: '', fecha3: '' };
                 const fechasKeys = Object.keys(appState.fechasAsambleas).filter(k => k.startsWith('fecha'));
                 appState.numAsambleas = Math.max(3, fechasKeys.length);
                 for (let i = 1; i <= appState.numAsambleas; i++) {
                     if (!appState.fechasAsambleas['fecha' + i]) appState.fechasAsambleas['fecha' + i] = '';
                 }
-                appState.asistencia = datosAño.registros || {};
+                const regsLegacy = dataAsistencia.años && dataAsistencia.años[año] && dataAsistencia.años[año].registros;
+                const regsFlat = dataAsistencia.registros || {};
+                appState.asistencia = regsLegacy ? migrarAsistencia(regsLegacy, año) : {};
+                Object.keys(regsFlat).forEach(k => {
+                    if (k.endsWith('_' + año)) appState.asistencia[k] = regsFlat[k];
+                });
 
                 reconstruirHeaderAsambleas();
                 document.getElementById('añoActualDisplay').textContent = año;
@@ -1764,6 +1947,7 @@
                 renderizarTabla();
                 document.getElementById('mainApp').style.display = 'block';
                 document.getElementById('githubTokenModal').style.display = 'none';
+                requestAnimationFrame(() => ajustarAlturaTabla());
                 mostrarAlerta(`✅ ${appState.afiliados.length} afiliados cargados`, 'success');
             } catch (e) {
                 mostrarAlerta('Error: ' + e.message, 'error');
@@ -1841,35 +2025,36 @@
                 ventana.document.write(`<html><head><title>Acta de Depuración</title>
                     <style>
                         body{font-family:'Times New Roman',serif;margin:0;padding:0;line-height:1.4;font-size:12pt;}
-                        .acta-print{max-width:750px;margin:0 auto;padding:20px 40px 40px;}
-                        .acta-print h2{color:#1a4a2a;text-align:center;font-size:14pt;margin-bottom:6px;}
-                        .acta-print h3{text-align:center;font-size:12pt;margin:4px 0;}
-                        .acta-print .acta-info{text-align:center;font-size:10pt;margin:6px 0;}
-                        .acta-print table{width:100%;border-collapse:collapse;margin:8px 0;}
-                        .acta-print table th,.acta-print table td{border:1px solid #000;padding:4px 6px;text-align:center;font-size:10pt;}
+                        .acta-print{max-width:760px;margin:0 auto;padding:18px 38px 28px;}
+                        .acta-print h2{color:#1a4a2a;text-align:center;font-size:14pt;margin-bottom:8px;}
+                        .acta-print h3{text-align:center;font-size:12pt;margin:8px 0;}
+                        .acta-print .acta-info{text-align:center;font-size:11pt;margin:6px 0;}
+                        .acta-print table{width:100%;border-collapse:collapse;margin:9px 0;}
+                        .acta-print table th,.acta-print table td{border:1px solid #000;padding:6px 10px;text-align:center;font-size:12pt;}
                         .acta-print table th{background:#eaf1ec;}
-                        .acta-print .fundamento-legal{background:#f0f8f0;padding:8px 12px;border-left:4px solid #1a4a2a;margin:10px 0;font-size:10pt;}
-                        .acta-print .apelacion{background:#fff9e6;padding:8px 12px;border-left:4px solid #ffd966;margin:10px 0;font-size:10pt;}
+                        .acta-print .fundamento-legal{background:#f0f8f0;padding:9px 14px;border-left:4px solid #1a4a2a;margin:10px 0;font-size:12pt;}
+                        .acta-print .apelacion{background:#fff9e6;padding:9px 14px;border-left:4px solid #ffd966;margin:10px 0;font-size:12pt;}
                         .acta-print .apelacion p{text-align:justify;}
-                        .acta-print p{text-align:justify;}
-                        .acta-print .firmas{display:flex;justify-content:center;gap:40px;margin-top:30px;}
+                        .acta-print p{text-align:justify;margin:7px 0;font-size:11pt;line-height:1.4;}
+                        .acta-print .firmas{display:flex;justify-content:center;gap:50px;margin-top:30px;}
                         .acta-print .firma-item{text-align:center;}
-                        .acta-print .linea{border-top:2px solid #000;width:200px;margin:0 auto 4px;}
+                        .acta-print .linea{border-top:2px solid #000;width:200px;margin:0 auto 5px;}
                         @media print{
-                            @page{margin:15mm 15mm 15mm 15mm;@bottom-right{content:"Página " counter(page);font-size:9pt;color:#555;font-family:'Times New Roman',serif;}}
+                            @page{margin:14mm 14mm 14mm 14mm;@bottom-right{content:"Página " counter(page);font-size:9pt;color:#555;font-family:'Times New Roman',serif;}}
                             body{margin:0;padding:0;}
                             .acta-print{padding:0;max-width:100%;}
                             .acta-print img{max-height:65px;}
                             .acta-print p,.acta-print .apelacion p{text-align:justify;}
-                            .acta-print .fundamento-legal{padding:10px 12px;margin:12px 0;font-size:10.5pt;}
-                            .acta-print .apelacion{padding:8px 10px;margin:10px 0;font-size:10pt;}
-                            .acta-print h4{margin:14px 0 8px;font-size:12.5pt;}
-                            .acta-print table{margin:8px 0;}
-                            .acta-print table th, .acta-print table td{padding:18px 8px !important;}
-                            .acta-print .firmas{display:flex;justify-content:center;gap:40px;margin-top:75px;padding-top:10px;}
-                            .acta-print p{margin:7px 0;font-size:11.5pt;line-height:1.5;}
-                            .acta-print p:last-of-type{margin:1px 0;font-size:7.5pt;line-height:1.15;}
-                            .acta-print .firma-item{margin:0 20px;}
+                            .acta-print .fundamento-legal{padding:8px 12px;margin:9px 0;font-size:12pt;}
+                            .acta-print .apelacion{padding:7px 12px;margin:9px 0;font-size:12pt;}
+                            .acta-print h2{font-size:14pt;margin-bottom:8px;}
+                            .acta-print h3{font-size:12pt;margin:8px 0;}
+                            .acta-print h4{margin:13px 0 8px;font-size:12pt;}
+                            .acta-print table{margin:7px 0;}
+                            .acta-print table th, .acta-print table td{padding:6px 10px !important;font-size:12pt !important;}
+                            .acta-print .firmas{display:flex;justify-content:center;gap:45px;margin-top:30px;padding-top:10px;}
+                            .acta-print p{margin:7px 0 10px;font-size:11pt;line-height:1.4;}
+                            .acta-print .linea{width:185px;}
                         }
                     </style>
                     </head><body>${contenido.outerHTML}
@@ -2007,6 +2192,13 @@
         });
 
         window.marcarAsistencia = marcarAsistencia;
+
+        window.addEventListener('beforeunload', (e) => {
+            if (appState.cambiosPendientes) {
+                e.preventDefault();
+                e.returnValue = '⚠️ Hay cambios sin guardar. ¿Salir sin guardar?';
+            }
+        });
 
         function actualizarReloj() {
             const ahora = new Date();
