@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-06-17T20:59:51.794Z",
+  "ultima_actualizacion": "2026-06-17T21:02:00.121Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -706,6 +706,12 @@
       "nombre": "CARLOS ANDRES VILLALOBO CADENA",
       "fecha_pago_año_2026": "mayo_2026_5000_23/05/2026_15:59:51_00129",
       "certificado": "junio_2026_20000_23/05/2026_15:59:51_00129"
+    },
+    {
+      "cedula": "1193221131",
+      "nombre": "CRISTIAN FABIAN VANEGAS",
+      "fecha_pago_año_2026": "febrero_2026_5000_23/05/2026_16:02:00_00130; marzo_2026_5000_23/05/2026_16:02:00_00130; abril_2026_5000_23/05/2026_16:02:00_00130; mayo_2026_5000_23/05/2026_16:02:00_00130",
+      "certificado": "junio_2026_20000_23/05/2026_16:02:00_00130"
     }
   ]
 }
