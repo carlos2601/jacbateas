@@ -2212,6 +2212,19 @@
             return pagosStr.split(';').some(p => p.trim().startsWith(`${meses[mes]}_${año}`));
         }
 
+        function pagoFueHoy(cedula, año, mes) {
+            const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+            const registro = appState.pagos.find(p => p.cedula === cedula);
+            if (!registro) return false;
+            const pagosStr = registro[`fecha_pago_año_${año}`] || '';
+            const hoy = new Date();
+            const hoyStr = `${String(hoy.getDate()).padStart(2, '0')}/${String(hoy.getMonth() + 1).padStart(2, '0')}/${hoy.getFullYear()}`;
+            return pagosStr.split(';').some(p => {
+                const parts = p.trim().split('_');
+                return parts[0] === meses[mes] && parts[1] === String(año) && parts[3] === hoyStr;
+            });
+        }
+
         function esMesCondonado(año, mes) {
             if (año === 2024) return true;
             if (año === 2025 && mes >= 0 && mes <= 10) return true;
@@ -2572,12 +2585,7 @@
             resetInactivityTimer();
             const afiliado = appState.afiliados.find(a => a.cedula === cedula);
             if (!afiliado) return;
-            const mesesDeuda = calcularMesesDeuda(cedula, afiliado.fecha);
-            if (mesesDeuda.length === 0) {
-                mostrarAlerta('✅ Este afiliado no tiene meses pendientes', 'success');
-                return;
-            }
-            abrirModalPagosMultiples(cedula, nombre, mesesDeuda, false);
+            abrirModalPagosMultiples(cedula, nombre, [], false);
         };
 
         // Función para abrir modal con pagos múltiples
@@ -2594,18 +2602,37 @@
             let checklistHtml = '';
             if (soloCertificado) {
                 checklistHtml = '<div style="text-align: center; padding: 20px; color: #b68b40;">💰 Para pagar solo el certificado, marca la opción de abajo</div>';
-            } else if (mesesDeuda.length > 0) {
-                mesesDeuda.forEach(({ año, mes }) => {
-                    checklistHtml += `
-                <div class="month-check-item" data-año="${año}" data-mes="${mes}">
-                    <input type="checkbox" class="month-checkbox-item" value="${mesesNombres[mes]}_${año}" data-año="${año}" data-mes="${mes}">
-                    <span class="month-name">${mesesNombres[mes]} ${año}</span>
-                    <span class="month-value">$${CONFIG.VALOR_CUOTA.toLocaleString()}</span>
+            } else {
+                const afiliado = appState.afiliados.find(a => a.cedula === cedula);
+                const afiliacion = afiliado ? parseFecha(afiliado.fecha) : new Date();
+                const hoy = appState.fechaActual;
+                for (let año = afiliacion.getFullYear(); año <= hoy.getFullYear(); año++) {
+                    const mesInicio = (año === afiliacion.getFullYear()) ? afiliacion.getMonth() : 0;
+                    const mesFin = (año === hoy.getFullYear()) ? hoy.getMonth() : 11;
+                    for (let mes = mesInicio; mes <= mesFin; mes++) {
+                        const estaPagado = mesEstaPagado(cedula, año, mes);
+                        const condonado = esMesCondonado(año, mes);
+                        if (condonado) {
+                            checklistHtml += `
+                <div class="month-check-item" data-año="${año}" data-mes="${mes}" style="opacity:0.6;">
+                    <input type="checkbox" class="month-checkbox-item" value="${mesesNombres[mes]}_${año}" data-año="${año}" data-mes="${mes}" disabled>
+                    <span class="month-name">${mesesNombres[mes]} ${año} ★</span>
+                    <span class="month-value" style="color:#b68b40;">Condonado</span>
                 </div>
             `;
-                });
-            } else {
-                checklistHtml = '<div style="text-align: center; padding: 20px; color: #5ab05a;">✅ No hay meses pendientes de pago</div>';
+                        } else {
+                            const pagadoHoy = estaPagado && pagoFueHoy(cedula, año, mes);
+                            const bloqueado = estaPagado && !pagadoHoy;
+                            checklistHtml += `
+                <div class="month-check-item" data-año="${año}" data-mes="${mes}" style="${bloqueado ? 'opacity:0.6;' : ''}">
+                    <input type="checkbox" class="month-checkbox-item" value="${mesesNombres[mes]}_${año}" data-año="${año}" data-mes="${mes}" ${estaPagado ? 'checked' : ''} ${bloqueado ? 'disabled' : ''}>
+                    <span class="month-name">${mesesNombres[mes]} ${año}</span>
+                    <span class="month-value">${bloqueado ? '🔒 Pagado antes' : (pagadoHoy ? '✅ Pagado hoy (desmarcar para anular)' : '$' + CONFIG.VALOR_CUOTA.toLocaleString())}</span>
+                </div>
+            `;
+                        }
+                    }
+                }
             }
 
             dom.monthsChecklist.innerHTML = checklistHtml;
@@ -2765,8 +2792,6 @@
                 }
             }
 
-            if (!appState.githubToken) return mostrarAlerta('❌ Token de GitHub no disponible', 'error');
-
             const saveBtn = dom.saveReceiptBtn;
             const originalText = saveBtn.innerHTML;
 
@@ -2788,6 +2813,34 @@
                     const pagoStr = `${mesesNombres[mesItem.mes]}_${mesItem.año}_${CONFIG.VALOR_CUOTA}_${fechaFormateada}_${horaRegistro}_${recibo}`;
                     registro[campo] = registro[campo] ? `${registro[campo]}; ${pagoStr}` : pagoStr;
                 }
+
+                // Remove payments for unchecked months (only today's entries)
+                const hoyDt = new Date();
+                const hoyDtStr = `${String(hoyDt.getDate()).padStart(2, '0')}/${String(hoyDt.getMonth() + 1).padStart(2, '0')}/${hoyDt.getFullYear()}`;
+                document.querySelectorAll('.month-check-item').forEach(item => {
+                    const checkbox = item.querySelector('.month-checkbox-item');
+                    if (checkbox && !checkbox.disabled && !checkbox.checked) {
+                        const año = parseInt(item.dataset.año);
+                        const mes = parseInt(item.dataset.mes);
+                        if (mesEstaPagado(appState.pendingPayment.cedula, año, mes)) {
+                            const campo = `fecha_pago_año_${año}`;
+                            if (registro[campo]) {
+                                const entries = registro[campo].split('; ');
+                                const filtered = entries.filter(e => {
+                                    const parts = e.trim().split('_');
+                                    const isTargetMonth = parts[0] === mesesNombres[mes] && parts[1] === String(año);
+                                    const isToday = parts[3] === hoyDtStr;
+                                    return !(isTargetMonth && isToday);
+                                });
+                                if (filtered.length === 0) {
+                                    delete registro[campo];
+                                } else {
+                                    registro[campo] = filtered.join('; ');
+                                }
+                            }
+                        }
+                    }
+                });
 
                 if (incluirCertificado) {
                     const mesActual = mesesNombres[appState.fechaActual.getMonth()];
@@ -2999,13 +3052,8 @@
             resetInactivityTimer();
             const afiliado = appState.afiliados.find(a => a.cedula === cedula);
             if (!afiliado) return;
-            const mesesDeuda = calcularMesesDeuda(cedula, afiliado.fecha);
-            if (mesesDeuda.length === 0) {
-                mostrarAlerta('✅ Este afiliado no tiene meses pendientes', 'success');
-                return;
-            }
             dom.modal.style.display = 'none';
-            abrirModalPagosMultiples(cedula, nombre, mesesDeuda, false);
+            abrirModalPagosMultiples(cedula, nombre, [], false);
         };
 
         function generarReporteCompacto(titulo, filtroFn) {
