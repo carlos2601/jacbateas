@@ -1470,7 +1470,6 @@
                             <button class="page-btn" id="goToPageBtn">→</button>
                         </div>
                         <button id="savePaymentsBtn" class="btn btn-success" style="margin-left: 8px;">💾 Guardar Todo</button>
-                        <a href="editor-pagos.html" class="btn btn-edit" style="margin-left: 6px; text-decoration: none; padding: 4px 10px; border-radius: 6px; font-size: 0.7rem;">✏️ Editar</a>
                     </div>
                 </div>
             </div>
@@ -2085,6 +2084,65 @@
             }
         }
 
+        function mergePagos(local, remote) {
+            const merged = [];
+            const map = new Map();
+            local.forEach(p => map.set(p.cedula, JSON.parse(JSON.stringify(p))));
+            remote.forEach(p => {
+                const existente = map.get(p.cedula);
+                if (!existente) {
+                    map.set(p.cedula, JSON.parse(JSON.stringify(p)));
+                } else {
+                    Object.keys(p).forEach(k => {
+                        if (k === 'cedula' || k === 'nombre') return;
+                        if (!existente[k]) {
+                            existente[k] = p[k];
+                        } else {
+                            const localEntries = existente[k].split('; ').filter(Boolean);
+                            const remoteEntries = p[k].split('; ').filter(Boolean);
+                            const all = new Set([...localEntries, ...remoteEntries]);
+                            existente[k] = Array.from(all).join('; ');
+                        }
+                    });
+                }
+            });
+            map.forEach(v => merged.push(v));
+            return merged;
+        }
+
+        let syncInterval = null;
+
+        function iniciarSyncAutomatico() {
+            detenerSyncAutomatico();
+            if (!appState.githubToken) return;
+            syncInterval = setInterval(async () => {
+                const url = `https://raw.githubusercontent.com/${CONFIG.DESTINATION.REPO_OWNER}/${CONFIG.DESTINATION.REPO_NAME}/refs/heads/${CONFIG.DESTINATION.BRANCH}/${CONFIG.DESTINATION.CUOTA_PATH}`;
+                try {
+                    const res = await fetch(url);
+                    if (!res.ok) return;
+                    const data = await res.json();
+                    if (!data.pagos || data.pagos.length === 0) return;
+                    const oldPagos = JSON.stringify(appState.pagos);
+                    appState.pagos = mergePagos(appState.pagos, data.pagos);
+                    if (JSON.stringify(appState.pagos) !== oldPagos) {
+                        await guardarPagosLocal(appState.pagos);
+                        if (appState.tablaVisible) {
+                            calcularEstadisticas();
+                            actualizarSiguienteRecibo();
+                            renderizarTabla();
+                        }
+                    }
+                } catch (e) { /* silent fail */ }
+            }, 30000);
+        }
+
+        function detenerSyncAutomatico() {
+            if (syncInterval) {
+                clearInterval(syncInterval);
+                syncInterval = null;
+            }
+        }
+
         async function cargarDatosConGithubToken(token) {
             appState.githubToken = token;
             try {
@@ -2105,6 +2163,7 @@
                 appState.currentPage = 1;
                 renderizarTabla();
                 mostrarAlerta(`✅ ${appState.afiliados.length} afiliados cargados`, 'success');
+                iniciarSyncAutomatico();
                 initActivityDetection();
             } catch (e) {
                 mostrarAlerta('Error al cargar datos: ' + e.message, 'error');
@@ -2551,7 +2610,7 @@
                         } else if (estado === 'condoned') {
                             html += `<td><div class="month-checkbox condoned"><\/div><\/td>`;
                         } else if (estado === 'paid') {
-                            html += `<td><div class="month-checkbox paid"><\/div><\/td>`;
+                            html += `<td><div class="month-checkbox paid" ${attrsString} onclick="window.handleMonthClick(this)"><\/div><\/td>`;
                         } else if (estado === 'future') {
                             html += `<td><div class="month-checkbox future"><\/div><\/td>`;
                         } else {
@@ -2690,22 +2749,47 @@
 
         window.handleMonthClick = function (element) {
             resetInactivityTimer();
-            if (!element.classList.contains('debt')) return;
-            if (!element.dataset.cedula || !element.dataset.nombre) {
+            if (!element.dataset.cedula || !element.dataset.nombre || element.dataset.mes === undefined || !element.dataset.año) {
                 mostrarAlerta('Error: Datos incompletos', 'error');
                 return;
             }
 
             const cedula = element.dataset.cedula;
             const nombre = element.dataset.nombre;
+            const mes = parseInt(element.dataset.mes);
+            const año = parseInt(element.dataset.año);
             const afiliado = appState.afiliados.find(a => a.cedula === cedula);
-            const mesesDeuda = calcularMesesDeuda(cedula, afiliado.fecha);
 
+            if (element.classList.contains('paid')) {
+                if (!confirm(`¿Eliminar pago de ${['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'][mes]} ${año}?`)) return;
+                const registro = appState.pagos.find(p => p.cedula === cedula);
+                if (!registro) return;
+                const campo = `fecha_pago_año_${año}`;
+                if (registro[campo]) {
+                    const mesesLower = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+                    const entries = registro[campo].split('; ');
+                    const filtered = entries.filter(e => !e.startsWith(`${mesesLower[mes]}_${año}_`));
+                    if (filtered.length === 0) {
+                        delete registro[campo];
+                    } else {
+                        registro[campo] = filtered.join('; ');
+                    }
+                    guardarPagosLocal(appState.pagos);
+                    appState.pendingGitHubSync = true;
+                    actualizarBotonGuardarTodo();
+                    calcularEstadisticas();
+                    renderizarTabla();
+                    mostrarAlerta('✅ Pago eliminado. Usa "Guardar Todo" para sincronizar con GitHub.', 'success');
+                }
+                return;
+            }
+
+            if (!element.classList.contains('debt')) return;
+            const mesesDeuda = calcularMesesDeuda(cedula, afiliado.fecha);
             if (mesesDeuda.length === 0) {
                 mostrarAlerta('✅ Este afiliado no tiene meses pendientes', 'success');
                 return;
             }
-
             abrirModalPagosMultiples(cedula, nombre, mesesDeuda, false);
         };
 
@@ -3238,6 +3322,7 @@
                 mostrarAlerta(`✅ Datos locales cargados (${appState.afiliados.length} afiliados)`, 'success');
                 if (appState.githubToken) {
                     mostrarAlerta('🔄 Token de GitHub configurado. Los cambios se sincronizarán automáticamente.', 'info');
+                    iniciarSyncAutomatico();
                 }
                 initActivityDetection();
                 return;
@@ -3525,6 +3610,7 @@
             }
         }
 
+        window.addEventListener('beforeunload', detenerSyncAutomatico);
         inicializar();
         inicializarEventosPanel();
     </script>
