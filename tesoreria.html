@@ -2045,8 +2045,8 @@
         async function guardarPagosEnGitHub() {
             await guardarPagosLocal(appState.pagos);
             if (!appState.githubToken) {
-                mostrarAlerta('✅ Datos guardados localmente. Configura un token de GitHub para sincronizar en la nube.', 'success');
-                return true;
+                mostrarAlerta('⚠️ Sin token de GitHub. Datos solo guardados localmente.', 'info');
+                return false;
             }
             try {
                 const content = {
@@ -2080,7 +2080,7 @@
                 return true;
             } catch (e) {
                 mostrarAlerta('⚠️ Datos guardados localmente, pero falló la sincronización con GitHub: ' + e.message, 'error');
-                return true;
+                return false;
             }
         }
 
@@ -3382,7 +3382,6 @@
                         if (ok) {
                             appState.pendingGitHubSync = false;
                             actualizarBotonGuardarTodo();
-                            mostrarAlerta('✅ Datos sincronizados con GitHub', 'success');
                         }
                     } catch (e) {
                         mostrarAlerta('Error al sincronizar: ' + e.message, 'error');
