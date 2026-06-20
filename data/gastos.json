@@ -1,10 +1,9 @@
 {
-  "ultima_actualizacion": "2026-05-02T06:07:46.784Z",
+  "ultima_actualizacion": "2026-06-20T23:38:38.736Z",
   "configuracion": {
-    "comision_certificado_porcentaje": 50,
-    "valor_certificado": 20000,
-    "valor_cuota": 5000,
-    "costo_papeleria_por_certificado": 10000
+    "comision": 50,
+    "valor_cert": 20000,
+    "valor_cuota": 5000
   },
   "gastos": [
     {
@@ -81,6 +80,21 @@
       "hora_registro": "01:07:46",
       "balance_anterior": 1840000,
       "balance_posterior": 1692500
+    },
+    {
+      "id": "GMQN00ZDCa7xy",
+      "fecha": "20/06/2026",
+      "hora": "18:38:38",
+      "concepto": "RADICACION DE DOCUMENTO DE ELECCIONES A LA GERENCIA DE ACCION COMUNAL",
+      "categoria": "Transporte",
+      "valor": 200000,
+      "responsable": "PRESIDENTE",
+      "comprobante": "N/A",
+      "metodo_pago": "Efectivo",
+      "observaciones": "",
+      "fecha_registro": "2026-06-20T23:38:38.736Z",
+      "balance_anterior": 2467500,
+      "balance_posterior": 2267500
     }
   ]
 }
