@@ -1429,6 +1429,12 @@
                 <span style="color: var(--text-muted);">🔍</span>
                 <input type="text" id="searchInput" placeholder="Buscar por cédula o número de recibo...">
             </div>
+            <button id="goToGastosBtn" class="btn btn-primary" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                💸 Ir a Gastos
+            </button>
+            <button id="informesBtn" class="btn btn-primary" style="background: linear-gradient(135deg, #7c3aed, #6d28d9);">
+                📊 Informes
+            </button>
             <button id="toggleTableBtn" class="btn btn-primary">
                 📋 Mostrar tabla
             </button>
@@ -1733,6 +1739,48 @@
             </div>
         </div>
 
+        <!-- MODAL DE INFORMES -->
+        <div id="informesModal" class="modal" style="display:none;">
+            <div class="modal-content" style="max-width:800px;">
+                <div class="modal-header">
+                    <h3>📊 Generador de Informes - Tesorería</h3>
+                    <button class="close-btn" id="closeInformesBtn">&times;</button>
+                </div>
+                <div style="padding:12px;background:var(--bg-surface);border-radius:12px;margin-bottom:12px;">
+                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;">
+                        <div>
+                            <label style="font-size:11px;color:var(--text-secondary);display:block;margin-bottom:4px;">Tipo de Informe</label>
+                            <select id="tipoInformeT" style="width:100%;padding:8px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-card);color:var(--text-primary);font-size:12px;">
+                                <option value="mensual">📅 Informe Mensual</option>
+                                <option value="mesames">📋 Resumen Mes a Mes</option>
+                                <option value="anual">📊 Informe Anual</option>
+                                <option value="rango">🔍 Informe por Rango de Fechas</option>
+                            </select>
+                        </div>
+                        <div id="containerAnoInformeT">
+                            <label style="font-size:11px;color:var(--text-secondary);display:block;margin-bottom:4px;">Año</label>
+                            <select id="anoInformeT" style="width:100%;padding:8px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-card);color:var(--text-primary);font-size:12px;"></select>
+                        </div>
+                        <div id="containerMesInformeT">
+                            <label style="font-size:11px;color:var(--text-secondary);display:block;margin-bottom:4px;">Mes</label>
+                            <select id="mesInformeT" style="width:100%;padding:8px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-card);color:var(--text-primary);font-size:12px;"></select>
+                        </div>
+                    </div>
+                    <div id="containerRangoInformeT" style="display:none;margin-bottom:10px;">
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                            <div><label style="font-size:11px;color:var(--text-secondary);display:block;margin-bottom:4px;">Desde</label><input type="date" id="fechaDesdeInformeT" style="width:100%;padding:8px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-card);color:var(--text-primary);font-size:12px;"></div>
+                            <div><label style="font-size:11px;color:var(--text-secondary);display:block;margin-bottom:4px;">Hasta</label><input type="date" id="fechaHastaInformeT" style="width:100%;padding:8px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-card);color:var(--text-primary);font-size:12px;"></div>
+                        </div>
+                    </div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <button onclick="generarInformeT()" style="flex:1;padding:10px;border:none;border-radius:8px;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:white;font-weight:700;font-size:13px;cursor:pointer;">📊 Generar Informe</button>
+                        <button onclick="document.getElementById('informesModal').style.display='none'" style="padding:10px 16px;border:none;border-radius:8px;background:var(--accent-red);color:white;font-weight:600;font-size:13px;cursor:pointer;">✕ Cerrar</button>
+                    </div>
+                </div>
+                <div id="informeContentT" style="max-height:60vh;overflow-y:auto;background:white;border-radius:12px;padding:20px;color:#000;"></div>
+            </div>
+        </div>
+
         <!-- MODAL DE DETALLE -->
         <div id="detailModal" class="modal">
             <div class="modal-content">
@@ -1830,7 +1878,8 @@
             rememberGithubToken: false,
             rememberAccessToken: false,
             modoLocal: false,
-            pendingGitHubSync: false
+            pendingGitHubSync: false,
+            gastos: []
         };
 
         let inactivityTimer;
@@ -1876,6 +1925,14 @@
             printReportBtn: document.getElementById('printReportBtn'),
             reportTitle: document.getElementById('reportTitle'),
             reportContent: document.getElementById('reportContent'),
+            informesModal: document.getElementById('informesModal'),
+            closeInformesBtn: document.getElementById('closeInformesBtn'),
+            tipoInformeT: document.getElementById('tipoInformeT'),
+            anoInformeT: document.getElementById('anoInformeT'),
+            mesInformeT: document.getElementById('mesInformeT'),
+            fechaDesdeInformeT: document.getElementById('fechaDesdeInformeT'),
+            fechaHastaInformeT: document.getElementById('fechaHastaInformeT'),
+            informeContentT: document.getElementById('informeContentT'),
             receiptModal: document.getElementById('receiptModal'),
             closeReceiptBtn: document.getElementById('closeReceiptBtn'),
             cancelReceiptBtn: document.getElementById('cancelReceiptBtn'),
@@ -2338,6 +2395,16 @@
             }
         }
 
+        async function cargarGastos() {
+            try {
+                const url = `https://raw.githubusercontent.com/carlos2601/jacbateas/main/data/gastos.json`;
+                const res = await fetch(url);
+                if (!res.ok) return [];
+                const data = await res.json();
+                return data.gastos || [];
+            } catch (e) { return []; }
+        }
+
         async function cargarDatosConGithubToken(token) {
             appState.githubToken = token;
             try {
@@ -2345,6 +2412,8 @@
                 appState.afiliados = await cargarAfiliados();
                 mostrarAlerta('📥 Cargando pagos desde GitHub...', 'info');
                 appState.pagos = await cargarPagos();
+                mostrarAlerta('📥 Cargando gastos...', 'info');
+                appState.gastos = await cargarGastos();
                 calcularEstadisticas();
                 actualizarSiguienteRecibo();
                 dom.githubTokenModal.style.display = 'none';
@@ -3645,6 +3714,7 @@
             const todosLosPagos = obtenerTodosLosPagos();
             let pagosFiltrados = todosLosPagos;
             if (filtroFn) pagosFiltrados = todosLosPagos.filter(filtroFn);
+            const COMISION_PORCENTAJE = 50;
 
             const recibosAgrupados = {};
             pagosFiltrados.forEach(p => {
@@ -3652,11 +3722,13 @@
                 if (!recibosAgrupados[key]) {
                     recibosAgrupados[key] = {
                         cedula: p.cedula, nombre: p.nombre, recibo: p.recibo,
-                        items: [], total: 0
+                        items: [], total: 0, totalNeto: 0
                     };
                 }
                 recibosAgrupados[key].items.push(p);
                 recibosAgrupados[key].total += p.valor;
+                const valorNeto = p.tipo === 'certificado' ? p.valor - (p.valor * COMISION_PORCENTAJE / 100) : p.valor;
+                recibosAgrupados[key].totalNeto += valorNeto;
             });
 
             let html = `<table style="width: 100%; border-collapse: collapse; font-size: 0.7rem; table-layout: fixed;">
@@ -3685,11 +3757,11 @@
                     html += `<td style="padding: 8px; text-align: left;">${r.nombre}</td>`;
                     html += `<td style="padding: 8px; text-align: center;"><span style="display:inline-block;background:var(--bg-card);padding:2px 10px;border-radius:100px;font-size:0.7rem;font-weight:600;color:var(--text-primary);">${r.recibo}</span></td>`;
                     html += `<td style="padding: 8px; text-align: center; font-weight: 500;">${detalle}</td>`;
-                    html += `<td style="padding: 8px; text-align: right; font-weight: 700; color: var(--accent-green);">$${r.total.toLocaleString()}</td></tr>`;
+                    html += `<td style="padding: 8px; text-align: right; font-weight: 700; color: var(--accent-green);">$${r.totalNeto.toLocaleString()}</td></tr>`;
                 });
-                const total = filas.reduce((s, r) => s + r.total, 0);
+                const total = filas.reduce((s, r) => s + r.totalNeto, 0);
                 html += `<tr style="background: var(--bg-card); font-weight: 700;">
-                    <td colspan="4" style="padding: 10px; text-align: right; color: var(--text-primary);">Total general:</td>
+                    <td colspan="4" style="padding: 10px; text-align: right; color: var(--text-primary);">Total general (neto):</td>
                     <td style="padding: 10px; text-align: right; color: var(--accent-green);">$${total.toLocaleString()}</td>
                     </tr>`;
             }
@@ -3703,6 +3775,7 @@
             resetInactivityTimer();
             const todosPagos = obtenerTodosLosPagos();
             const certificados = todosPagos.filter(p => p.tipo === 'certificado');
+            const COMISION_PORCENTAJE = 50;
 
             let html = `<table style="width: 100%; border-collapse: collapse; font-size: 0.7rem;">
                 <thead><tr style="background: #b68b40; color: white;">
@@ -3715,18 +3788,19 @@
                 html += `<tr><td colspan="6" style="padding: 40px; text-align: center;">No hay certificados emitidos</td></tr>`;
             } else {
                 certificados.sort((a, b) => b.fechaObj - a.fechaObj).forEach(c => {
+                    const valorNeto = c.valor - (c.valor * COMISION_PORCENTAJE / 100);
                     html += `<tr style="border-bottom: 1px solid #ffd966;">
                         <td style="padding: 8px; text-align: center; font-weight: 600;">${c.recibo}</td>
                         <td style="padding: 8px; text-align: center;">${c.cedula}</td>
                         <td style="padding: 8px;">${c.nombre}</td>
                         <td style="padding: 8px; text-align: center;">${c.fecha}</td>
                         <td style="padding: 8px; text-align: center;">${c.hora}</td>
-                        <td style="padding: 8px; text-align: right; font-weight: 700; color: #b68b40;">$${c.valor.toLocaleString()}</td>
+                        <td style="padding: 8px; text-align: right; font-weight: 700; color: #b68b40;">$${valorNeto.toLocaleString()}</td>
                         </tr>`;
                 });
-                const total = certificados.reduce((s, c) => s + c.valor, 0);
+                const total = certificados.reduce((s, c) => s + (c.valor - (c.valor * COMISION_PORCENTAJE / 100)), 0);
                 html += `<tr style="background: rgba(245, 158, 11, 0.15); font-weight: 700;">
-                    <td colspan="5" style="padding: 10px; text-align: right; color: var(--text-primary);">Total certificados:</td>
+                    <td colspan="5" style="padding: 10px; text-align: right; color: var(--text-primary);">Total certificados (neto):</td>
                     <td style="padding: 10px; text-align: right;">$${total.toLocaleString()}</td>
                     </tr>`;
             }
@@ -3734,6 +3808,211 @@
             dom.reportTitle.textContent = '📜 Certificados emitidos';
             dom.reportContent.innerHTML = html;
             dom.reportModal.style.display = 'flex';
+        }
+
+        // ============================================================
+        // SISTEMA DE INFORMES TESORERÍA
+        // ============================================================
+        const COMISION_CERT = 50;
+        const VALOR_CERT_BRUTO = 20000;
+        const VALOR_CERT_NETO = VALOR_CERT_BRUTO - (VALOR_CERT_BRUTO * COMISION_CERT / 100);
+
+        function inicializarInformeT() {
+            const anoSelect = dom.tipoInformeT;
+            const containerAno = document.getElementById('containerAnoInformeT');
+            const containerMes = document.getElementById('containerMesInformeT');
+            const containerRango = document.getElementById('containerRangoInformeT');
+
+            dom.anoInformeT.innerHTML = '';
+            for (let y = new Date().getFullYear(); y >= 2024; y--) {
+                dom.anoInformeT.innerHTML += `<option value="${y}">${y}</option>`;
+            }
+            const mesesN = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+            dom.mesInformeT.innerHTML = '';
+            mesesN.forEach((m, i) => { dom.mesInformeT.innerHTML += `<option value="${i}">${m}</option>`; });
+            dom.mesInformeT.value = new Date().getMonth();
+
+            function actualizarVisibilidadT() {
+                const tipo = dom.tipoInformeT.value;
+                containerAno.style.display = (tipo === 'mensual' || tipo === 'mesames' || tipo === 'anual') ? '' : 'none';
+                containerMes.style.display = (tipo === 'mensual') ? '' : 'none';
+                containerRango.style.display = (tipo === 'rango') ? '' : 'none';
+            }
+            dom.tipoInformeT.onchange = actualizarVisibilidadT;
+            actualizarVisibilidadT();
+        }
+
+        function extraerPagosT(str, yr) {
+            if (!str) return [];
+            return str.split(';').filter(p => p.trim()).map(p => {
+                const parts = p.trim().split('_');
+                return { mes: parts[0], year: parseInt(parts[1]), valor: parseInt(parts[2]), fechaPago: parts[3] || '' };
+            }).filter(p => p.year === yr);
+        }
+
+        function extraerCertsT(str) {
+            if (!str) return [];
+            return str.split(';').filter(c => c.trim()).map(c => {
+                const parts = c.trim().split('_');
+                return { mes: parts[0], year: parseInt(parts[1]), valor: parseInt(parts[2]), fechaPago: parts[3] || '' };
+            });
+        }
+
+        function fechaStrADateT(fechaStr) {
+            if (!fechaStr) return null;
+            const partes = fechaStr.split('/');
+            if (partes.length < 3) return null;
+            return new Date(parseInt(partes[2]), parseInt(partes[1]) - 1, parseInt(partes[0]));
+        }
+
+        function obtenerRecaudoT(tipo, ano, mes) {
+            let totalCuotas = 0, totalCertBruto = 0;
+            function fechaEnPeriodo(fechaPago) {
+                const f = fechaStrADateT(fechaPago);
+                if (!f) return false;
+                if (tipo === 'mensual') return f.getFullYear() === ano && f.getMonth() === mes;
+                if (tipo === 'anual' || tipo === 'mesames') return f.getFullYear() === ano;
+                if (tipo === 'rango') {
+                    const desde = document.getElementById('fechaDesdeInformeT').value;
+                    const hasta = document.getElementById('fechaHastaInformeT').value;
+                    if (!desde || !hasta) return false;
+                    const dDesde = new Date(desde); const dHasta = new Date(hasta);
+                    return f >= dDesde && f <= dHasta;
+                }
+                return false;
+            }
+            appState.pagos.forEach(reg => {
+                for (let y = 2024; y <= new Date().getFullYear(); y++) {
+                    const campo = `fecha_pago_año_${y}`;
+                    if (reg[campo]) {
+                        const pagos = extraerPagosT(reg[campo], y);
+                        pagos.filter(p => fechaEnPeriodo(p.fechaPago)).forEach(p => { totalCuotas += p.valor; });
+                    }
+                }
+                if (reg.certificado) {
+                    const certs = extraerCertsT(reg.certificado);
+                    certs.filter(c => fechaEnPeriodo(c.fechaPago)).forEach(c => { totalCertBruto += c.valor; });
+                }
+            });
+            const certNeto = totalCertBruto - (totalCertBruto * COMISION_CERT / 100);
+            return { cuotas: totalCuotas, certBruto: totalCertBruto, certNeto };
+        }
+
+        function calcularSaldoAnteriorT(tipo, ano, mes) {
+            let totalCuotasAnt = 0, totalCertBrutoAnt = 0;
+            let fechaCorte;
+            if (tipo === 'rango') {
+                const desde = document.getElementById('fechaDesdeInformeT').value;
+                const partes = desde.split('-');
+                fechaCorte = new Date(parseInt(partes[0]), parseInt(partes[1]) - 1, parseInt(partes[2]));
+            } else if (tipo === 'mensual') {
+                fechaCorte = new Date(ano, mes, 1);
+            } else if (tipo === 'anual') {
+                fechaCorte = new Date(ano, 0, 1);
+            } else if (tipo === 'mesames') {
+                fechaCorte = new Date(ano, 0, 1);
+            }
+            appState.pagos.forEach(reg => {
+                for (let y = 2024; y <= new Date().getFullYear(); y++) {
+                    const campo = `fecha_pago_año_${y}`;
+                    if (reg[campo]) {
+                        const pagos = extraerPagosT(reg[campo], y);
+                        pagos.forEach(p => {
+                            const f = fechaStrADateT(p.fechaPago);
+                            if (f && f < fechaCorte) totalCuotasAnt += p.valor;
+                        });
+                    }
+                }
+                if (reg.certificado) {
+                    const certs = extraerCertsT(reg.certificado);
+                    certs.forEach(c => {
+                        const f = fechaStrADateT(c.fechaPago);
+                        if (f && f < fechaCorte) totalCertBrutoAnt += c.valor;
+                    });
+                }
+            });
+            const certNetoAnt = totalCertBrutoAnt - (totalCertBrutoAnt * COMISION_CERT / 100);
+            const gastosAnt = (appState.gastos || []).filter(g => {
+                const partes = g.fecha.split('/');
+                const f = new Date(parseInt(partes[2]), parseInt(partes[1]) - 1, parseInt(partes[0]));
+                return f < fechaCorte;
+            }).reduce((s, g) => s + g.valor, 0);
+            return (totalCuotasAnt + certNetoAnt) - gastosAnt;
+        }
+
+        function generarInformeT() {
+            try {
+                const tipo = dom.tipoInformeT.value;
+                const ano = parseInt(dom.anoInformeT.value);
+                const mes = parseInt(dom.mesInformeT.value);
+                const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+                const mesesLower = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+                let titulo = 'Informe', periodo = '';
+                if (tipo === 'mensual') {
+                    const ultimoDia = new Date(ano, mes + 1, 0).getDate();
+                    titulo = `Informe Mensual - ${meses[mes]} ${ano}`;
+                    periodo = `del 1 de ${mesesLower[mes]} de ${ano} al ${ultimoDia} de ${mesesLower[mes]} de ${ano}`;
+                } else if (tipo === 'mesames') {
+                    titulo = `Resumen Mes a Mes - ${ano}`;
+                    periodo = `durante el año ${ano}`;
+                } else if (tipo === 'anual') {
+                    titulo = `Informe Anual - ${ano}`;
+                    periodo = `del 1 de enero de ${ano} al 31 de diciembre de ${ano}`;
+                } else if (tipo === 'rango') {
+                    const desde = dom.fechaDesdeInformeT.value;
+                    const hasta = dom.fechaHastaInformeT.value;
+                    const fDesde = new Date(desde); const fHasta = new Date(hasta);
+                    titulo = `Informe de Tesorería`;
+                    periodo = `del ${fDesde.getDate()} de ${mesesLower[fDesde.getMonth()]} de ${fDesde.getFullYear()} al ${fHasta.getDate()} de ${mesesLower[fHasta.getMonth()]} de ${fHasta.getFullYear()}`;
+                }
+                const fechaGen = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
+                let html = `<div style="text-align:center;border-bottom:3px double #000;padding-bottom:10px;margin-bottom:10px;">
+                    <div style="font-size:13px;color:#333;line-height:1.1;">Junta de Acción Comunal Barrio Bateas - Puerto Gaitán, Meta</div>
+                    <div style="font-size:13px;color:#333;line-height:1.1;">Personería Jurídica No. 451 del 31 de Octubre de 2.025</div>
+                    <h1 style="font-size:20px;margin:6px 0;color:#000;line-height:1.1;">${titulo}</h1>
+                    <div style="font-size:13px;color:#333;line-height:1.1;">Período: ${periodo}</div>
+                    <div style="font-size:13px;color:#333;line-height:1.1;">Fecha de generación: ${fechaGen}</div>
+                </div>`;
+
+                if (tipo === 'mesames') {
+                    let tablaMeses = `<table style="width:100%;border-collapse:collapse;font-size:11px;line-height:1.1;"><thead><tr style="background:#1a3a5c;color:white;"><th style="padding:5px;">Mes</th><th style="padding:5px;">Cuotas</th><th style="padding:5px;">Cert. Neto</th><th style="padding:5px;">Recaudo</th><th style="padding:5px;">Saldo Mes</th></tr></thead><tbody>`;
+                    let totalCuotasAno = 0, totalCertAno = 0, totalRecAno = 0;
+                    for (let m = 0; m < 12; m++) {
+                        const recaudo = obtenerRecaudoT('mensual', ano, m);
+                        const saldoMes = recaudo.cuotas + recaudo.certNeto;
+                        totalCuotasAno += recaudo.cuotas; totalCertAno += recaudo.certNeto; totalRecAno += saldoMes;
+                        const colorSaldo = saldoMes >= 0 ? '#2a7a2a' : '#c04040';
+                        tablaMeses += `<tr style="border-bottom:1px solid #ddd;"><td style="padding:4px;font-weight:bold;">${meses[m]}</td><td style="padding:4px;text-align:right;">$${recaudo.cuotas.toLocaleString()}</td><td style="padding:4px;text-align:right;">$${recaudo.certNeto.toLocaleString()}</td><td style="padding:4px;text-align:right;color:#1a7a7a;font-weight:bold;">$${saldoMes.toLocaleString()}</td><td style="padding:4px;text-align:right;color:${colorSaldo};font-weight:bold;">$${saldoMes.toLocaleString()}</td></tr>`;
+                    }
+                    tablaMeses += `<tr style="background:#e0e8f0;font-weight:bold;"><td style="padding:5px;">TOTAL</td><td style="padding:5px;text-align:right;">$${totalCuotasAno.toLocaleString()}</td><td style="padding:5px;text-align:right;">$${totalCertAno.toLocaleString()}</td><td style="padding:5px;text-align:right;color:#1a7a7a;">$${totalRecAno.toLocaleString()}</td><td style="padding:5px;text-align:right;">$${totalRecAno.toLocaleString()}</td></tr>`;
+                    tablaMeses += `</tbody></table>`;
+                    html += tablaMeses;
+                    html += `<div style="margin-top:10px;padding:8px;font-size:12px;line-height:1.4;"><p style="text-align:justify;">Señores directivos, se hace entrega del resumen mes a mes de recaudos generados durante el año ${ano}, para su revisión y conocimiento.</p></div>`;
+                } else {
+                    const recaudo = obtenerRecaudoT(tipo, ano, mes);
+                    const totalRec = recaudo.cuotas + recaudo.certNeto;
+                    const saldoAnterior = calcularSaldoAnteriorT(tipo, ano, mes);
+                    const saldoFinal = saldoAnterior + totalRec;
+                    html += `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;">
+                        <div style="border:1px solid #ccc;padding:8px;text-align:center;"><div style="font-size:11px;font-weight:bold;color:#333;">CUOTAS</div><div style="font-size:15px;font-weight:bold;color:#1a7a7a;margin-top:3px;">$${recaudo.cuotas.toLocaleString()}</div></div>
+                        <div style="border:1px solid #ccc;padding:8px;text-align:center;"><div style="font-size:11px;font-weight:bold;color:#333;">CERT. NETO</div><div style="font-size:15px;font-weight:bold;color:#b68b40;margin-top:3px;">$${recaudo.certNeto.toLocaleString()}</div></div>
+                        <div style="border:1px solid #ccc;padding:8px;text-align:center;"><div style="font-size:11px;font-weight:bold;color:#333;">RECAUDO TOTAL</div><div style="font-size:15px;font-weight:bold;color:#1a7a7a;margin-top:3px;">$${totalRec.toLocaleString()}</div></div>
+                        <div style="border:1px solid #ccc;padding:8px;text-align:center;"><div style="font-size:11px;font-weight:bold;color:#333;">SALDO FINAL</div><div style="font-size:15px;font-weight:bold;color:${saldoFinal >= 0 ? '#2a7a2a' : '#c04040'};margin-top:3px;">$${saldoFinal.toLocaleString()}</div></div>
+                    </div>`;
+                    html += `<div style="margin-top:10px;padding:8px;font-size:12px;line-height:1.4;"><p style="text-align:justify;">Señores directivos, se hace entrega del informe de tesorería ${periodo}. Antes de este período en caja había <strong>$${saldoAnterior.toLocaleString()}</strong>. Desde ${periodo} se recaudó <strong>$${totalRec.toLocaleString()}</strong> (cuotas: $${recaudo.cuotas.toLocaleString()}, certificados neto: $${recaudo.certNeto.toLocaleString()}) para un total en caja de <strong>$${saldoFinal.toLocaleString()}</strong>.</p></div>`;
+                }
+
+                html += `<div style="margin-top:50px; display:flex; justify-content:space-around; text-align:center; font-size:12px;">
+                    <div><br><br>________________________<br><strong>YEISON BELTRAN URREA</strong><br>Tesorero<br>C.C. 1.121.896.567</div>
+                    <div><br><br>________________________<br><strong>LEONEL BAUTISTA CARRANZA</strong><br>Presidente<br>C.C. 6.650.213</div>
+                    <div><br><br>________________________<br><strong>JESUS ANTONIO GARCIA</strong><br>Fiscal<br>C.C. 80.732.535</div>
+                </div>`;
+
+                dom.informeContentT.innerHTML = html;
+            } catch (e) {
+                console.error('Error generando informe:', e);
+                dom.informeContentT.innerHTML = `<div style="padding:20px;color:red;">Error: ${e.message}</div>`;
+            }
         }
 
         function mostrarAlerta(msg, tipo = 'error') {
@@ -3811,6 +4090,7 @@
             if (localData && localData.length > 0 && localAfiliados && localAfiliados.length > 0) {
                 appState.afiliados = localAfiliados;
                 appState.pagos = localData;
+                appState.gastos = await cargarGastos();
                 appState.modoLocal = true;
                 appState.accessTokenData = null;
                 appState.githubToken = localStorage.getItem('github_token') || null;
@@ -3869,6 +4149,23 @@
         // EVENTOS DEL PANEL
         // ============================================================
         function inicializarEventosPanel() {
+            const goToGastosBtn = document.getElementById('goToGastosBtn');
+            if (goToGastosBtn) {
+                goToGastosBtn.addEventListener('click', () => {
+                    const u = JSON.parse(sessionStorage.getItem('usuario_actual') || '{}');
+                    window.location.href = `gastos.html?token=${sessionStorage.getItem('session_token')}&user=${u.usuario}&mode=${u.modo}`;
+                });
+            }
+
+            const informesBtn = document.getElementById('informesBtn');
+            if (informesBtn) {
+                informesBtn.addEventListener('click', () => {
+                    inicializarInformeT();
+                    dom.informesModal.style.display = 'flex';
+                });
+            }
+            dom.closeInformesBtn.addEventListener('click', () => { dom.informesModal.style.display = 'none'; });
+
             dom.searchInput.addEventListener('input', (e) => {
                 resetInactivityTimer();
                 appState.filtroActual = e.target.value;
