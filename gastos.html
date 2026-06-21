@@ -1,1958 +1,805 @@
-
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
-    <title>JAC Bateas · Control de Gastos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JAC Bateas · Control de Gastos Profesional</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ===== RESET Y VARIABLES ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
-
-        body {
-            background: linear-gradient(145deg, #4c724c 0%, #4c724c 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 5px;
-        }
-
-        .app {
-            max-width: 1440px;
-            width: 100%;
-            background: white;
-            border-radius: 28px;
-            box-shadow: 0 15px 35px rgba(10, 30, 50, 0.15);
-            padding: 5px;
-            border: 1px solid rgba(200, 210, 220, 0.3);
-        }
-
-        /* ===== HEADER ===== */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2px;
-            padding-bottom: 1px;
-            border-bottom: 2px solid #d0dce6;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .logo-area h1 {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #1a3a5c;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .logo-area h1 span {
-            background: #e6eef0;
-            padding: 4px 12px;
-            border-radius: 100px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: #1a3a5c;
-            letter-spacing: 0.3px;
-            border: 1px solid #b8c8d8;
-        }
-
-        .year-badge {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: #f2f5f9;
-            padding: 6px 18px;
-            border-radius: 100px;
-            font-size: 0.85rem;
-            color: #1a3a5c;
-            border: 1px solid #c0d0e0;
-            font-weight: 500;
-        }
-
-        .year-badge select {
-            border: none;
-            background: transparent;
-            padding: 4px 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #1a3a5c;
-            outline: none;
-            cursor: pointer;
-        }
-
-        /* ===== MODALES DE API ===== */
-        .api-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(10, 30, 50, 0.5);
-            backdrop-filter: blur(4px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 20000;
-            padding: 20px;
-        }
-
-        .api-modal-content {
-            background: white;
-            border-radius: 24px;
-            max-width: 400px;
-            width: 100%;
-            padding: 30px;
-            text-align: center;
-            box-shadow: 0 25px 50px -12px rgba(10, 30, 50, 0.3);
-            border: 2px solid #1a3a5c;
-        }
-
-        .api-modal-content h2 {
-            color: #1a3a5c;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-        }
-
-        .api-modal-content p {
-            color: #4a5a6a;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-        }
-
-        .api-modal-content input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #d0dce4;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            margin-bottom: 15px;
-            outline: none;
-        }
-
-        .api-modal-content input:focus {
-            border-color: #1a3a5c;
-        }
-
-        .api-modal-content button {
-            background: #1a3a5c;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        .api-modal-content button:hover {
-            background: #2a4a6c;
-        }
-
-        .api-modal-content .error-message {
-            color: #c04040;
-            margin-top: 10px;
-            font-size: 0.8rem;
-            display: none;
-        }
-
-        .remember-checkbox {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 15px 0;
-            padding: 8px;
-            background: #f5f8fa;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-
-        .remember-checkbox input {
-            width: 18px;
-            height: 18px;
-            margin: 0;
-            cursor: pointer;
-        }
-
-        .remember-checkbox label {
-            font-size: 0.85rem;
-            color: #1a3a5c;
-            cursor: pointer;
-            font-weight: 500;
-            margin: 0;
-        }
-
-        /* ===== BOTONES ===== */
-        .btn {
-            border: none;
-            padding: 6px 14px;
-            border-radius: 100px;
-            font-weight: 600;
-            font-size: 0.75rem;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            cursor: pointer;
-            transition: all 0.15s;
-            background: white;
-            color: #1e293b;
-            border: 1px solid #d0dce0;
-            height: 34px;
-        }
-
-        .btn:hover {
-            background: #f0f4f8;
-            border-color: #a0b0c0;
-        }
-
-        .btn-primary {
-            background: #1a3a5c;
-            color: white;
-            border: none;
-        }
-
-        .btn-primary:hover {
-            background: #2a4a6c;
-        }
-
-        .btn-success {
-            background: #1e6a3a;
-            color: white;
-            border: none;
-        }
-
-        .btn-success:hover {
-            background: #2a7a4a;
-        }
-
-        .btn-danger {
-            background: #c04040;
-            color: white;
-            border: none;
-        }
-
-        .btn-danger:hover {
-            background: #a03030;
-        }
-
-        .btn-warning {
-            background: #ffd966;
-            color: #1a3a5c;
-            border: none;
-        }
-
-        .btn-warning:hover {
-            background: #ffcd4a;
-        }
-
-        .btn-secondary {
-            background: #4a5a6a;
-            color: white;
-            border: none;
-        }
-
-        .btn-secondary:hover {
-            background: #5a6a7a;
-        }
-
-        .btn-expense {
-            background: #c04040;
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 100px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-
-        .btn-expense:hover {
-            background: #a03030;
-            transform: scale(1.05);
-        }
-
-        /* ===== BARRA DE ACCIONES ===== */
-        .action-bar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 2px;
-            align-items: center;
-            background: #1a4a2a;
-            padding: 12px 16px;
-            border-radius: 20px;
-            border: 1px solid #d0dce8;
-        }
-
-        .search-box {
-            flex: 1;
-            min-width: 180px;
-            display: flex;
-            align-items: center;
-            background: white;
-            border: 1.5px solid #d0dce8;
-            border-radius: 10px;
-            padding: 0 10px;
-            transition: all 0.15s;
-        }
-
-        .search-box:focus-within {
-            border-color: #2a5a8c;
-            box-shadow: 0 0 0 3px rgba(42, 90, 140, 0.1);
-        }
-
-        .search-box input {
-            flex: 1;
-            padding: 8px 6px;
-            border: none;
-            background: transparent;
-            font-size: 0.85rem;
-        }
-
-        .search-box input:focus {
-            outline: none;
-        }
-
-        .report-group {
-            display: flex;
-            gap: 4px;
-            flex-wrap: wrap;
-        }
-
-        /* ===== TARJETAS DE ESTADÍSTICAS (5 COLUMNAS) ===== */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            margin-bottom: 5px;
-            text-align: center;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 14px 6px;
-            border-radius: 14px;
-            border: 1px solid #c0d0e0;
-            box-shadow: 0 2px 8px rgba(10, 30, 50, 0.05);
-            min-height: 110px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .stat-card.flipped {
-            transform: rotateY(180deg);
-        }
-
-        .stat-card .stat-front,
-        .stat-card .stat-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-            top: 0;
-            left: 0;
-            padding: 14px 6px;
-            border-radius: 14px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            background: white;
-        }
-
-        .stat-card .stat-front {
-            transform: rotateY(0deg);
-            z-index: 2;
-        }
-
-        .stat-card .stat-back {
-            transform: rotateY(180deg);
-            background: #1a3a5c;
-            color: white;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-            border: 2px solid #ffd966;
-        }
-
-        .stat-back .eye-icon {
-            font-size: 1.5rem;
-            margin-bottom: 5px;
-        }
-
-        .stat-back .back-text {
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-align: center;
-            padding: 0 5px;
-        }
-
-        .stat-label {
-            font-size: 0.68rem;
-            color: #4a5a6a;
-            text-transform: uppercase;
-            letter-spacing: 0.2px;
-            font-weight: 700;
-            margin-bottom: 6px;
-            white-space: nowrap;
-        }
-
-        .stat-value {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #1a2a3a;
-            line-height: 1.3;
-            margin: 2px 0;
-        }
-
-        .stat-desc {
-            font-size: 0.58rem;
-            color: #6a7a8a;
-            margin-top: 4px;
-        }
-
-        .stat-card.recaudo {
-            border-top: 4px solid #2a9d2a;
-        }
-
-        .stat-card.certificados {
-            border-top: 4px solid #b68b40;
-        }
-
-        .stat-card.disponible {
-            border-top: 4px solid #2a6a9a;
-        }
-
-        .stat-card.gastos {
-            border-top: 4px solid #c04040;
-        }
-
-        .stat-card.saldo {
-            border-top: 4px solid #1a6a3a;
-        }
-
-        /* ===== TABLA ===== */
-        .table-section {
-            background: #1a4a2a;
-            border-radius: 20px;
-            border: 3px solid #1a4a2a;
-            margin-bottom: 16px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(10, 30, 50, 0.05);
-        }
-
-        .table-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 4px 5px;
-            background: #f0f4f8;
-            border-bottom: 2px solid #c8d4e4;
-            background-color: #d0d8e0;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .table-title {
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: #1a3a5c;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .table-responsive {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.7rem;
-        }
-
-        th {
-            background: #1a4a2a;
-            color: white;
-            font-weight: 600;
-            padding: 12px 6px;
-            text-align: center;
-            font-size: 13px;
-            letter-spacing: 0.5px;
-        }
-
-        td {
-            padding: 8px 6px;
-            border-bottom: 1px solid #c0d0da;
-            vertical-align: middle;
-            text-align: center;
-            background: white;
-            font-size: 12px;
-            font-weight: 500;
-            color: #1a2a3a;
-        }
-
-        tr:hover td {
-            background: #f5f8fa;
-        }
-
-        .badge {
-            padding: 4px 12px;
-            border-radius: 100px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            display: inline-block;
-            background: #e0e8f0;
-            color: #1a3a5c;
-        }
-
-        .badge-expense {
-            background: #ffe0e0;
-            color: #c04040;
-            padding: 4px 12px;
-            border-radius: 100px;
-            font-size: 0.7rem;
-            font-weight: 700;
-        }
-
-        .btn-detail {
-            background: #e0e8f0;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 100px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #1a3a5c;
-            cursor: pointer;
-            transition: all 0.1s;
-            border: 1px solid #b8c8d8;
-        }
-
-        .btn-detail:hover {
-            background: #d0dae4;
-        }
-
-        .balance-positive {
-            color: #2a7a2a;
-            font-weight: 700;
-        }
-
-        .balance-negative {
-            color: #c04040;
-            font-weight: 700;
-        }
-
-        /* ===== MODALES ===== */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(10, 30, 50, 0.5);
-            backdrop-filter: blur(4px);
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            padding: 20px;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 24px;
-            max-width: 700px;
-            width: 100%;
-            max-height: 80vh;
-            overflow-y: auto;
-            padding: 20px;
-            box-shadow: 0 25px 50px -12px rgba(10, 30, 50, 0.3);
-            border: 1px solid #d0dce4;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #c8d4e4;
-            position: sticky;
-            top: 0;
-            background: white;
-            z-index: 10;
-        }
-
-        .modal-header h3 {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #1a3a5c;
-            text-align: center;
-            flex: 1;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 1.3rem;
-            cursor: pointer;
-            color: #6a7a8a;
-            padding: 2px 6px;
-        }
-
-        .close-btn:hover {
-            color: #1a3a5c;
-        }
-
-        .expense-field {
-            margin-bottom: 16px;
-        }
-
-        .expense-field label {
-            display: block;
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: #1a3a5c;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-        }
-
-        .expense-field input,
-        .expense-field select,
-        .expense-field textarea {
-            width: 100%;
-            padding: 10px 14px;
-            border: 2px solid #d0dce4;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .expense-field textarea {
-            resize: vertical;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .loading {
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            from {
-                transform: rotate(0deg);
-            }
-
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .alert {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 12px 18px;
-            border-radius: 10px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            display: none;
-            z-index: 10002;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-        }
-
-        .alert.show {
-            display: block;
-        }
-
-        .alert-success {
-            background: #e4ffe4;
-            color: #1a4a2a;
-            border-left: 6px solid #2a8e5a;
-        }
-
-        .alert-error {
-            background: #ffe4e4;
-            color: #8a2a2a;
-            border-left: 6px solid #c04040;
-        }
-
-        .alert-info {
-            background: #e4f0ff;
-            color: #2a4a6a;
-            border-left: 6px solid #4a8ac0;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .summary-box {
-            background: #f5f8fa;
-            border: 2px solid #d0dce4;
-            border-radius: 14px;
-            padding: 16px;
-            margin-bottom: 16px;
-        }
-
-        .summary-box h4 {
-            color: #1a3a5c;
-            margin-bottom: 12px;
-            font-size: 0.9rem;
-        }
-
-        .summary-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 6px 0;
-            border-bottom: 1px solid #e0e8f0;
-        }
-
-        .summary-total {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0 0 0;
-            font-weight: 700;
-            font-size: 0.9rem;
-        }
-
-        @media (max-width: 1200px) {
-            .stats-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        @media (max-width: 800px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 500px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: rgba(30,41,59,0.8);
+            --bg-glass: rgba(255,255,255,0.05);
+            --border-glass: rgba(255,255,255,0.1);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-green: #22c55e;
+            --accent-red: #ef4444;
+            --accent-yellow: #eab308;
+            --accent-blue: #3b82f6;
+            --accent-purple: #a855f7;
+            --accent-cyan: #06b6d4;
+            --accent-orange: #f97316;
+        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Inter',sans-serif;background:var(--bg-primary);color:var(--text-primary);min-height:100vh;overflow-x:hidden;}
+        body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 20% 20%,rgba(102,126,234,0.15) 0%,transparent 50%),radial-gradient(circle at 80% 80%,rgba(118,75,162,0.15) 0%,transparent 50%);pointer-events:none;z-index:0;}
+
+        .loading-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg-primary);display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:99999;transition:opacity .5s,visibility .5s;}
+        .loading-screen.hidden{opacity:0;visibility:hidden;}
+        .loading-logo{width:120px;height:120px;border-radius:50%;animation:logoPulse 2s ease-in-out infinite,logoSpin 3s linear infinite;box-shadow:0 0 30px rgba(102,126,234,0.5);object-fit:cover;}
+        @keyframes logoPulse{0%,100%{transform:scale(1);box-shadow:0 0 30px rgba(102,126,234,0.5)}50%{transform:scale(1.1);box-shadow:0 0 50px rgba(102,126,234,0.8)}}
+        @keyframes logoSpin{0%{transform:rotate(0deg) scale(1)}25%{transform:rotate(5deg) scale(1.05)}50%{transform:rotate(0deg) scale(1.1)}75%{transform:rotate(-5deg) scale(1.05)}100%{transform:rotate(0deg) scale(1)}}
+        .loading-text{margin-top:30px;font-size:1.2rem;font-weight:600;background:linear-gradient(90deg,#667eea,#764ba2,#f093fb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:textGlow 2s ease-in-out infinite;}
+        @keyframes textGlow{0%,100%{filter:brightness(1)}50%{filter:brightness(1.3)}}
+        .loading-bar{width:200px;height:4px;background:var(--bg-secondary);border-radius:2px;margin-top:20px;overflow:hidden;}
+        .loading-bar::after{content:'';display:block;width:50%;height:100%;background:linear-gradient(90deg,#667eea,#764ba2);border-radius:2px;animation:loadingProgress 1.5s ease-in-out infinite;}
+        @keyframes loadingProgress{0%{transform:translateX(-100%)}100%{transform:translateX(300%)}}
+
+        .auth-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(10,30,50,0.7);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:20000;padding:20px;}
+        .auth-modal-content{background:var(--bg-secondary);border-radius:24px;max-width:420px;width:100%;padding:40px;text-align:center;box-shadow:0 25px 50px rgba(0,0,0,0.5);border:1px solid var(--border-glass);animation:modalIn .4s ease;}
+        @keyframes modalIn{from{transform:translateY(-30px) scale(.95);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+        .auth-modal-content h2{color:var(--text-primary);margin-bottom:10px;font-size:1.5rem;}
+        .auth-modal-content p{color:var(--text-secondary);margin-bottom:25px;font-size:.9rem;}
+        .auth-input{width:100%;padding:14px 18px;border:2px solid var(--border-glass);border-radius:12px;font-size:1rem;background:var(--bg-glass);color:var(--text-primary);outline:none;transition:all .3s;margin-bottom:16px;}
+        .auth-input:focus{border-color:var(--accent-blue);box-shadow:0 0 0 3px rgba(59,130,246,0.2);}
+        .auth-checkbox{display:flex;align-items:center;gap:10px;margin:16px 0;padding:10px 14px;background:var(--bg-glass);border-radius:12px;cursor:pointer;border:1px solid var(--border-glass);}
+        .auth-checkbox input{width:18px;height:18px;accent-color:var(--accent-blue);}
+        .auth-checkbox label{font-size:.85rem;color:var(--text-secondary);cursor:pointer;}
+        .auth-btn{width:100%;padding:14px;border:none;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#667eea,#764ba2);color:white;transition:all .3s;margin-top:10px;}
+        .auth-btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(102,126,234,0.4);}
+        .auth-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+        .auth-error{color:var(--accent-red);margin-top:12px;font-size:.85rem;display:none;}
+        .auth-error.show{display:block;}
+
+        .app-header{position:sticky;top:0;z-index:100;background:rgba(15,23,42,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border-glass);padding:12px 24px;}
+        .header-content{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+        .header-left{display:flex;align-items:center;gap:16px;}
+        .header-logo{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--accent-blue);}
+        .header-title h1{font-size:1.1rem;font-weight:700;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+        .header-title span{font-size:.7rem;color:var(--text-muted);}
+        .header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+        .year-selector{display:flex;align-items:center;gap:8px;background:var(--bg-glass);padding:8px 16px;border-radius:100px;border:1px solid var(--border-glass);}
+        .year-selector select{border:none;background:transparent;color:var(--text-primary);font-size:.9rem;font-weight:600;outline:none;cursor:pointer;}
+        .year-selector select option{background:var(--bg-secondary);color:var(--text-primary);}
+        .nav-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border:none;border-radius:100px;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .3s;text-decoration:none;}
+        .nav-btn-primary{background:linear-gradient(135deg,var(--accent-blue),var(--accent-purple));color:white;}
+        .nav-btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(59,130,246,0.4);}
+        .nav-btn-warning{background:var(--accent-yellow);color:#1a3a5c;}
+        .nav-btn-danger{background:var(--accent-red);color:white;}
+        .nav-btn-secondary{background:var(--bg-glass);color:var(--text-secondary);border:1px solid var(--border-glass);}
+
+        .main-content{position:relative;z-index:10;padding:24px;max-width:1400px;margin:0 auto;}
+        .action-bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;align-items:center;background:var(--bg-secondary);padding:14px 18px;border-radius:16px;border:1px solid var(--border-glass);}
+        .search-box{flex:1;min-width:200px;display:flex;align-items:center;background:var(--bg-glass);border:1px solid var(--border-glass);border-radius:12px;padding:0 14px;transition:all .3s;}
+        .search-box:focus-within{border-color:var(--accent-blue);box-shadow:0 0 0 3px rgba(59,130,246,0.15);}
+        .search-box i{color:var(--text-muted);font-size:.9rem;}
+        .search-box input{flex:1;padding:10px;border:none;background:transparent;color:var(--text-primary);font-size:.85rem;outline:none;}
+        .search-box input::placeholder{color:var(--text-muted);}
+        .action-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border:none;border-radius:12px;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .3s;}
+        .action-btn-new{background:linear-gradient(135deg,var(--accent-red),#dc2626);color:white;}
+        .action-btn-new:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(239,68,68,0.4);}
+        .action-btn-template{background:linear-gradient(135deg,var(--accent-purple),#9333ea);color:white;}
+        .action-btn-template:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(168,85,247,0.4);}
+        .filter-group{display:flex;gap:4px;flex-wrap:wrap;}
+        .filter-btn{padding:8px 14px;border:1px solid var(--border-glass);border-radius:10px;background:var(--bg-glass);color:var(--text-secondary);font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s;}
+        .filter-btn:hover,.filter-btn.active{background:var(--accent-blue);color:white;border-color:var(--accent-blue);}
+
+        .dashboard{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:24px;}
+        .dash-card{background:var(--bg-secondary);border-radius:16px;padding:18px 14px;border:1px solid var(--border-glass);text-align:center;transition:all .6s;transform-style:preserve-3d;cursor:pointer;position:relative;min-height:130px;}
+        .dash-card.flipped{transform:rotateY(180deg);}
+        .dash-front,.dash-back{position:absolute;width:100%;height:100%;backface-visibility:hidden;top:0;left:0;padding:18px 14px;border-radius:16px;display:flex;flex-direction:column;justify-content:center;}
+        .dash-front{transform:rotateY(0deg);z-index:2;}
+        .dash-back{transform:rotateY(180deg);background:linear-gradient(135deg,#1e3a5f,#2d1b69);color:white;align-items:center;justify-content:center;gap:6px;border:2px solid var(--accent-yellow);}
+        .dash-back i{font-size:1.5rem;margin-bottom:4px;}
+        .dash-back span{font-size:.7rem;text-align:center;line-height:1.3;}
+        .dash-icon{font-size:1.8rem;margin-bottom:8px;}
+        .dash-label{font-size:.65rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:6px;}
+        .dash-value{font-size:1.3rem;font-weight:800;line-height:1.2;}
+        .dash-sub{font-size:.6rem;color:var(--text-muted);margin-top:4px;}
+        .dash-card.c-recaudo{border-top:4px solid var(--accent-green);}.dash-card.c-recaudo .dash-value{color:var(--accent-green);}
+        .dash-card.c-certificados{border-top:4px solid var(--accent-yellow);}.dash-card.c-certificados .dash-value{color:var(--accent-yellow);}
+        .dash-card.c-gastos{border-top:4px solid var(--accent-red);}.dash-card.c-gastos .dash-value{color:var(--accent-red);}
+        .dash-card.c-saldo{border-top:4px solid var(--accent-cyan);}.dash-card.c-saldo .dash-value{color:var(--accent-cyan);}
+
+        .table-section{background:var(--bg-secondary);border-radius:16px;border:1px solid var(--border-glass);overflow:hidden;margin-bottom:24px;}
+        .table-header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:rgba(102,126,234,0.1);border-bottom:1px solid var(--border-glass);flex-wrap:wrap;gap:10px;}
+        .table-title{font-size:.9rem;font-weight:700;display:flex;align-items:center;gap:8px;}
+        .table-badge{background:var(--bg-glass);padding:4px 12px;border-radius:100px;font-size:.7rem;color:var(--text-secondary);border:1px solid var(--border-glass);}
+        .table-responsive{overflow-x:auto;}
+        table{width:100%;border-collapse:collapse;}
+        th{background:rgba(102,126,234,0.15);color:var(--text-secondary);font-weight:600;padding:12px 10px;text-align:center;font-size:.7rem;text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid var(--border-glass);white-space:nowrap;}
+        td{padding:10px;border-bottom:1px solid var(--border-glass);vertical-align:middle;text-align:center;font-size:.78rem;color:var(--text-primary);}
+        tr:hover td{background:rgba(102,126,234,0.05);}
+        .badge-cat{padding:4px 10px;border-radius:100px;font-size:.65rem;font-weight:700;display:inline-block;}
+        .cat-mantenimiento{background:rgba(59,130,246,0.15);color:var(--accent-blue);}
+        .cat-servicios{background:rgba(6,182,212,0.15);color:var(--accent-cyan);}
+        .cat-eventos{background:rgba(168,85,247,0.15);color:var(--accent-purple);}
+        .cat-materiales{background:rgba(249,115,22,0.15);color:var(--accent-orange);}
+        .cat-transporte{background:rgba(234,179,8,0.15);color:var(--accent-yellow);}
+        .cat-papeleria{background:rgba(34,197,94,0.15);color:var(--accent-green);}
+        .cat-refrigerios{background:rgba(236,72,153,0.15);color:#ec4899;}
+        .cat-otros{background:rgba(148,163,184,0.15);color:var(--text-secondary);}
+        .valor-gasto{color:var(--accent-red);font-weight:700;}
+        .saldo-pos{color:var(--accent-green);font-weight:600;}
+        .saldo-neg{color:var(--accent-red);font-weight:600;}
+        .btn-action{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border:none;border-radius:8px;font-size:.7rem;font-weight:600;cursor:pointer;transition:all .2s;}
+        .btn-edit{background:rgba(59,130,246,0.15);color:var(--accent-blue);}
+        .btn-edit:hover{background:var(--accent-blue);color:white;}
+        .btn-delete{background:rgba(239,68,68,0.15);color:var(--accent-red);}
+        .btn-delete:hover{background:var(--accent-red);color:white;}
+        .btn-view{background:rgba(34,197,94,0.15);color:var(--accent-green);}
+        .btn-view:hover{background:var(--accent-green);color:white;}
+
+        .modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(10,30,50,0.7);backdrop-filter:blur(8px);align-items:center;justify-content:center;z-index:15000;padding:20px;}
+        .modal-box{background:var(--bg-secondary);border-radius:20px;max-width:600px;width:100%;max-height:85vh;overflow-y:auto;padding:28px;box-shadow:0 25px 50px rgba(0,0,0,0.5);border:1px solid var(--border-glass);animation:modalIn .3s ease;}
+        .modal-box::-webkit-scrollbar{width:6px;}.modal-box::-webkit-scrollbar-track{background:transparent;}.modal-box::-webkit-scrollbar-thumb{background:var(--border-glass);border-radius:3px;}
+        .modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border-glass);}
+        .modal-head h3{font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:8px;}
+        .modal-close{background:var(--bg-glass);border:1px solid var(--border-glass);color:var(--text-secondary);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;font-size:1rem;}
+        .modal-close:hover{background:var(--accent-red);color:white;border-color:var(--accent-red);}
+        .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+        .form-group{display:flex;flex-direction:column;gap:6px;}
+        .form-group.full{grid-column:1/-1;}
+        .form-group label{font-size:.7rem;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.5px;}
+        .form-group input,.form-group select,.form-group textarea{padding:10px 14px;border:2px solid var(--border-glass);border-radius:10px;font-size:.85rem;background:var(--bg-glass);color:var(--text-primary);outline:none;transition:all .3s;font-family:'Inter',sans-serif;}
+        .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--accent-blue);box-shadow:0 0 0 3px rgba(59,130,246,0.15);}
+        .form-group select option{background:var(--bg-secondary);color:var(--text-primary);}
+        .form-group textarea{resize:vertical;min-height:70px;}
+        #informeContenido, #informeContenido *{color:#000 !important;}
+        .form-balance{grid-column:1/-1;background:var(--bg-glass);border:1px solid var(--border-glass);border-radius:12px;padding:14px;}
+        .form-balance h4{font-size:.8rem;font-weight:700;color:var(--text-secondary);margin-bottom:10px;}
+        .balance-row{display:flex;justify-content:space-between;padding:4px 0;font-size:.8rem;}
+        .balance-row.total{border-top:1px solid var(--border-glass);padding-top:8px;margin-top:6px;font-weight:700;}
+        .form-actions{grid-column:1/-1;display:flex;gap:10px;justify-content:flex-end;margin-top:10px;}
+        .btn-cancel{padding:10px 20px;border:1px solid var(--border-glass);border-radius:10px;background:transparent;color:var(--text-secondary);font-weight:600;cursor:pointer;transition:all .2s;}
+        .btn-cancel:hover{background:var(--bg-glass);}
+        .btn-save{padding:10px 24px;border:none;border-radius:10px;background:linear-gradient(135deg,var(--accent-green),#16a34a);color:white;font-weight:700;cursor:pointer;transition:all .3s;}
+        .btn-save:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(34,197,94,0.4);}
+        .btn-save:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+
+        .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+        .detail-item{background:var(--bg-glass);border-radius:10px;padding:12px;border:1px solid var(--border-glass);}
+        .detail-item.full{grid-column:1/-1;}
+        .detail-item label{font-size:.65rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;display:block;margin-bottom:4px;}
+        .detail-item span{font-size:.85rem;font-weight:600;color:var(--text-primary);}
+
+        .template-list{display:flex;flex-direction:column;gap:10px;}
+        .template-item{display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--bg-glass);border:1px solid var(--border-glass);border-radius:12px;cursor:pointer;transition:all .2s;}
+        .template-item:hover{border-color:var(--accent-blue);background:rgba(59,130,246,0.1);}
+        .template-info{display:flex;align-items:center;gap:12px;}
+        .template-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;}
+        .template-name{font-weight:600;font-size:.85rem;}
+        .template-desc{font-size:.7rem;color:var(--text-muted);}
+
+        .export-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+        .export-option{display:flex;flex-direction:column;align-items:center;gap:10px;padding:20px;background:var(--bg-glass);border:2px solid var(--border-glass);border-radius:14px;cursor:pointer;transition:all .3s;}
+        .export-option:hover{border-color:var(--accent-blue);background:rgba(59,130,246,0.1);transform:translateY(-3px);}
+        .export-option i{font-size:2rem;color:var(--accent-blue);}
+        .export-option span{font-weight:600;font-size:.85rem;}
+
+        .alert-toast{position:fixed;top:20px;right:20px;padding:14px 20px;border-radius:12px;font-size:.85rem;font-weight:600;display:none;z-index:30000;box-shadow:0 10px 30px rgba(0,0,0,0.3);animation:toastSlide .3s ease;max-width:400px;}
+        @keyframes toastSlide{from{transform:translateX(100px);opacity:0}to{transform:translateX(0);opacity:1}}
+        .alert-toast.show{display:flex;align-items:center;gap:10px;}
+        .alert-success{background:rgba(34,197,94,0.15);color:var(--accent-green);border:1px solid var(--accent-green);}
+        .alert-error{background:rgba(239,68,68,0.15);color:var(--accent-red);border:1px solid var(--accent-red);}
+        .alert-info{background:rgba(59,130,246,0.15);color:var(--accent-blue);border:1px solid var(--accent-blue);}
+
+        .app-footer{text-align:center;padding:20px;color:var(--text-muted);font-size:.7rem;border-top:1px solid var(--border-glass);margin-top:20px;}
+
+        @media(max-width:1200px){.dashboard{grid-template-columns:repeat(3,1fr);}}
+        @media(max-width:800px){.dashboard{grid-template-columns:repeat(2,1fr);}.header-content{flex-direction:column;align-items:flex-start;}.form-grid{grid-template-columns:1fr;}}
+        @media(max-width:500px){.dashboard{grid-template-columns:1fr;}.main-content{padding:12px;}}
     </style>
 </head>
-
 <body>
-    <!-- MODAL DE VALIDACIÓN DE TOKEN DE ACCESO -->
-    <div id="accessTokenModal" class="api-modal">
-        <div class="api-modal-content">
-            <h2>🔐 Validar Token de Acceso</h2>
-            <p>Ingresa el token de acceso generado en el panel de administración</p>
-            <input type="password" id="accessTokenInput" placeholder="Token de acceso" autofocus>
-            <div class="remember-checkbox">
-                <input type="checkbox" id="rememberAccessTokenCheckbox">
-                <label for="rememberAccessTokenCheckbox">🔒 Recordar token en este equipo</label>
-            </div>
-            <button id="validateAccessTokenBtn">Validar y continuar</button>
-            <div id="accessTokenError" class="error-message">❌ Token inválido o expirado</div>
+    <div class="loading-screen" id="loadingScreen">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Escudo_Acci%C3%B3n_Comunal_Colombia.svg/500px-Escudo_Acci%C3%B3n_Comunal_Colombia.svg.png?_=20230605004557" alt="Logo" class="loading-logo">
+        <div class="loading-text">Cargando Control de Gastos...</div>
+        <div class="loading-bar"></div>
+    </div>
+
+    <div id="accessTokenModal" class="auth-modal" style="display:none;">
+        <div class="auth-modal-content">
+            <h2>🔐 Token de Acceso</h2>
+            <p>Ingresa el token de acceso del panel de administración</p>
+            <input type="password" id="accessTokenInput" class="auth-input" placeholder="Token de acceso" autofocus>
+            <div class="auth-checkbox"><input type="checkbox" id="rememberTokenCheck"><label for="rememberTokenCheck">🔒 Recordar token</label></div>
+            <button id="validateTokenBtn" class="auth-btn">Validar y continuar</button>
+            <div id="tokenError" class="auth-error"></div>
         </div>
     </div>
 
-    <!-- MODAL DE TOKEN DE GITHUB -->
-    <div id="githubTokenModal" class="api-modal" style="display: none;">
-        <div class="api-modal-content">
-            <h2>🔐 Configuración API GitHub</h2>
-            <p>Ingresa el token de GitHub para acceder al sistema</p>
-            <input type="password" id="githubTokenInput" placeholder="Token GitHub">
-            <div class="remember-checkbox">
-                <input type="checkbox" id="rememberGithubTokenCheckbox">
-                <label for="rememberGithubTokenCheckbox">🔒 Recordar token en este equipo</label>
-            </div>
-            <button id="validateGithubTokenBtn">Validar y continuar</button>
-            <div id="githubTokenError" class="error-message">❌ Token inválido. Intenta nuevamente.</div>
+    <div id="githubModal" class="auth-modal" style="display:none;">
+        <div class="auth-modal-content">
+            <h2>🔑 Token GitHub</h2>
+            <p>Ingresa tu token de GitHub para sincronizar datos</p>
+            <input type="password" id="githubTokenInput" class="auth-input" placeholder="ghp_xxxxxxxxxxxx">
+            <div class="auth-checkbox"><input type="checkbox" id="rememberGithubCheck"><label for="rememberGithubCheck">🔒 Recordar token GitHub</label></div>
+            <button id="validateGithubBtn" class="auth-btn">Conectar con GitHub</button>
+            <div id="githubError" class="auth-error"></div>
         </div>
     </div>
 
-    <!-- APLICACIÓN PRINCIPAL -->
-    <div class="app" id="mainApp" style="display: none;">
-        <!-- HEADER -->
-        <div class="header">
-            <div class="logo-area">
-                <h1 style="text-align: center; align-items: center;">
-                    💸 Control de Gastos - Junta de Acción Comunal Bateas
-                </h1>
+    <div id="mainApp" style="display:none;">
+        <header class="app-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Escudo_Acci%C3%B3n_Comunal_Colombia.svg/500px-Escudo_Acci%C3%B3n_Comunal_Colombia.svg.png?_=20230605004557" alt="Logo" class="header-logo">
+                    <div class="header-title">
+                        <h1>💸 Control de Gastos</h1>
+                        <span>Junta de Acción Comunal Barrio Bateas</span>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="year-selector"><span>📅</span><select id="yearSelect"></select></div>
+                    <button class="nav-btn nav-btn-primary" onclick="irATesoreria()"><i class="fas fa-money-bill-wave"></i> Tesorería</button>
+                    <button class="nav-btn nav-btn-secondary" onclick="irAPanel()"><i class="fas fa-th-large"></i> Panel</button>
+                    <button class="nav-btn nav-btn-warning" onclick="cambiarToken()"><i class="fas fa-sync"></i> Token</button>
+                    <button class="nav-btn nav-btn-danger" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> Salir</button>
+                </div>
             </div>
-            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                <div class="year-badge">
-                    <span>📅</span>
-                    <select id="yearSelect"></select>
+        </header>
+
+        <main class="main-content">
+            <div class="action-bar">
+                <div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="Buscar por concepto, categoría, responsable..."></div>
+                <button class="action-btn action-btn-new" onclick="abrirModalGasto()"><i class="fas fa-plus"></i> Nuevo Gasto</button>
+                <button class="action-btn action-btn-template" onclick="abrirModalPlantillas()"><i class="fas fa-copy"></i> Plantillas</button>
+                <button class="action-btn" style="background:linear-gradient(135deg,var(--accent-green),#16a34a);color:white;" onclick="guardarGastosEnGitHub()"><i class="fas fa-cloud-upload-alt"></i> Guardar Gastos</button>
+                <button class="action-btn" style="background:linear-gradient(135deg,var(--accent-purple),#7c3aed);color:white;" onclick="abrirModalInforme()"><i class="fas fa-file-alt"></i> Informes</button>
+                <div class="filter-group">
+                    <button class="filter-btn active" onclick="filtrarPor('todos',this)">📋 Todos</button>
+                    <button class="filter-btn" onclick="filtrarPor('hoy',this)">📅 Hoy</button>
+                    <button class="filter-btn" onclick="filtrarPor('semana',this)">📆 Semana</button>
+                    <button class="filter-btn" onclick="filtrarPor('mes',this)">🗓️ Mes</button>
                 </div>
-                <div class="button-group">
-                    <button id="goToTreasuryBtn" class="btn" style="background: #1a4a2a; color: white;">
-                        <span>💰</span> Tesorería
-                    </button>
-                    <button id="changeTokenBtn" class="btn btn-warning">
-                        <span>🔄</span> Cambiar Token
-                    </button>
-                    <button id="logoutTempBtn" class="btn btn-secondary">
-                        <span>🚪</span> Salir
-                    </button>
-                    <button id="logoutFullBtn" class="btn btn-danger">
-                        <span>🗑️</span> Cerrar sesión
-                    </button>
+                <button class="nav-btn nav-btn-secondary" onclick="abrirModalExportar()" style="font-size:.8rem;"><i class="fas fa-file-export"></i> Exportar</button>
+            </div>
+
+            <div class="dashboard" id="dashboard">
+                <div class="dash-card c-recaudo" onclick="this.classList.toggle('flipped')">
+                    <div class="dash-front"><div class="dash-icon">💰</div><div class="dash-label">Recaudo Cuotas</div><div class="dash-value" id="dCuotas">$0</div><div class="dash-sub" id="dCuotasNum">0 pagos</div></div>
+                    <div class="dash-back"><i class="fas fa-home"></i><span>Total de cuotas mensuales de afiliados</span></div>
                 </div>
+                <div class="dash-card c-certificados" onclick="this.classList.toggle('flipped')">
+                    <div class="dash-front"><div class="dash-icon">📜</div><div class="dash-label">Certificados Neto</div><div class="dash-value" id="dCertNeto">$0</div><div class="dash-sub" id="dCertNum">0 certificados</div></div>
+                    <div class="dash-back"><i class="fas fa-file-alt"></i><span>Bruto: <span id="dCertBruto">$0</span><br>Comisión 50%: <span id="dCertComision">$0</span></span></div>
+                </div>
+                <div class="dash-card" style="border-top:4px solid var(--accent-cyan);" onclick="this.classList.toggle('flipped')">
+                    <div class="dash-front"><div class="dash-icon">📊</div><div class="dash-label">Total Recaudado</div><div class="dash-value" id="dTotalRecaudado" style="color:var(--accent-cyan);">$0</div><div class="dash-sub">Cuotas + Cert. Neto</div></div>
+                    <div class="dash-back"><i class="fas fa-coins"></i><span>Ingresos totales del año</span></div>
+                </div>
+                <div class="dash-card c-gastos" onclick="this.classList.toggle('flipped')">
+                    <div class="dash-front"><div class="dash-icon">💸</div><div class="dash-label">Total Gastos</div><div class="dash-value" id="dGastos">$0</div><div class="dash-sub" id="dGastosNum">0 gastos</div></div>
+                    <div class="dash-back"><i class="fas fa-chart-line"></i><span>Total de egresos registrados</span></div>
+                </div>
+                <div class="dash-card c-saldo" onclick="this.classList.toggle('flipped')">
+                    <div class="dash-front"><div class="dash-icon">🏦</div><div class="dash-label">Saldo Disponible</div><div class="dash-value" id="dSaldo">$0</div><div class="dash-sub">Ingresos - Gastos</div></div>
+                    <div class="dash-back"><i class="fas fa-lock"></i><span>Balance final después de todos los movimientos</span></div>
+                </div>
+            </div>
+
+            <div class="table-section">
+                <div class="table-header">
+                    <div class="table-title"><i class="fas fa-list"></i> Registro de Gastos <span class="table-badge" id="yearBadge">2026</span></div>
+                    <span style="font-size:.75rem;color:var(--text-muted);"><span id="numCertificados">0</span> cert. | <span id="numCuotas">0</span> cuotas</span>
+                </div>
+                <div class="table-responsive">
+                    <table><thead><tr><th>Fecha</th><th>Concepto</th><th>Categoría</th><th>Valor</th><th>Responsable</th><th>Comprobante</th><th>Total Gastos</th><th>Acciones</th></tr></thead><tbody id="tableBody"></tbody></table>
+                </div>
+            </div>
+        </main>
+        <footer class="app-footer">Junta de Acción Comunal Barrio Bateas · Puerto Gaitán, Meta | 📅 <span id="currentDate"></span></footer>
+    </div>
+
+    <div id="gastoModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-head"><h3><i class="fas fa-receipt"></i> <span id="gastoModalTitle">Registrar Nuevo Gasto</span></h3><button class="modal-close" onclick="cerrarModalGasto()">&times;</button></div>
+            <div class="form-grid">
+                <div class="form-balance"><h4>📊 Balance Actual</h4>
+                    <div class="balance-row"><span>💰 Recaudo Cuotas:</span><span id="bCuotas" style="color:var(--accent-green);">$0</span></div>
+                    <div class="balance-row"><span>📜 Certificados Neto:</span><span id="bCert" style="color:var(--accent-yellow);">$0</span></div>
+                    <div class="balance-row total"><span>✅ Disponible:</span><span id="bDisp" style="color:var(--accent-blue);">$0</span></div>
+                    <div class="balance-row"><span>💸 Gastos:</span><span id="bGastos" style="color:var(--accent-red);">$0</span></div>
+                    <div class="balance-row total"><span>🏦 Saldo:</span><span id="bSaldo" style="font-size:1rem;">$0</span></div>
+                </div>
+                <div class="form-group"><label>📅 Fecha del gasto</label><input type="date" id="fFecha" required></div>
+                <div class="form-group"><label>📂 Categoría</label><select id="fCategoria"><option value="Mantenimiento">🔧 Mantenimiento</option><option value="Servicios públicos">💡 Servicios públicos</option><option value="Eventos comunitarios">🎉 Eventos comunitarios</option><option value="Materiales">📦 Materiales</option><option value="Transporte">🚗 Transporte</option><option value="Papelería">📄 Papelería</option><option value="Refrigerios">🍽️ Refrigerios</option><option value="Herramientas">🔨 Herramientas</option><option value="Seguros">🛡️ Seguros</option><option value="Capacitación">📚 Capacitación</option><option value="Otros">📌 Otros</option></select></div>
+                <div class="form-group full"><label>📝 Concepto</label><input type="text" id="fConcepto" placeholder="Descripción detallada del gasto" required></div>
+                <div class="form-group"><label>💰 Valor (pesos)</label><input type="number" id="fValor" placeholder="0" min="1" required></div>
+                <div class="form-group"><label>👤 Responsable</label><input type="text" id="fResponsable" placeholder="Nombre" required></div>
+                <div class="form-group"><label>📄 Comprobante No.</label><input type="text" id="fComprobante" placeholder="Factura o recibo"></div>
+                <div class="form-group"><label>🧾 Método de pago</label><select id="fMetodo"><option value="Efectivo">💵 Efectivo</option><option value="Transferencia">🏦 Transferencia</option><option value="Daviplata">📱 Daviplata</option><option value="Nequi">📱 Nequi</option><option value="RappiPay">📱 RappiPay</option></select></div>
+                <div class="form-group full"><label>📋 Observaciones</label><textarea id="fObservaciones" rows="2" placeholder="Detalles adicionales"></textarea></div>
+                <div class="form-actions"><button class="btn-cancel" onclick="cerrarModalGasto()">Cancelar</button><button class="btn-save" id="btnGuardar" onclick="guardarGasto()"><i class="fas fa-save"></i> Guardar Gasto</button></div>
             </div>
         </div>
+    </div>
 
-        <!-- ALERTAS FLOTANTES -->
-        <div id="alertMessage" class="alert"></div>
+    <div id="detalleModal" class="modal-overlay">
+        <div class="modal-box" style="max-width:500px;">
+            <div class="modal-head"><h3><i class="fas fa-info-circle"></i> Detalle del Gasto</h3><button class="modal-close" onclick="document.getElementById('detalleModal').style.display='none'">&times;</button></div>
+            <div class="detail-grid" id="detalleContent"></div>
+        </div>
+    </div>
 
-        <!-- ACCIONES -->
-        <div class="action-bar">
-            <div class="search-box">
-                <span style="color: #6a7a8a;">🔍</span>
-                <input type="text" id="searchInput" placeholder="Buscar por concepto, categoría o responsable...">
-            </div>
-            <button id="newExpenseBtn" class="btn-expense">
-                💸 Nuevo Gasto
-            </button>
-            <div class="report-group">
-                <button id="expensesTodayBtn" class="btn">📅 Hoy</button>
-                <button id="expensesMonthBtn" class="btn">📆 Mes</button>
-                <button id="expensesYearBtn" class="btn">📊 Año</button>
-                <button id="expensesAllBtn" class="btn">📋 Todos</button>
+    <div id="plantillaModal" class="modal-overlay">
+        <div class="modal-box" style="max-width:500px;">
+            <div class="modal-head"><h3><i class="fas fa-copy"></i> Plantillas Recurrentes</h3><button class="modal-close" onclick="document.getElementById('plantillaModal').style.display='none'">&times;</button></div>
+            <p style="color:var(--text-secondary);font-size:.8rem;margin-bottom:14px;">Selecciona una plantilla para crear un gasto rápido</p>
+            <div class="template-list" id="templateList"></div>
+        </div>
+    </div>
+
+    <div id="exportarModal" class="modal-overlay">
+        <div class="modal-box" style="max-width:450px;">
+            <div class="modal-head"><h3><i class="fas fa-file-export"></i> Exportar Datos</h3><button class="modal-close" onclick="document.getElementById('exportarModal').style.display='none'">&times;</button></div>
+            <div class="export-options">
+                <div class="export-option" onclick="exportarPDF()"><i class="fas fa-file-pdf"></i><span>PDF</span></div>
+                <div class="export-option" onclick="exportarExcel()"><i class="fas fa-file-excel"></i><span>Excel (CSV)</span></div>
+                <div class="export-option" onclick="exportarImpresion()"><i class="fas fa-print"></i><span>Imprimir</span></div>
+                <div class="export-option" onclick="exportarJSON()"><i class="fas fa-file-code"></i><span>JSON (Backup)</span></div>
             </div>
         </div>
+    </div>
 
-        <!-- ESTADÍSTICAS FINANCIERAS (5 TARJETAS) -->
-        <div class="stats-grid">
-            <!-- 1. RECAUDO DE CUOTAS -->
-            <div class="stat-card recaudo" onclick="this.classList.toggle('flipped')">
-                <div class="stat-front">
-                    <div class="stat-label">💰 Recaudo Cuotas</div>
-                    <div class="stat-value" id="recaudoCuotas">$0</div>
-                    <div class="stat-desc">Mensualidades recibidas</div>
-                </div>
-                <div class="stat-back">
-                    <div class="eye-icon">🏠</div>
-                    <div class="back-text">Total de cuotas de afiliados</div>
-                </div>
-            </div>
-
-            <!-- 2. CERTIFICADOS (NETO - 50%) -->
-            <div class="stat-card certificados" onclick="this.classList.toggle('flipped')">
-                <div class="stat-front">
-                    <div class="stat-label">📜 Certificados</div>
-                    <div class="stat-value" id="certificadosNeto">$0</div>
-                    <div class="stat-desc" style="color: #c04040;">Neto (50% comisión)</div>
-                </div>
-                <div class="stat-back">
-                    <div class="eye-icon">📄</div>
-                    <div class="back-text">Bruto: <span id="certificadosBruto">$0</span> | Comisión: <span
-                            id="comisionCertificados">$0</span></div>
-                </div>
-            </div>
-
-            <!-- 3. DISPONIBLE TOTAL -->
-            <div class="stat-card disponible" onclick="this.classList.toggle('flipped')">
-                <div class="stat-front">
-                    <div class="stat-label">✅ Disponible Total</div>
-                    <div class="stat-value" id="disponibleTotal">$0</div>
-                    <div class="stat-desc">Cuotas + Certificados Neto</div>
-                </div>
-                <div class="stat-back">
-                    <div class="eye-icon">💵</div>
-                    <div class="back-text">Dinero real disponible para usar</div>
-                </div>
-            </div>
-
-            <!-- 4. GASTOS -->
-            <div class="stat-card gastos" onclick="this.classList.toggle('flipped')">
-                <div class="stat-front">
-                    <div class="stat-label">💸 Gastos Totales</div>
-                    <div class="stat-value" id="gastosTotales">$0</div>
-                    <div class="stat-desc"><span id="numGastos">0</span> gastos registrados</div>
-                </div>
-                <div class="stat-back">
-                    <div class="eye-icon">📊</div>
-                    <div class="back-text">Total de gastos registrados en el sistema</div>
-                </div>
-            </div>
-
-            <!-- 5. SALDO TOTAL -->
-            <div class="stat-card saldo" onclick="this.classList.toggle('flipped')">
-                <div class="stat-front">
-                    <div class="stat-label">🏦 Saldo Total</div>
-                    <div class="stat-value" id="saldoTotal">$0</div>
-                    <div class="stat-desc">Disponible - Gastos</div>
-                </div>
-                <div class="stat-back">
-                    <div class="eye-icon">🔒</div>
-                    <div class="back-text">Saldo final después de todos los gastos</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TABLA DE GASTOS -->
-        <div class="table-section">
-            <div class="table-header">
-                <div class="table-title">
-                    📋 Registro de Gastos · <span style="background: #d0dce0; padding: 4px 14px; border-radius: 100px;"
-                        id="añoActualDisplay"></span>
-                </div>
-                <div style="display: flex; align-items: center; gap: 15px;">
-                    <span style="font-size: 0.75rem; font-weight: 600; color: #1a3a5c;">
-                        📜 Certificados: <span id="numCertificados">0</span> |
-                        💰 Cuotas: <span id="numCuotas">0</span>
-                    </span>
-                </div>
-            </div>
-            <div class="table-responsive">
-                <table id="expensesTable">
-                    <thead>
-                        <tr>
-                            <th>Fecha</th>
-                            <th>Concepto</th>
-                            <th>Categoría</th>
-                            <th>Valor</th>
-                            <th>Saldo Anterior</th>
-                            <th>Saldo Posterior</th>
-                            <th>Responsable</th>
-                            <th>Comprobante</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- MODAL DE NUEVO GASTO -->
-        <div id="expenseModal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>💸 Registrar Nuevo Gasto</h3>
-                    <button class="close-btn" id="closeExpenseModalBtn">&times;</button>
-                </div>
-
-                <div class="summary-box" id="balanceSummary">
-                    <h4>📊 Balance Actual</h4>
-                    <div class="summary-item">
-                        <span>💰 Recaudo Cuotas:</span>
-                        <span style="color: #2a7a2a; font-weight: 600;" id="summaryCuotas">$0</span>
-                    </div>
-                    <div class="summary-item">
-                        <span>📜 Certificados Neto:</span>
-                        <span style="color: #b68b40; font-weight: 600;" id="summaryCertNeto">$0</span>
-                    </div>
-                    <div class="summary-total">
-                        <span>✅ DISPONIBLE TOTAL:</span>
-                        <span style="color: #2a6a9a; font-size: 1.1rem;" id="summaryDisponible">$0</span>
-                    </div>
-                    <div class="summary-item" style="margin-top: 8px;">
-                        <span>💸 Gastos registrados:</span>
-                        <span style="color: #c04040; font-weight: 600;" id="summaryGastos">$0</span>
-                    </div>
-                    <div class="summary-total" style="border-top: 2px solid #c8d4e4;">
-                        <span>🏦 SALDO DISPONIBLE:</span>
-                        <span style="font-weight: 700; font-size: 1.1rem;" id="summarySaldo">$0</span>
-                    </div>
-                </div>
-
-                <div class="expense-field">
-                    <label>📅 FECHA DEL GASTO</label>
-                    <input type="date" id="fechaGasto" required>
-                </div>
-
-                <div class="expense-field">
-                    <label>📝 CONCEPTO</label>
-                    <input type="text" id="conceptoGasto" placeholder="Descripción detallada del gasto" required>
-                </div>
-
-                <div class="expense-field">
-                    <label>📂 CATEGORÍA</label>
-                    <select id="categoriaGasto">
-                        <option value="Mantenimiento">Mantenimiento</option>
-                        <option value="Servicios públicos">Servicios públicos</option>
-                        <option value="Eventos comunitarios">Eventos comunitarios</option>
-                        <option value="Materiales">Materiales</option>
-                        <option value="Transporte">Transporte</option>
-                        <option value="Papelería">Papelería</option>
-                        <option value="Refrigerios">Refrigerios</option>
-                        <option value="Otros">Otros</option>
+    <!-- MODAL DE INFORMES -->
+    <div id="informeModal" class="modal-overlay">
+        <div class="modal-box" style="max-width:550px;">
+            <div class="modal-head"><h3><i class="fas fa-file-alt"></i> Generar Informe para Directiva</h3><button class="modal-close" onclick="document.getElementById('informeModal').style.display='none'">&times;</button></div>
+            <div class="form-grid">
+                <div class="form-group full">
+                    <label>📋 Tipo de Informe</label>
+                    <select id="tipoInforme" onchange="actualizarFechasInforme()">
+                        <option value="mensual">📅 Informe Mensual</option>
+                        <option value="mesames">📋 Resumen Mes a Mes</option>
+                        <option value="anos">📆 Resumen por Años</option>
+                        <option value="anual">📊 Informe Anual</option>
+                        <option value="rango">🔍 Informe por Rango de Fechas</option>
+                        <option value="categoria">📂 Informe por Categoría</option>
                     </select>
                 </div>
-
-                <div class="expense-field">
-                    <label>💰 VALOR DEL GASTO</label>
-                    <input type="number" id="valorGasto" placeholder="Valor en pesos" required min="1">
-                    <small style="color: #4a5a6a; display: block; margin-top: 4px;">
-                        ⚠️ Saldo disponible: <span id="disponibleGasto" style="font-weight: 700;">$0</span>
-                    </small>
+                <div class="form-group" id="grpMesInforme">
+                    <label>📅 Mes</label>
+                    <select id="mesInforme">
+                        <option value="0">Enero</option><option value="1">Febrero</option><option value="2">Marzo</option>
+                        <option value="3">Abril</option><option value="4">Mayo</option><option value="5">Junio</option>
+                        <option value="6">Julio</option><option value="7">Agosto</option><option value="8">Septiembre</option>
+                        <option value="9">Octubre</option><option value="10">Noviembre</option><option value="11">Diciembre</option>
+                    </select>
                 </div>
-
-                <div class="expense-field">
-                    <label>👤 RESPONSABLE</label>
-                    <input type="text" id="responsableGasto" placeholder="Nombre de quien realizó el gasto" required>
+                <div class="form-group" id="grpAnoInforme">
+                    <label>📅 Año</label>
+                    <select id="anoInforme"></select>
                 </div>
-
-                <div class="expense-field">
-                    <label>📄 COMPROBANTE No.</label>
-                    <input type="text" id="comprobanteGasto" placeholder="Número de factura o recibo">
+                <div class="form-group" id="grpFechaDesde" style="display:none;">
+                    <label>📅 Desde</label>
+                    <input type="date" id="fechaDesdeInforme">
                 </div>
-
-                <div class="expense-field">
-                    <label>📋 OBSERVACIONES</label>
-                    <textarea id="observacionesGasto" rows="3" placeholder="Detalles adicionales del gasto"></textarea>
+                <div class="form-group" id="grpFechaHasta" style="display:none;">
+                    <label>📅 Hasta</label>
+                    <input type="date" id="fechaHastaInforme">
                 </div>
-
-                <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                    <button id="cancelExpenseBtn" class="btn">Cancelar</button>
-                    <button id="saveExpenseBtn" class="btn btn-danger">💾 Registrar Gasto</button>
+                <div class="form-group" id="grpCategoriaInforme" style="display:none;">
+                    <label>📂 Categoría</label>
+                    <select id="categoriaInforme">
+                        <option value="todas">Todas las categorías</option>
+                        <option value="Mantenimiento">🔧 Mantenimiento</option>
+                        <option value="Servicios públicos">💡 Servicios públicos</option>
+                        <option value="Eventos comunitarios">🎉 Eventos comunitarios</option>
+                        <option value="Materiales">📦 Materiales</option>
+                        <option value="Transporte">🚗 Transporte</option>
+                        <option value="Papelería">📄 Papelería</option>
+                        <option value="Refrigerios">🍽️ Refrigerios</option>
+                        <option value="Herramientas">🔨 Herramientas</option>
+                        <option value="Seguros">🛡️ Seguros</option>
+                        <option value="Capacitación">📚 Capacitación</option>
+                        <option value="Otros">📌 Otros</option>
+                    </select>
+                </div>
+                <div class="form-group full" style="margin-top:10px;">
+                    <label>📝 Notas adicionales (opcional)</label>
+                    <textarea id="notasInforme" rows="2" placeholder="Observaciones para el informe..."></textarea>
+                </div>
+                <div class="form-actions">
+                    <button class="btn-cancel" onclick="document.getElementById('informeModal').style.display='none'">Cancelar</button>
+                    <button class="btn-save" style="background:linear-gradient(135deg,var(--accent-purple),#7c3aed);" onclick="generarInforme()"><i class="fas fa-file-alt"></i> Generar Informe</button>
                 </div>
             </div>
-        </div>
-
-        <!-- MODAL DE REPORTE -->
-        <div id="reportModal" class="modal">
-            <div class="modal-content" style="max-width: 900px;">
-                <div class="modal-header">
-                    <h3 id="reportTitle">Reporte de gastos</h3>
-                    <div style="display: flex; gap: 2px;">
-                        <button id="printReportBtn" class="btn" style="padding: 4px 10px;">🖨️</button>
-                        <button class="close-btn" id="closeReportModalBtn">&times;</button>
-                    </div>
-                </div>
-                <div id="reportContent" style="overflow-x: auto;"></div>
-            </div>
-        </div>
-
-        <div style="margin-top: 24px; text-align: center; color: #6a7a8a; font-size: 0.6rem; font-weight: 500;">
-            <span>Junta de Acción Comunal Barrio Bateas · Puerto Gaitán, Meta</span>
-            <span style="margin-left: 16px;">📅 <span id="fechaActualDisplay"></span></span>
         </div>
     </div>
 
+    <!-- MODAL VISTA PREVIA DEL INFORME -->
+    <div id="informePreviewModal" class="modal-overlay">
+        <div class="modal-box" style="max-width:800px;">
+            <div class="modal-head"><h3><i class="fas fa-eye"></i> Vista Previa del Informe</h3>
+                <div style="display:flex;gap:8px;">
+                    <button class="btn-save" style="background:var(--accent-blue);font-size:.75rem;padding:8px 14px;" onclick="imprimirInforme()"><i class="fas fa-print"></i> Imprimir</button>
+                    <button class="btn-save" style="background:#25d366;font-size:.75rem;padding:8px 14px;" onclick="copiarInformeImagen()"><i class="fas fa-copy"></i> Copiar</button>
+                    <button class="btn-save" style="background:#e44d26;font-size:.75rem;padding:8px 14px;" onclick="descargarInformePNG()"><i class="fas fa-download"></i> PNG</button>
+                    <button class="modal-close" onclick="document.getElementById('informePreviewModal').style.display='none'">&times;</button>
+                </div>
+            </div>
+            <div id="informeContenido" style="background:white;color:#000 !important;padding:30px 50px;border-radius:12px;font-family:'Tahoma',sans-serif;font-size:13px;line-height:1.7;"></div>
+        </div>
+    </div>
+
+    <div id="toast" class="alert-toast"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
-        // ============================================================
-        // VERIFICACIÓN DE AUTENTICACIÓN INICIAL
-        // ============================================================
-        (function verificarAutenticacion() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const token = urlParams.get('token');
-            const user = urlParams.get('user');
-            const mode = urlParams.get('mode');
+    const CONFIG={SOURCE:{REPO_OWNER:'carlos2601',REPO_NAME:'juntadeaccioncomunalbarriobateaspuertogaitanmetalilianalondo-ogallego1010101010101000111010001010010',AFILIADOS_PATH:'afiliados.json'},DESTINATION:{REPO_OWNER:'carlos2601',REPO_NAME:'jacbateas',CUOTA_PATH:'data/cuota.json',GASTOS_PATH:'data/gastos.json'},VALOR_CUOTA:5000,VALOR_CERTIFICADO:20000,COMISION_PORCENTAJE:50,ADMIN_TOKEN:'carlos2601'};
+    const PLANTILLAS=[{nombre:'Servicios públicos',icono:'💡',categoria:'Servicios públicos',concepto:'Pago servicios públicos mensuales',color:'var(--accent-cyan)'},{nombre:'Mantenimiento área común',icono:'🔧',categoria:'Mantenimiento',concepto:'Mantenimiento preventivo área común',color:'var(--accent-blue)'},{nombre:'Reunión comunitaria',icono:'🎉',categoria:'Eventos comunitarios',concepto:'Organización reunión comunitaria',color:'var(--accent-purple)'},{nombre:'Papelería y útiles',icono:'📄',categoria:'Papelería',concepto:'Compra de papelería y útiles',color:'var(--accent-green)'},{nombre:'Transporte',icono:'🚗',categoria:'Transporte',concepto:'Transporte para reuniones oficiales',color:'var(--accent-yellow)'},{nombre:'Refrigerios',icono:'🍽️',categoria:'Refrigerios',concepto:'Refrigerios para eventos',color:'#ec4899'},{nombre:'Herramientas',icono:'🔨',categoria:'Herramientas',concepto:'Compra de herramientas',color:'var(--accent-orange)'},{nombre:'Capacitación',icono:'📚',categoria:'Capacitación',concepto:'Curso o capacitación',color:'var(--accent-purple)'}];
+    let state={gastos:[],pagos:[],githubToken:null,selectedYear:new Date().getFullYear(),filtro:'todos',busqueda:'',editando:null,balance:null};
 
-            const sessionToken = sessionStorage.getItem('session_token');
-            const usuarioActual = sessionStorage.getItem('usuario_actual');
+    function verificarSesion(){const p=new URLSearchParams(window.location.search);const t=p.get('token');const s=sessionStorage.getItem('session_token');if(!t&&!s){window.location.href='index.html';return;}if(t&&!s)sessionStorage.setItem('session_token',t);if(!sessionStorage.getItem('usuario_actual'))window.location.href='index.html';}
+    function validarTokenAcceso(token){if(token===CONFIG.ADMIN_TOKEN)return{ok:true,data:{admin:true}};const tokens=JSON.parse(localStorage.getItem('tokens_jacbateas')||'[]');const now=new Date();const found=tokens.find(t=>t.token===token&&new Date(t.fechaInicio)<=now&&new Date(t.fechaExpiracion)>now);return found?{ok:true,data:found}:{ok:false};}
+    async function validarTokenGitHub(token){try{const url=`https://api.github.com/repos/${CONFIG.DESTINATION.REPO_OWNER}/${CONFIG.DESTINATION.REPO_NAME}/contents/${CONFIG.DESTINATION.GASTOS_PATH}`;const res=await fetch(url,{headers:{Authorization:`token ${token}`}});return res.status===200||res.status===404;}catch{return false;}}
 
-            if (!token && !sessionToken) {
-                window.location.href = 'index.html';
-                return;
-            }
+    async function procesarTokenAcceso(){const input=document.getElementById('accessTokenInput').value.trim();const errEl=document.getElementById('tokenError');if(!input){errEl.textContent='❌ Ingresa un token';errEl.classList.add('show');return;}const val=validarTokenAcceso(input);if(val.ok){if(document.getElementById('rememberTokenCheck').checked)localStorage.setItem('jac_access_token',input);document.getElementById('accessTokenModal').style.display='none';const gh=localStorage.getItem('github_token');if(gh&&await validarTokenGitHub(gh)){await cargarDatos(gh);}else{document.getElementById('githubModal').style.display='flex';}}else{errEl.textContent='❌ Token inválido o expirado';errEl.classList.add('show');}}
 
-            if (token && !sessionToken) {
-                sessionStorage.setItem('session_token', token);
-            }
+    async function procesarTokenGitHub(){const input=document.getElementById('githubTokenInput').value.trim();const errEl=document.getElementById('githubError');const btn=document.getElementById('validateGithubBtn');if(!input){errEl.textContent='❌ Ingresa un token de GitHub';errEl.classList.add('show');return;}btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Validando...';if(await validarTokenGitHub(input)){if(document.getElementById('rememberGithubCheck').checked)localStorage.setItem('github_token',input);await cargarDatos(input);}else{errEl.textContent='❌ Token de GitHub inválido';errEl.classList.add('show');btn.disabled=false;btn.innerHTML='Conectar con GitHub';}}
 
-            if (user && !usuarioActual) {
-                try {
-                    const usuarioInfo = {
-                        usuario: user,
-                        rol: mode === 'full' ? 'tesorera' : 'presidente',
-                        modo: mode
-                    };
-                    sessionStorage.setItem('usuario_actual', JSON.stringify(usuarioInfo));
-                } catch (e) {
-                    console.error('Error al guardar usuario:', e);
+    async function fetchJSON(path){const url=`https://raw.githubusercontent.com/${CONFIG.DESTINATION.REPO_OWNER}/${CONFIG.DESTINATION.REPO_NAME}/refs/heads/main/${path}`;try{const res=await fetch(url);if(res.status===404)return null;return await res.json();}catch{return null;}}
+    async function guardarEnGitHub(path,data){const url=`https://api.github.com/repos/${CONFIG.DESTINATION.REPO_OWNER}/${CONFIG.DESTINATION.REPO_NAME}/contents/${path}`;let sha=null;try{const res=await fetch(url,{headers:{Authorization:`token ${state.githubToken}`}});if(res.ok)sha=(await res.json()).sha;}catch{}const res=await fetch(url,{method:'PUT',headers:{Authorization:`token ${state.githubToken}`,'Content-Type':'application/json'},body:JSON.stringify({message:`Gastos - ${new Date().toLocaleDateString()}`,content:btoa(unescape(encodeURIComponent(JSON.stringify(data,null,2)))),sha,branch:'main'})});if(!res.ok)throw new Error('Error al guardar en GitHub');}
+
+    async function cargarDatos(token){state.githubToken=token;mostrarToast('📥 Cargando datos...','info');const cuotas=await fetchJSON(CONFIG.DESTINATION.CUOTA_PATH);state.pagos=cuotas?.pagos||[];const gastos=await fetchJSON(CONFIG.DESTINATION.GASTOS_PATH);state.gastos=gastos?.gastos||[];localStorage.setItem('gastos_backup',JSON.stringify(state.gastos));document.getElementById('githubModal').style.display='none';document.getElementById('mainApp').style.display='block';await calcularBalance();renderizarTodo();mostrarToast('✅ Datos cargados','success');}
+    function guardarBackup(){localStorage.setItem('gastos_backup',JSON.stringify(state.gastos));localStorage.setItem('gastos_backup_fecha',new Date().toISOString());}
+    function recuperarBackup(){const b=localStorage.getItem('gastos_backup');if(b){try{state.gastos=JSON.parse(b);mostrarToast('📦 Backup recuperado','info');}catch{}}}
+
+    function extraerPagos(str,yr){if(!str)return[];return str.split(';').filter(p=>p.trim()).map(p=>{const parts=p.trim().split('_');return{mes:parts[0],year:parseInt(parts[1]),valor:parseInt(parts[2]),fechaPago:parts[3]||''};}).filter(p=>p.year===yr);}
+    function extraerCertificados(str){if(!str)return[];return str.split(';').filter(c=>c.trim()).map(c=>{const parts=c.trim().split('_');return{mes:parts[0],year:parseInt(parts[1]),valor:parseInt(parts[2]),fechaPago:parts[3]||''};});}
+
+    async function calcularBalance(){let totalCuotas=0,totalCertBruto=0,numCuotas=0,numCerts=0;state.pagos.forEach(reg=>{for(let y=2024;y<=new Date().getFullYear();y++){const campo=`fecha_pago_año_${y}`;if(reg[campo]){const pagos=extraerPagos(reg[campo],y);totalCuotas+=pagos.reduce((s,p)=>s+p.valor,0);numCuotas+=pagos.length;}}if(reg.certificado){const certs=extraerCertificados(reg.certificado);totalCertBruto+=certs.reduce((s,c)=>s+c.valor,0);numCerts+=certs.length;}});const comision=totalCertBruto*(CONFIG.COMISION_PORCENTAJE/100);const certNeto=totalCertBruto-comision;const disponible=totalCuotas+certNeto;const totalGastos=state.gastos.reduce((s,g)=>s+g.valor,0);const saldo=disponible-totalGastos;const porcentaje=disponible>0?((totalGastos/disponible)*100):0;state.balance={cuotas:totalCuotas,certBruto:totalCertBruto,comision,certNeto,disponible,totalGastos,saldo,porcentaje,numCuotas,numCerts};}
+
+    function renderizarTodo(){renderizarDashboard();renderizarTabla();}
+    function renderizarDashboard(){const b=state.balance;if(!b)return;document.getElementById('dCuotas').textContent=`$${b.cuotas.toLocaleString()}`;document.getElementById('dCuotasNum').textContent=`${b.numCuotas} pagos`;document.getElementById('dCertNeto').textContent=`$${b.certNeto.toLocaleString()}`;document.getElementById('dCertNum').textContent=`${b.numCerts} certificados`;document.getElementById('dCertBruto').textContent=`$${b.certBruto.toLocaleString()}`;document.getElementById('dCertComision').textContent=`-$${b.comision.toLocaleString()}`;const totalRec=b.cuotas+b.certNeto;document.getElementById('dTotalRecaudado').textContent=`$${totalRec.toLocaleString()}`;document.getElementById('dGastos').textContent=`$${b.totalGastos.toLocaleString()}`;document.getElementById('dGastosNum').textContent=`${state.gastos.length} gastos`;const saldoEl=document.getElementById('dSaldo');saldoEl.textContent=`$${b.saldo.toLocaleString()}`;saldoEl.style.color=b.saldo>=0?'var(--accent-cyan)':'var(--accent-red)';document.getElementById('numCertificados').textContent=b.numCerts;document.getElementById('numCuotas').textContent=b.numCuotas;document.getElementById('yearBadge').textContent=state.selectedYear;}
+
+    function renderizarTabla(){let gastos=[...state.gastos];gastos=gastos.filter(g=>{const parts=g.fecha.split('/');return parseInt(parts[2])===state.selectedYear;});if(state.filtro==='hoy'){const hoy=new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'});gastos=gastos.filter(g=>g.fecha===hoy);}else if(state.filtro==='semana'){const now=new Date();const semana=new Date(now.getTime()-7*86400000);gastos=gastos.filter(g=>{const [d,m,y]=g.fecha.split('/').map(Number);return new Date(y,m-1,d)>=semana;});}else if(state.filtro==='mes'){const now=new Date();gastos=gastos.filter(g=>{const [d,m,y]=g.fecha.split('/').map(Number);return(m-1)===now.getMonth()&&y===now.getFullYear();});}if(state.busqueda){const q=state.busqueda.toLowerCase();gastos=gastos.filter(g=>g.concepto.toLowerCase().includes(q)||g.categoria.toLowerCase().includes(q)||g.responsable.toLowerCase().includes(q)||(g.comprobante&&g.comprobante.toLowerCase().includes(q)));}gastos.sort((a,b)=>{const[da,ma,ya]=a.fecha.split('/').map(Number);const[db,mb,yb]=b.fecha.split('/').map(Number);return new Date(yb,mb-1,db)-new Date(ya,ma-1,da);});const tbody=document.getElementById('tableBody');if(gastos.length===0){tbody.innerHTML=`<tr><td colspan="8" style="padding:40px;text-align:center;color:var(--text-muted);">📭 No hay gastos registrados</td></tr>`;return;}const catClass={'Mantenimiento':'cat-mantenimiento','Servicios públicos':'cat-servicios','Eventos comunitarios':'cat-eventos','Materiales':'cat-materiales','Transporte':'cat-transporte','Papelería':'cat-papeleria','Refrigerios':'cat-refrigerios','Herramientas':'cat-materiales','Seguros':'cat-servicios','Capacitación':'cat-eventos','Otros':'cat-otros'};const totalFiltrado=gastos.reduce((s,g)=>s+g.valor,0);tbody.innerHTML=gastos.map(g=>`<tr><td>${g.fecha}</td><td style="text-align:left;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${g.concepto}</td><td><span class="badge-cat ${catClass[g.categoria]||'cat-otros'}">${g.categoria}</span></td><td class="valor-gasto">-$${g.valor.toLocaleString()}</td><td>${g.responsable}</td><td>${g.comprobante||'—'}</td><td style="font-weight:700;color:var(--accent-cyan);">$${totalFiltrado.toLocaleString()}</td><td style="white-space:nowrap;"><button class="btn-action btn-view" onclick="verDetalle('${g.id}')" title="Ver"><i class="fas fa-eye"></i></button> <button class="btn-action btn-edit" onclick="editarGasto('${g.id}')" title="Editar"><i class="fas fa-pen"></i></button> <button class="btn-action btn-delete" onclick="eliminarGasto('${g.id}')" title="Eliminar"><i class="fas fa-trash"></i></button></td></tr>`).join('');}
+
+
+    function abrirModalGasto(gasto=null){state.editando=gasto?gasto.id:null;document.getElementById('gastoModalTitle').textContent=gasto?'✏️ Editar Gasto':'💸 Registrar Nuevo Gasto';document.getElementById('btnGuardar').innerHTML=gasto?'<i class="fas fa-save"></i> Actualizar':'<i class="fas fa-save"></i> Guardar Gasto';if(gasto){const[d,m,y]=gasto.fecha.split('/');document.getElementById('fFecha').value=`${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`;document.getElementById('fCategoria').value=gasto.categoria;document.getElementById('fConcepto').value=gasto.concepto;document.getElementById('fValor').value=gasto.valor;document.getElementById('fResponsable').value=gasto.responsable;document.getElementById('fComprobante').value=gasto.comprobante||'';document.getElementById('fMetodo').value=gasto.metodo_pago||'Efectivo';document.getElementById('fObservaciones').value=gasto.observaciones||'';}else{document.getElementById('fFecha').value=new Date().toISOString().split('T')[0];document.getElementById('fCategoria').value='Mantenimiento';document.getElementById('fConcepto').value='';document.getElementById('fValor').value='';document.getElementById('fResponsable').value='';document.getElementById('fComprobante').value='';document.getElementById('fMetodo').value='Efectivo';document.getElementById('fObservaciones').value='';}actualizarBalanceModal();document.getElementById('gastoModal').style.display='flex';}
+    function cerrarModalGasto(){document.getElementById('gastoModal').style.display='none';state.editando=null;}
+    function actualizarBalanceModal(){const b=state.balance;if(!b)return;document.getElementById('bCuotas').textContent=`$${b.cuotas.toLocaleString()}`;document.getElementById('bCert').textContent=`$${b.certNeto.toLocaleString()}`;document.getElementById('bDisp').textContent=`$${b.disponible.toLocaleString()}`;document.getElementById('bGastos').textContent=`$${b.totalGastos.toLocaleString()}`;const saldoEl=document.getElementById('bSaldo');saldoEl.textContent=`$${b.saldo.toLocaleString()}`;saldoEl.style.color=b.saldo>=0?'var(--accent-green)':'var(--accent-red)';}
+
+    async function guardarGasto(){const fecha=document.getElementById('fFecha').value;const concepto=document.getElementById('fConcepto').value.trim();const categoria=document.getElementById('fCategoria').value;const valor=parseInt(document.getElementById('fValor').value);const responsable=document.getElementById('fResponsable').value.trim();const comprobante=document.getElementById('fComprobante').value.trim();const metodo=document.getElementById('fMetodo').value;const observaciones=document.getElementById('fObservaciones').value.trim();if(!fecha)return mostrarToast('❌ Selecciona una fecha','error');if(!concepto)return mostrarToast('❌ Escribe un concepto','error');if(!valor||valor<=0)return mostrarToast('❌ Ingresa un valor válido','error');if(!responsable)return mostrarToast('❌ Indica el responsable','error');const balance=state.balance;if(!state.editando&&valor>balance.saldo)return mostrarToast(`❌ Saldo insuficiente. Disponible: $${balance.saldo.toLocaleString()}`,'error');if(!state.editando&&valor>balance.saldo*0.8&&balance.saldo>0){if(!confirm(`⚠️ Este gasto es el ${((valor/balance.saldo)*100).toFixed(1)}% del saldo. ¿Continuar?`))return;}const fechaFormateada=fecha.split('-').reverse().join('/');const ahora=new Date();const btn=document.getElementById('btnGuardar');if(state.editando){const idx=state.gastos.findIndex(g=>g.id===state.editando);if(idx>=0)state.gastos[idx]={...state.gastos[idx],fecha:fechaFormateada,concepto,categoria,valor,responsable,comprobante:comprobante||'N/A',metodo_pago:metodo,observaciones,fecha_modificacion:ahora.toISOString()};}else{state.gastos.push({id:'G'+Date.now().toString(36).toUpperCase()+Math.random().toString(36).substr(2,4),fecha:fechaFormateada,hora:ahora.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',second:'2-digit'}),concepto,categoria,valor,responsable,comprobante:comprobante||'N/A',metodo_pago:metodo,observaciones,fecha_registro:ahora.toISOString(),balance_anterior:balance.saldo,balance_posterior:balance.saldo-valor});}try{btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Guardando...';await guardarEnGitHub(CONFIG.DESTINATION.GASTOS_PATH,{ultima_actualizacion:ahora.toISOString(),configuracion:{comision:CONFIG.COMISION_PORCENTAJE,valor_cert:CONFIG.VALOR_CERTIFICADO,valor_cuota:CONFIG.VALOR_CUOTA},gastos:state.gastos});guardarBackup();await calcularBalance();renderizarTodo();cerrarModalGasto();mostrarToast(state.editando?'✅ Gasto actualizado':'✅ Gasto registrado','success');}catch(e){mostrarToast('❌ Error: '+e.message,'error');}finally{btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> Guardar';}}
+
+    function editarGasto(id){const gasto=state.gastos.find(g=>g.id===id);if(gasto)abrirModalGasto(gasto);}
+    async function eliminarGasto(id){const gasto=state.gastos.find(g=>g.id===id);if(!gasto)return;if(!confirm(`¿Eliminar gasto?\n\n${gasto.concepto}\n$${gasto.valor.toLocaleString()}\n${gasto.fecha}\n\n⚠️ No se puede deshacer.`))return;state.gastos=state.gastos.filter(g=>g.id!==id);try{await guardarEnGitHub(CONFIG.DESTINATION.GASTOS_PATH,{ultima_actualizacion:new Date().toISOString(),gastos:state.gastos});guardarBackup();await calcularBalance();renderizarTodo();mostrarToast('✅ Gasto eliminado','success');}catch(e){mostrarToast('❌ Error: '+e.message,'error');recuperarBackup();await calcularBalance();renderizarTodo();}}
+
+    function verDetalle(id){const g=state.gastos.find(x=>x.id===id);if(!g)return;document.getElementById('detalleContent').innerHTML=`<div class="detail-item"><label>Fecha</label><span>${g.fecha}</span></div><div class="detail-item"><label>Hora</label><span>${g.hora||'—'}</span></div><div class="detail-item full"><label>Concepto</label><span>${g.concepto}</span></div><div class="detail-item"><label>Categoría</label><span>${g.categoria}</span></div><div class="detail-item"><label>Valor</label><span style="color:var(--accent-red);">$${g.valor.toLocaleString()}</span></div><div class="detail-item"><label>Responsable</label><span>${g.responsable}</span></div><div class="detail-item"><label>Comprobante</label><span>${g.comprobante||'N/A'}</span></div><div class="detail-item"><label>Método de pago</label><span>${g.metodo_pago||'Efectivo'}</span></div><div class="detail-item"><label>Saldo anterior</label><span style="color:var(--accent-green);">$${(g.balance_anterior||0).toLocaleString()}</span></div><div class="detail-item"><label>Saldo posterior</label><span style="color:${(g.balance_posterior||0)>=0?'var(--accent-green)':'var(--accent-red)'};">$${(g.balance_posterior||0).toLocaleString()}</span></div><div class="detail-item full"><label>Observaciones</label><span>${g.observaciones||'Sin observaciones'}</span></div><div class="detail-item"><label>ID</label><span style="font-size:.7rem;color:var(--text-muted);">${g.id}</span></div><div class="detail-item"><label>Registro</label><span style="font-size:.7rem;">${g.fecha_registro?new Date(g.fecha_registro).toLocaleString('es-ES'):'—'}</span></div>`;document.getElementById('detalleModal').style.display='flex';}
+
+    function abrirModalPlantillas(){document.getElementById('templateList').innerHTML=PLANTILLAS.map((p,i)=>`<div class="template-item" onclick="usarPlantilla(${i})"><div class="template-info"><div class="template-icon" style="background:${p.color}20;color:${p.color};">${p.icono}</div><div><div class="template-name">${p.nombre}</div><div class="template-desc">${p.concepto}</div></div></div></div>`).join('');document.getElementById('plantillaModal').style.display='flex';}
+    function usarPlantilla(idx){const p=PLANTILLAS[idx];document.getElementById('plantillaModal').style.display='none';abrirModalGasto();document.getElementById('fCategoria').value=p.categoria;document.getElementById('fConcepto').value=p.concepto;}
+
+    function abrirModalExportar(){document.getElementById('exportarModal').style.display='flex';}
+    function exportarPDF(){document.getElementById('exportarModal').style.display='none';const w=window.open('','_blank');const gastosFiltrados=state.gastos.filter(g=>g.fecha.split('/')[2]==state.selectedYear);const totalG=gastosFiltrados.reduce((s,g)=>s+g.valor,0);let html=`<html><head><title>Gastos ${state.selectedYear}</title><style>body{font-family:Arial;padding:30px;color:#000;}h1{color:#1a3a5c;font-size:1.2rem;}table{border-collapse:collapse;width:100%;margin-top:15px;}th{background:#1a3a5c;color:white;padding:8px;font-size:.75rem;}td{padding:6px;border:1px solid #ddd;font-size:.7rem;text-align:center;}.total{background:#e0e8f0;font-weight:700;}.neg{color:#c04040;}</style></head><body><h1>JAC Bateas - Gastos ${state.selectedYear}</h1><p>Fecha: ${new Date().toLocaleDateString('es-ES')}</p><table><thead><tr><th>Fecha</th><th>Concepto</th><th>Categoría</th><th>Valor</th><th>Responsable</th><th>Comprobante</th><th>Total Gastos</th></tr></thead><tbody>`;gastosFiltrados.forEach(g=>{html+=`<tr><td>${g.fecha}</td><td>${g.concepto}</td><td>${g.categoria}</td><td class="neg">$${g.valor.toLocaleString()}</td><td>${g.responsable}</td><td>${g.comprobante||'—'}</td><td>$${totalG.toLocaleString()}</td></tr>`;});html+=`<tr class="total"><td colspan="3">TOTAL</td><td class="neg">$${totalG.toLocaleString()}</td><td colspan="3"></td></tr></tbody></table></body></html>`;w.document.write(html);w.document.close();setTimeout(()=>w.print(),300);}
+    function exportarExcel(){document.getElementById('exportarModal').style.display='none';let csv='Fecha,Concepto,Categoría,Valor,Responsable,Comprobante,Método\n';state.gastos.filter(g=>g.fecha.split('/')[2]==state.selectedYear).forEach(g=>{csv+=`${g.fecha},"${g.concepto}",${g.categoria},${g.valor},"${g.responsable}","${g.comprobante||''}",${g.metodo_pago||'Efectivo'}\n`;});const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`gastos_${state.selectedYear}.csv`;a.click();mostrarToast('✅ CSV descargado','success');}
+    function exportarImpresion(){document.getElementById('exportarModal').style.display='none';exportarPDF();}
+    function exportarJSON(){document.getElementById('exportarModal').style.display='none';const data={fecha_exportacion:new Date().toISOString(),gastos:state.gastos};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`backup_gastos_${state.selectedYear}.json`;a.click();mostrarToast('✅ Backup JSON descargado','success');}
+
+    function mostrarToast(msg,tipo='info'){const toast=document.getElementById('toast');toast.textContent=msg;toast.className=`alert-toast show alert-${tipo}`;setTimeout(()=>toast.classList.remove('show'),4000);}
+    async function guardarGastosEnGitHub(){if(!state.githubToken){mostrarToast('❌ No hay token de GitHub. Conecta primero.','error');return;}try{mostrarToast('💾 Guardando gastos en GitHub...','info');await guardarEnGitHub(CONFIG.DESTINATION.GASTOS_PATH,{ultima_actualizacion:new Date().toISOString(),configuracion:{comision:CONFIG.COMISION_PORCENTAJE,valor_cert:CONFIG.VALOR_CERTIFICADO,valor_cuota:CONFIG.VALOR_CUOTA},gastos:state.gastos});guardarBackup();mostrarToast('✅ Gastos guardados en GitHub exitosamente','success');}catch(e){mostrarToast('❌ Error al guardar: '+e.message,'error');}}
+    function filtrarPor(filtro,btn){state.filtro=filtro;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderizarTabla();}
+
+    // ========== SISTEMA DE INFORMES ==========
+    function abrirModalInforme(){
+        const anoSelect=document.getElementById('anoInforme');
+        anoSelect.innerHTML='';
+        for(let y=new Date().getFullYear();y>=2024;y--){const o=document.createElement('option');o.value=y;o.textContent=y;anoSelect.appendChild(o);}
+        document.getElementById('mesInforme').value=new Date().getMonth();
+        document.getElementById('anoInforme').value=new Date().getFullYear();
+        const hoy=new Date().toISOString().split('T')[0];
+        document.getElementById('fechaDesdeInforme').value=hoy;
+        document.getElementById('fechaHastaInforme').value=hoy;
+        actualizarFechasInforme();
+        document.getElementById('informeModal').style.display='flex';
+    }
+    function actualizarFechasInforme(){
+        const tipo=document.getElementById('tipoInforme').value;
+        document.getElementById('grpMesInforme').style.display=(tipo==='mensual'||tipo==='categoria')?'':'none';
+        document.getElementById('grpAnoInforme').style.display=(tipo==='rango'||tipo==='anos')?'none':'';
+        document.getElementById('grpFechaDesde').style.display=tipo==='rango'?'':'none';
+        document.getElementById('grpFechaHasta').style.display=tipo==='rango'?'':'none';
+        document.getElementById('grpCategoriaInforme').style.display=tipo==='categoria'?'':'none';
+    }
+    function obtenerGastosInforme(){
+        const tipo=document.getElementById('tipoInforme').value;
+        const ano=parseInt(document.getElementById('anoInforme').value);
+        const mes=parseInt(document.getElementById('mesInforme').value);
+        const cat=document.getElementById('categoriaInforme').value;
+        let gastos=[...state.gastos];
+        if(tipo==='mensual'){gastos=gastos.filter(g=>{const[,m,y]=g.fecha.split('/').map(Number);return y===ano&&m-1===mes;});}
+        else if(tipo==='anual'){gastos=gastos.filter(g=>{const[, ,y]=g.fecha.split('/').map(Number);return y===ano;});}
+        else if(tipo==='rango'){const desde=document.getElementById('fechaDesdeInforme').value;const hasta=document.getElementById('fechaHastaInforme').value;if(desde&&hasta){const dDesde=new Date(desde);const dHasta=new Date(hasta);gastos=gastos.filter(g=>{const[dd,mm,yy]=g.fecha.split('/').map(Number);const f=new Date(yy,mm-1,dd);return f>=dDesde&&f<=dHasta;});}}
+        else if(tipo==='categoria'){gastos=gastos.filter(g=>{const[,m,y]=g.fecha.split('/').map(Number);return y===ano&&m-1===mes;});if(cat!=='todas')gastos=gastos.filter(g=>g.categoria===cat);}
+        gastos.sort((a,b)=>{const[da,ma,ya]=a.fecha.split('/').map(Number);const[db,mb,yb]=b.fecha.split('/').map(Number);return new Date(ya,ma-1,da)-new Date(yb,mb-1,db);});
+        return gastos;
+    }
+    function calcularSaldoAnterior(tipo,ano,mes){
+        let totalCuotasAnt=0,totalCertBrutoAnt=0;
+        let fechaCorte;
+        if(tipo==='rango'){
+            const desde=document.getElementById('fechaDesdeInforme').value;
+            const partes=desde.split('-');
+            fechaCorte=new Date(parseInt(partes[0]),parseInt(partes[1])-1,parseInt(partes[2]));
+        }else if(tipo==='mensual'||tipo==='categoria'){
+            fechaCorte=new Date(ano,mes,1);
+        }else if(tipo==='anual'){
+            fechaCorte=new Date(ano,0,1);
+        }
+        function fechaStrADate(fechaStr){
+            if(!fechaStr)return null;
+            const partes=fechaStr.split('/');
+            if(partes.length<3)return null;
+            return new Date(parseInt(partes[2]),parseInt(partes[1])-1,parseInt(partes[0]));
+        }
+        state.pagos.forEach(reg=>{
+            for(let y=2024;y<=new Date().getFullYear();y++){
+                const campo=`fecha_pago_año_${y}`;
+                if(reg[campo]){
+                    const pagos=extraerPagos(reg[campo],y);
+                    pagos.forEach(p=>{
+                        const f=fechaStrADate(p.fechaPago);
+                        if(f&&f<fechaCorte)totalCuotasAnt+=p.valor;
+                    });
                 }
             }
-
-            if (!sessionStorage.getItem('usuario_actual')) {
-                window.location.href = 'index.html';
-            }
-        })();
-
-        // ============================================================
-        // CONFIGURACIÓN
-        // ============================================================
-        const CONFIG = {
-            SOURCE: {
-                REPO_OWNER: 'carlos2601',
-                REPO_NAME: 'juntadeaccioncomunalbarriobateaspuertogaitanmetalilianalondo-ogallego1010101010101000111010001010010',
-                AFILIADOS_PATH: 'afiliados.json',
-                BRANCH: 'main'
-            },
-            DESTINATION: {
-                REPO_OWNER: 'carlos2601',
-                REPO_NAME: 'jacbateas',
-                CUOTA_PATH: 'data/cuota.json',
-                GASTOS_PATH: 'data/gastos.json',
-                BRANCH: 'main'
-            },
-            VALOR_CUOTA: 5000,
-            VALOR_CERTIFICADO: 20000,
-            COMISION_CERTIFICADO_PORCENTAJE: 50,
-            COSTO_PAPELERIA_POR_CERTIFICADO: 10000,
-            ADMIN_TOKEN: 'carlos2601'
-        };
-
-        let appState = {
-            afiliados: [],
-            pagos: [],
-            gastos: [],
-            githubToken: null,
-            accessTokenData: null,
-            usuarioActual: null,
-            fechaActual: new Date(),
-            selectedYear: new Date().getFullYear(),
-            filtroActual: '',
-            balanceReal: null
-        };
-
-        const dom = {
-            mainApp: document.getElementById('mainApp'),
-            accessTokenModal: document.getElementById('accessTokenModal'),
-            accessTokenInput: document.getElementById('accessTokenInput'),
-            validateAccessTokenBtn: document.getElementById('validateAccessTokenBtn'),
-            accessTokenError: document.getElementById('accessTokenError'),
-            rememberAccessTokenCheckbox: document.getElementById('rememberAccessTokenCheckbox'),
-            githubTokenModal: document.getElementById('githubTokenModal'),
-            githubTokenInput: document.getElementById('githubTokenInput'),
-            validateGithubTokenBtn: document.getElementById('validateGithubTokenBtn'),
-            githubTokenError: document.getElementById('githubTokenError'),
-            rememberGithubTokenCheckbox: document.getElementById('rememberGithubTokenCheckbox'),
-            tableBody: document.getElementById('tableBody'),
-            alertMessage: document.getElementById('alertMessage'),
-            searchInput: document.getElementById('searchInput'),
-            yearSelect: document.getElementById('yearSelect'),
-            añoActualDisplay: document.getElementById('añoActualDisplay'),
-            fechaActualDisplay: document.getElementById('fechaActualDisplay'),
-            expenseModal: document.getElementById('expenseModal'),
-            closeExpenseModalBtn: document.getElementById('closeExpenseModalBtn'),
-            cancelExpenseBtn: document.getElementById('cancelExpenseBtn'),
-            saveExpenseBtn: document.getElementById('saveExpenseBtn'),
-            reportModal: document.getElementById('reportModal'),
-            closeReportModalBtn: document.getElementById('closeReportModalBtn'),
-            printReportBtn: document.getElementById('printReportBtn'),
-            reportTitle: document.getElementById('reportTitle'),
-            reportContent: document.getElementById('reportContent'),
-            changeTokenBtn: document.getElementById('changeTokenBtn'),
-            goToTreasuryBtn: document.getElementById('goToTreasuryBtn')
-        };
-
-        // ============================================================
-        // FUNCIÓN DE VALIDACIÓN DE TOKEN DE ACCESO
-        // ============================================================
-        function validarTokenAcceso(tokenIngresado) {
-            if (tokenIngresado === CONFIG.ADMIN_TOKEN) {
-                return { valido: true, data: { token: tokenIngresado, fechaExpiracion: new Date('2099-12-31'), esAdmin: true } };
-            }
-
-            const tokens = JSON.parse(localStorage.getItem('tokens_jacbateas') || '[]');
-            const ahora = new Date();
-
-            const tokenEncontrado = tokens.find(t => {
-                if (t.token === tokenIngresado) {
-                    const fechaInicio = new Date(t.fechaInicio);
-                    const fechaExpiracion = new Date(t.fechaExpiracion);
-                    return fechaInicio <= ahora && fechaExpiracion > ahora;
-                }
-                return false;
-            });
-
-            if (tokenEncontrado) {
-                return { valido: true, data: tokenEncontrado };
-            }
-            return { valido: false };
-        }
-
-        // ============================================================
-        // PROCESAR VALIDACIÓN DEL TOKEN DE ACCESO
-        // ============================================================
-        async function procesarValidacionAccessToken() {
-            const tokenAcceso = dom.accessTokenInput.value.trim();
-
-            if (!tokenAcceso) {
-                dom.accessTokenError.style.display = 'block';
-                dom.accessTokenError.textContent = '❌ Debes ingresar un token de acceso';
-                return;
-            }
-
-            const validacion = validarTokenAcceso(tokenAcceso);
-
-            if (validacion.valido) {
-                appState.accessTokenData = validacion.data;
-
-                if (dom.rememberAccessTokenCheckbox.checked) {
-                    localStorage.setItem('jac_access_token', tokenAcceso);
-                }
-
-                iniciarMonitorTokenAcceso(validacion.data.fechaExpiracion);
-                dom.accessTokenModal.style.display = 'none';
-
-                const githubTokenGuardado = localStorage.getItem('github_token');
-                if (githubTokenGuardado) {
-                    const esValido = await validarTokenGitHub(githubTokenGuardado);
-                    if (esValido) {
-                        await cargarDatosConGithubToken(githubTokenGuardado);
-                        return;
-                    } else {
-                        localStorage.removeItem('github_token');
-                    }
-                }
-
-                dom.githubTokenModal.style.display = 'flex';
-                dom.githubTokenInput.focus();
-            } else {
-                dom.accessTokenError.style.display = 'block';
-                dom.accessTokenError.textContent = '❌ Token inválido o expirado';
-            }
-        }
-
-        // ============================================================
-        // FUNCIONES DE GITHUB
-        // ============================================================
-        async function validarTokenGitHub(token) {
-            try {
-                const url = `https://api.github.com/repos/${CONFIG.DESTINATION.REPO_OWNER}/${CONFIG.DESTINATION.REPO_NAME}/contents/${CONFIG.DESTINATION.CUOTA_PATH}`;
-                const res = await fetch(url, { headers: { 'Authorization': `token ${token}` } });
-                return res.status === 200 || res.status === 404;
-            } catch (e) {
-                return false;
-            }
-        }
-
-        async function cargarDatosCuotas() {
-            const url = `https://raw.githubusercontent.com/${CONFIG.DESTINATION.REPO_OWNER}/${CONFIG.DESTINATION.REPO_NAME}/refs/heads/${CONFIG.DESTINATION.BRANCH}/${CONFIG.DESTINATION.CUOTA_PATH}`;
-            try {
-                const res = await fetch(url);
-                if (res.status === 404) return { pagos: [] };
-                return await res.json();
-            } catch {
-                return { pagos: [] };
-            }
-        }
-
-        async function cargarDatosGastos() {
-            const url = `https://raw.githubusercontent.com/${CONFIG.DESTINATION.REPO_OWNER}/${CONFIG.DESTINATION.REPO_NAME}/refs/heads/${CONFIG.DESTINATION.BRANCH}/${CONFIG.DESTINATION.GASTOS_PATH}`;
-            try {
-                const res = await fetch(url);
-                if (res.status === 404) return { gastos: [], configuracion: { comision_certificado_porcentaje: 50 } };
-                return await res.json();
-            } catch {
-                return { gastos: [], configuracion: { comision_certificado_porcentaje: 50 } };
-            }
-        }
-
-        async function guardarGastosEnGitHub() {
-            try {
-                const content = {
-                    ultima_actualizacion: new Date().toISOString(),
-                    configuracion: {
-                        comision_certificado_porcentaje: CONFIG.COMISION_CERTIFICADO_PORCENTAJE,
-                        valor_certificado: CONFIG.VALOR_CERTIFICADO,
-                        valor_cuota: CONFIG.VALOR_CUOTA,
-                        costo_papeleria_por_certificado: CONFIG.COSTO_PAPELERIA_POR_CERTIFICADO
-                    },
-                    gastos: appState.gastos
-                };
-
-                const url = `https://api.github.com/repos/${CONFIG.DESTINATION.REPO_OWNER}/${CONFIG.DESTINATION.REPO_NAME}/contents/${CONFIG.DESTINATION.GASTOS_PATH}`;
-                let sha = null;
-                try {
-                    const shaRes = await fetch(url, { headers: { 'Authorization': `token ${appState.githubToken}` } });
-                    if (shaRes.ok) {
-                        const shaData = await shaRes.json();
-                        sha = shaData.sha;
-                    }
-                } catch (e) { }
-
-                const res = await fetch(url, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${appState.githubToken}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        message: `Gasto - ${new Date().toLocaleDateString()}`,
-                        content: btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2)))),
-                        sha,
-                        branch: CONFIG.DESTINATION.BRANCH
-                    })
-                });
-
-                if (!res.ok) throw new Error('Error al guardar');
-                return true;
-            } catch (e) {
-                throw new Error(e.message);
-            }
-        }
-
-        // ============================================================
-        // FUNCIONES DE CÁLCULO FINANCIERO
-        // ============================================================
-        function extraerPagosDeString(str, año) {
-            if (!str) return [];
-            return str.split(';').filter(p => p.trim()).map(p => {
-                const partes = p.trim().split('_');
-                return {
-                    mes: partes[0],
-                    año: parseInt(partes[1]),
-                    valor: parseInt(partes[2]),
-                    fecha: partes[3],
-                    hora: partes[4] || '00:00:00',
-                    recibo: partes[5] || 'N/A'
-                };
-            }).filter(p => p.año === año);
-        }
-
-        function extraerCertificadosDeString(str) {
-            if (!str) return [];
-            return str.split(';').filter(c => c.trim()).map(c => {
-                const partes = c.trim().split('_');
-                return {
-                    mes: partes[0],
-                    año: parseInt(partes[1]),
-                    valor: parseInt(partes[2]),
-                    fecha: partes[3],
-                    hora: partes[4] || '00:00:00',
-                    recibo: partes[5] || 'N/A'
-                };
-            });
-        }
-
-        function calcularTotalCuotas() {
-            let total = 0;
-            appState.pagos.forEach(registro => {
-                for (let año = 2024; año <= appState.fechaActual.getFullYear(); año++) {
-                    const campo = `fecha_pago_año_${año}`;
-                    if (registro[campo]) {
-                        const pagosAño = extraerPagosDeString(registro[campo], año);
-                        total += pagosAño.reduce((sum, p) => sum + p.valor, 0);
-                    }
-                }
-            });
-            return total;
-        }
-
-        function calcularTotalCertificadosBruto() {
-            let total = 0;
-            appState.pagos.forEach(registro => {
-                if (registro.certificado) {
-                    const certificados = extraerCertificadosDeString(registro.certificado);
-                    total += certificados.reduce((sum, c) => sum + c.valor, 0);
-                }
-            });
-            return total;
-        }
-
-        function contarCertificados() {
-            let count = 0;
-            appState.pagos.forEach(registro => {
-                if (registro.certificado) {
-                    const certificados = extraerCertificadosDeString(registro.certificado);
-                    count += certificados.length;
-                }
-            });
-            return count;
-        }
-
-        function contarCuotasPagadas() {
-            let count = 0;
-            appState.pagos.forEach(registro => {
-                for (let año = 2024; año <= appState.fechaActual.getFullYear(); año++) {
-                    const campo = `fecha_pago_año_${año}`;
-                    if (registro[campo]) {
-                        const pagosAño = extraerPagosDeString(registro[campo], año);
-                        count += pagosAño.length;
-                    }
-                }
-            });
-            return count;
-        }
-
-        async function calcularBalanceReal() {
-            const ingresosCuotas = calcularTotalCuotas();
-            const ingresosCertificadosBruto = calcularTotalCertificadosBruto();
-            const comisionPapeleria = ingresosCertificadosBruto * (CONFIG.COMISION_CERTIFICADO_PORCENTAJE / 100);
-            const ingresosCertificadosNeto = ingresosCertificadosBruto - comisionPapeleria;
-            const disponibleTotal = ingresosCuotas + ingresosCertificadosNeto;
-            const totalGastos = appState.gastos.reduce((sum, g) => sum + g.valor, 0);
-            const saldoTotal = disponibleTotal - totalGastos;
-
-            return {
-                ingresosCuotas,
-                ingresosCertificadosBruto,
-                comisionPapeleria,
-                ingresosCertificadosNeto,
-                disponibleTotal,
-                totalGastos,
-                saldoTotal,
-                numeroCertificados: contarCertificados(),
-                numeroCuotasPagadas: contarCuotasPagadas(),
-                numeroGastos: appState.gastos.length
-            };
-        }
-
-        async function actualizarPanelFinanciero() {
-            const balance = await calcularBalanceReal();
-            appState.balanceReal = balance;
-
-            document.getElementById('recaudoCuotas').textContent =
-                `$${balance.ingresosCuotas.toLocaleString()}`;
-
-            document.getElementById('certificadosNeto').textContent =
-                `$${balance.ingresosCertificadosNeto.toLocaleString()}`;
-            document.getElementById('certificadosBruto').textContent =
-                `$${balance.ingresosCertificadosBruto.toLocaleString()}`;
-            document.getElementById('comisionCertificados').textContent =
-                `-$${balance.comisionPapeleria.toLocaleString()}`;
-
-            document.getElementById('disponibleTotal').textContent =
-                `$${balance.disponibleTotal.toLocaleString()}`;
-
-            document.getElementById('gastosTotales').textContent =
-                `$${balance.totalGastos.toLocaleString()}`;
-            document.getElementById('numGastos').textContent = balance.numeroGastos;
-
-            const saldoElem = document.getElementById('saldoTotal');
-            saldoElem.textContent = `$${balance.saldoTotal.toLocaleString()}`;
-            saldoElem.style.color = balance.saldoTotal >= 0 ? '#1a6a3a' : '#c04040';
-
-            document.getElementById('numCertificados').textContent = balance.numeroCertificados;
-            document.getElementById('numCuotas').textContent = balance.numeroCuotasPagadas;
-        }
-
-        function actualizarResumenModal() {
-            if (!appState.balanceReal) return;
-
-            const b = appState.balanceReal;
-            document.getElementById('summaryCuotas').textContent = `$${b.ingresosCuotas.toLocaleString()}`;
-            document.getElementById('summaryCertNeto').textContent = `$${b.ingresosCertificadosNeto.toLocaleString()}`;
-            document.getElementById('summaryDisponible').textContent = `$${b.disponibleTotal.toLocaleString()}`;
-            document.getElementById('summaryGastos').textContent = `$${b.totalGastos.toLocaleString()}`;
-
-            const saldoElem = document.getElementById('summarySaldo');
-            saldoElem.textContent = `$${b.saldoTotal.toLocaleString()}`;
-            saldoElem.style.color = b.saldoTotal >= 0 ? '#1a6a3a' : '#c04040';
-
-            document.getElementById('disponibleGasto').textContent = `$${b.saldoTotal.toLocaleString()}`;
-        }
-
-        // ============================================================
-        // RENDERIZAR TABLA DE GASTOS - USA VALORES GUARDADOS, NO RECALCULA
-        // ============================================================
-        function renderizarTablaGastos() {
-            let gastosFiltrados = [...appState.gastos];
-
-            // Aplicar filtro de año
-            gastosFiltrados = gastosFiltrados.filter(g => {
-                const partes = g.fecha.split('/');
-                const añoGasto = parseInt(partes[2]);
-                return añoGasto === appState.selectedYear;
-            });
-
-            // Aplicar filtro de búsqueda
-            if (appState.filtroActual) {
-                const filtro = appState.filtroActual.toLowerCase();
-                gastosFiltrados = gastosFiltrados.filter(g =>
-                    g.concepto.toLowerCase().includes(filtro) ||
-                    g.categoria.toLowerCase().includes(filtro) ||
-                    g.responsable.toLowerCase().includes(filtro) ||
-                    (g.comprobante && g.comprobante.toLowerCase().includes(filtro))
-                );
-            }
-
-            // Ordenar por fecha (MÁS RECIENTE PRIMERO)
-            gastosFiltrados.sort((a, b) => {
-                const [diaA, mesA, añoA] = a.fecha.split('/').map(Number);
-                const [diaB, mesB, añoB] = b.fecha.split('/').map(Number);
-                const fechaA = new Date(añoA, mesA - 1, diaA);
-                const fechaB = new Date(añoB, mesB - 1, diaB);
-                return fechaB - fechaA;
-            });
-
-            let html = '';
-
-            if (gastosFiltrados.length === 0) {
-                html = `<tr><td colspan="9" style="padding: 40px; text-align: center; color: #6a7a8a;">
-                    📭 No hay gastos registrados en este período
-                </td></tr>`;
-            } else {
-                gastosFiltrados.forEach(gasto => {
-                    // ✅ USAR LOS VALORES GUARDADOS - NUNCA RECALCULAR
-                    const balanceAnterior = gasto.balance_anterior || 0;
-                    const balancePosterior = gasto.balance_posterior || 0;
-                    const balancePosteriorClass = balancePosterior >= 0 ? 'balance-positive' : 'balance-negative';
-
-                    html += `
-                        <tr>
-                            <td>${gasto.fecha}</td>
-                            <td style="text-align: left;">${gasto.concepto}</td>
-                            <td><span class="badge-expense">${gasto.categoria}</span></td>
-                            <td style="color: #c04040; font-weight: 700;">
-                                -$${gasto.valor.toLocaleString()}
-                            </td>
-                            <td style="color: #2a6a9a; font-weight: 600;">
-                                $${balanceAnterior.toLocaleString()}
-                            </td>
-                            <td class="${balancePosteriorClass}">
-                                $${balancePosterior.toLocaleString()}
-                            </td>
-                            <td>${gasto.responsable}</td>
-                            <td style="font-weight: 600;">${gasto.comprobante || '—'}</td>
-                            <td>
-                                <button onclick="eliminarGasto('${gasto.id}')" 
-                                        class="btn" style="background: #c04040; color: white; padding: 4px 10px; font-size: 0.7rem;">
-                                    🗑️
-                                </button>
-                            </td>
-                        </tr>
-                    `;
+            if(reg.certificado){
+                const certs=extraerCertificados(reg.certificado);
+                certs.forEach(c=>{
+                    const f=fechaStrADate(c.fechaPago);
+                    if(f&&f<fechaCorte)totalCertBrutoAnt+=c.valor;
                 });
             }
-
-            dom.tableBody.innerHTML = html;
+        });
+        const comisionAnt=totalCertBrutoAnt*(CONFIG.COMISION_PORCENTAJE/100);
+        const certNetoAnt=totalCertBrutoAnt-comisionAnt;
+        const gastosAnt=state.gastos.filter(g=>{
+            const partes=g.fecha.split('/');
+            const f=new Date(parseInt(partes[2]),parseInt(partes[1])-1,parseInt(partes[0]));
+            return f<fechaCorte;
+        }).reduce((s,g)=>s+g.valor,0);
+        return(totalCuotasAnt+certNetoAnt)-gastosAnt;
+    }
+    function obtenerRecaudoInforme(){
+        const tipo=document.getElementById('tipoInforme').value;
+        const ano=parseInt(document.getElementById('anoInforme').value);
+        const mes=parseInt(document.getElementById('mesInforme').value);
+        const mesesN=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+        let totalCuotas=0,totalCertBruto=0;
+        function fechaStrADate(fechaStr){
+            if(!fechaStr)return null;
+            const partes=fechaStr.split('/');
+            if(partes.length<3)return null;
+            return new Date(parseInt(partes[2]),parseInt(partes[1])-1,parseInt(partes[0]));
         }
-
-        // ============================================================
-        // REGISTRAR NUEVO GASTO - GUARDA SALDOS CONGELADOS
-        // ============================================================
-        async function registrarGasto() {
-            const fecha = document.getElementById('fechaGasto').value;
-            const concepto = document.getElementById('conceptoGasto').value.trim();
-            const categoria = document.getElementById('categoriaGasto').value;
-            const valor = parseInt(document.getElementById('valorGasto').value);
-            const responsable = document.getElementById('responsableGasto').value.trim();
-            const comprobante = document.getElementById('comprobanteGasto').value.trim();
-            const observaciones = document.getElementById('observacionesGasto').value.trim();
-
-            if (!fecha) return mostrarAlerta('❌ Debes seleccionar una fecha', 'error');
-            if (!concepto) return mostrarAlerta('❌ Debes escribir un concepto', 'error');
-            if (!valor || valor <= 0) return mostrarAlerta('❌ Debes ingresar un valor válido', 'error');
-            if (!responsable) return mostrarAlerta('❌ Debes indicar el responsable', 'error');
-
-            const balance = appState.balanceReal;
-
-            if (valor > balance.saldoTotal) {
-                return mostrarAlerta(
-                    `❌ Saldo insuficiente. Disponible: $${balance.saldoTotal.toLocaleString()} | ` +
-                    `Gasto: $${valor.toLocaleString()} | ` +
-                    `Faltante: $${(valor - balance.saldoTotal).toLocaleString()}`,
-                    'error'
-                );
+        function fechaEnPeriodo(fechaPago){
+            const f=fechaStrADate(fechaPago);
+            if(!f)return false;
+            if(tipo==='mensual'||tipo==='categoria')return f.getFullYear()===ano&&f.getMonth()===mes;
+            if(tipo==='anual'||tipo==='mesames')return f.getFullYear()===ano;
+            if(tipo==='rango'){
+                const desde=document.getElementById('fechaDesdeInforme').value;
+                const hasta=document.getElementById('fechaHastaInforme').value;
+                if(!desde||!hasta)return false;
+                const dDesde=new Date(desde);const dHasta=new Date(hasta);
+                return f>=dDesde&&f<=dHasta;
             }
-
-            if (valor > balance.saldoTotal * 0.8 && balance.saldoTotal > 0) {
-                const confirmar = confirm(
-                    `⚠️ Este gasto representa el ${((valor / balance.saldoTotal) * 100).toFixed(1)}% ` +
-                    `del saldo disponible ($${balance.saldoTotal.toLocaleString()}).\n\n¿Desea continuar?`
-                );
-                if (!confirmar) return;
-            }
-
-            const fechaFormateada = fecha.split('-').reverse().join('/');
-            const ahora = new Date();
-
-            // ✅ GUARDAR SALDOS CONGELADOS EN ESTE MOMENTO
-            const nuevoGasto = {
-                id: 'G' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substr(2, 4),
-                fecha: fechaFormateada,
-                hora: ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-                concepto,
-                categoria,
-                valor,
-                responsable,
-                comprobante: comprobante || 'N/A',
-                observaciones: observaciones || '',
-                fecha_registro: ahora.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }),
-                hora_registro: ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-                balance_anterior: balance.saldoTotal,
-                balance_posterior: balance.saldoTotal - valor
-            };
-
-            const saveBtn = dom.saveExpenseBtn;
-            const originalText = saveBtn.innerHTML;
-
-            try {
-                saveBtn.innerHTML = '<span class="loading">⌛</span> Guardando...';
-                saveBtn.disabled = true;
-
-                appState.gastos.push(nuevoGasto);
-                await guardarGastosEnGitHub();
-
-                await actualizarPanelFinanciero();
-                renderizarTablaGastos();
-
-                mostrarAlerta('✅ Gasto registrado exitosamente', 'success');
-                dom.expenseModal.style.display = 'none';
-
-                document.getElementById('conceptoGasto').value = '';
-                document.getElementById('valorGasto').value = '';
-                document.getElementById('responsableGasto').value = '';
-                document.getElementById('comprobanteGasto').value = '';
-                document.getElementById('observacionesGasto').value = '';
-            } catch (e) {
-                mostrarAlerta('Error al guardar: ' + e.message, 'error');
-                appState.gastos.pop();
-            } finally {
-                saveBtn.innerHTML = originalText;
-                saveBtn.disabled = false;
-            }
+            return false;
         }
-
-        async function eliminarGasto(id) {
-            const gasto = appState.gastos.find(g => g.id === id);
-            if (!gasto) return;
-
-            const confirmar = confirm(
-                `¿Está seguro de eliminar este gasto?\n\n` +
-                `Concepto: ${gasto.concepto}\n` +
-                `Valor: $${gasto.valor.toLocaleString()}\n` +
-                `Fecha: ${gasto.fecha}\n\n` +
-                `Esta acción no se puede deshacer.`
-            );
-
-            if (!confirmar) return;
-
-            try {
-                appState.gastos = appState.gastos.filter(g => g.id !== id);
-                await guardarGastosEnGitHub();
-                await actualizarPanelFinanciero();
-                renderizarTablaGastos();
-                mostrarAlerta('✅ Gasto eliminado exitosamente', 'success');
-            } catch (e) {
-                mostrarAlerta('Error al eliminar: ' + e.message, 'error');
-                const data = await cargarDatosGastos();
-                appState.gastos = data.gastos || [];
-                await actualizarPanelFinanciero();
-                renderizarTablaGastos();
+        state.pagos.forEach(reg=>{
+            for(let y=2024;y<=new Date().getFullYear();y++){
+                const campo=`fecha_pago_año_${y}`;
+                if(reg[campo]){
+                    const pagos=extraerPagos(reg[campo],y);
+                    pagos.filter(p=>fechaEnPeriodo(p.fechaPago)).forEach(p=>{totalCuotas+=p.valor;});
+                }
             }
+            if(reg.certificado){
+                const certs=extraerCertificados(reg.certificado);
+                certs.filter(c=>fechaEnPeriodo(c.fechaPago)).forEach(c=>{totalCertBruto+=c.valor;});
+            }
+        });
+        const comision=totalCertBruto*(CONFIG.COMISION_PORCENTAJE/100);
+        return{cuotas:totalCuotas,certBruto:totalCertBruto,certNeto:totalCertBruto-comision};
+    }
+    function generarInforme(){
+        try{
+        const tipo=document.getElementById('tipoInforme').value;
+        const notas=document.getElementById('notasInforme').value.trim();
+        const gastos=obtenerGastosInforme();
+        const total=gastos.reduce((s,g)=>s+g.valor,0);
+        const cats={};gastos.forEach(g=>{cats[g.categoria]=(cats[g.categoria]||0)+g.valor;});
+        const resp={};gastos.forEach(g=>{resp[g.responsable]=(resp[g.responsable]||0)+g.valor;});
+        const meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+        const mesesLower=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+        const ano=parseInt(document.getElementById('anoInforme').value);
+        const mes=parseInt(document.getElementById('mesInforme').value);
+        function fechaStrADate(fechaStr){
+            if(!fechaStr)return null;
+            const partes=fechaStr.split('/');
+            if(partes.length<3)return null;
+            return new Date(parseInt(partes[2]),parseInt(partes[1])-1,parseInt(partes[0]));
         }
-
-        // ============================================================
-        // REPORTES
-        // ============================================================
-        function generarReporte(titulo, filtroFn) {
-            let gastosFiltrados = [...appState.gastos];
-            if (filtroFn) gastosFiltrados = gastosFiltrados.filter(filtroFn);
-
-            gastosFiltrados.sort((a, b) => {
-                const [diaA, mesA, añoA] = a.fecha.split('/').map(Number);
-                const [diaB, mesB, añoB] = b.fecha.split('/').map(Number);
-                return new Date(añoB, mesB - 1, diaB) - new Date(añoA, mesA - 1, diaA);
-            });
-
-            let html = `<table style="width: 100%; border-collapse: collapse; font-size: 0.75rem;">
-                <thead><tr style="background: #1a3a5c; color: white;">
-                    <th style="padding: 10px;">Fecha</th>
-                    <th style="padding: 10px;">Concepto</th>
-                    <th style="padding: 10px;">Categoría</th>
-                    <th style="padding: 10px;">Valor</th>
-                    <th style="padding: 10px;">Saldo Ant.</th>
-                    <th style="padding: 10px;">Saldo Post.</th>
-                    <th style="padding: 10px;">Responsable</th>
-                    <th style="padding: 10px;">Comprobante</th>
-                </tr></thead><tbody>`;
-
-            if (gastosFiltrados.length === 0) {
-                html += `<tr><td colspan="8" style="padding: 40px; text-align: center;">No hay gastos en este período</td></tr>`;
-            } else {
-                let total = 0;
-                gastosFiltrados.forEach(g => {
-                    total += g.valor;
-                    html += `<tr style="border-bottom: 1px solid #d0dce0;">
-                        <td style="padding: 8px; text-align: center;">${g.fecha}</td>
-                        <td style="padding: 8px;">${g.concepto}</td>
-                        <td style="padding: 8px;"><span class="badge-expense">${g.categoria}</span></td>
-                        <td style="padding: 8px; text-align: right; color: #c04040; font-weight: 600;">
-                            $${g.valor.toLocaleString()}
-                        </td>
-                        <td style="padding: 8px; text-align: right;">$${(g.balance_anterior || 0).toLocaleString()}</td>
-                        <td style="padding: 8px; text-align: right;">$${(g.balance_posterior || 0).toLocaleString()}</td>
-                        <td style="padding: 8px;">${g.responsable}</td>
-                        <td style="padding: 8px; text-align: center;">${g.comprobante || '—'}</td>
-                    </tr>`;
-                });
-                html += `<tr style="background: #e0e8f0; font-weight: 700;">
-                    <td colspan="3" style="padding: 10px; text-align: right;">Total:</td>
-                    <td style="padding: 10px; text-align: right; color: #c04040;">$${total.toLocaleString()}</td>
-                    <td colspan="4"></td>
-                </tr>`;
-            }
-            html += `</tbody></table>`;
-
-            if (appState.balanceReal) {
-                const b = appState.balanceReal;
-                html += `<div style="margin-top: 20px; padding: 16px; background: #f5f8fa; border-radius: 12px; border: 2px solid #d0dce4;">
-                    <h4 style="color: #1a3a5c; margin-bottom: 12px;">📊 Resumen Financiero Actual</h4>
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; font-size: 0.8rem;">
-                        <div>💰 Recaudo Cuotas:</div>
-                        <div style="text-align: right; color: #2a7a2a; font-weight: 600;">$${b.ingresosCuotas.toLocaleString()}</div>
-                        <div>📜 Certificados Neto:</div>
-                        <div style="text-align: right; color: #b68b40; font-weight: 600;">$${b.ingresosCertificadosNeto.toLocaleString()}</div>
-                        <div>✅ Disponible Total:</div>
-                        <div style="text-align: right; color: #2a6a9a; font-weight: 600;">$${b.disponibleTotal.toLocaleString()}</div>
-                        <div>💸 Gastos Totales:</div>
-                        <div style="text-align: right; color: #c04040; font-weight: 600;">$${b.totalGastos.toLocaleString()}</div>
-                        <div style="font-weight: 700; border-top: 2px solid #c8d4e4; padding-top: 8px;">🏦 Saldo Total:</div>
-                        <div style="text-align: right; font-weight: 700; border-top: 2px solid #c8d4e4; padding-top: 8px; color: ${b.saldoTotal >= 0 ? '#1a6a3a' : '#c04040'};">
-                            $${b.saldoTotal.toLocaleString()}
-                        </div>
-                    </div>
-                </div>`;
-            }
-
-            dom.reportTitle.textContent = titulo;
-            dom.reportContent.innerHTML = html;
-            dom.reportModal.style.display = 'flex';
+        let titulo='Informe',periodo='';
+        if(tipo==='mensual'){
+            const ultimoDia=new Date(ano,mes+1,0).getDate();
+            titulo=`Informe Mensual - ${meses[mes]} ${ano}`;
+            periodo=`del 1 de ${mesesLower[mes]} de ${ano} al ${ultimoDia} de ${mesesLower[mes]} de ${ano}`;
+        }else if(tipo==='mesames'){
+            titulo=`Resumen Mes a Mes - ${ano}`;
+            periodo=`durante el año ${ano}`;
+        }else if(tipo==='anos'){
+            titulo=`Resumen por Años`;
+            periodo=`todos los años registrados`;
+        }else if(tipo==='anual'){
+            titulo=`Informe Anual - ${ano}`;
+            periodo=`del 1 de enero de ${ano} al 31 de diciembre de ${ano}`;
+        }else if(tipo==='rango'){
+            const desde=document.getElementById('fechaDesdeInforme').value;
+            const hasta=document.getElementById('fechaHastaInforme').value;
+            const fDesde=new Date(desde);const fHasta=new Date(hasta);
+            titulo=`Informe de Gastos`;
+            periodo=`del ${fDesde.getDate()} de ${mesesLower[fDesde.getMonth()]} de ${fDesde.getFullYear()} al ${fHasta.getDate()} de ${mesesLower[fHasta.getMonth()]} de ${fHasta.getFullYear()}`;
+        }else if(tipo==='categoria'){
+            const ultimoDia=new Date(ano,mes+1,0).getDate();
+            titulo=`Informe por Categoría - ${document.getElementById('categoriaInforme').value} - ${meses[mes]} ${ano}`;
+            periodo=`del 1 de ${mesesLower[mes]} de ${ano} al ${ultimoDia} de ${mesesLower[mes]} de ${ano}`;
         }
-
-        function mostrarAlerta(msg, tipo = 'error') {
-            dom.alertMessage.textContent = msg;
-            dom.alertMessage.className = `alert show alert-${tipo}`;
-            setTimeout(() => dom.alertMessage.classList.remove('show'), 5000);
-        }
-
-        // ============================================================
-        // INICIALIZACIÓN
-        // ============================================================
-        async function cargarDatosConGithubToken(token) {
-            appState.githubToken = token;
-            try {
-                mostrarAlerta('📥 Cargando datos de tesorería...', 'info');
-                const datosCuotas = await cargarDatosCuotas();
-                appState.pagos = datosCuotas.pagos || [];
-
-                mostrarAlerta('📥 Cargando gastos...', 'info');
-                const datosGastos = await cargarDatosGastos();
-                appState.gastos = datosGastos.gastos || [];
-
-                dom.githubTokenModal.style.display = 'none';
-                dom.mainApp.style.display = 'block';
-
-                await actualizarPanelFinanciero();
-                renderizarTablaGastos();
-
-                mostrarAlerta('✅ Datos cargados correctamente', 'success');
-            } catch (e) {
-                mostrarAlerta('Error al cargar datos: ' + e.message, 'error');
-            }
-        }
-
-        async function inicializar() {
-            const añoActual = appState.fechaActual.getFullYear();
-            for (let i = 2024; i <= añoActual; i++) {
-                const opt = document.createElement('option');
-                opt.value = i;
-                opt.textContent = i;
-                dom.yearSelect.appendChild(opt);
-            }
-            dom.yearSelect.value = añoActual;
-            dom.fechaActualDisplay.textContent = appState.fechaActual.toLocaleDateString('es-ES', {
-                day: '2-digit', month: '2-digit', year: 'numeric'
-            });
-
-            dom.validateAccessTokenBtn.addEventListener('click', procesarValidacionAccessToken);
-            dom.validateGithubTokenBtn.addEventListener('click', procesarValidacionGithubToken);
-            dom.changeTokenBtn.addEventListener('click', cambiarToken);
-            dom.goToTreasuryBtn.addEventListener('click', () => {
-                const usuarioActual = JSON.parse(sessionStorage.getItem('usuario_actual') || '{}');
-                window.location.href = `tesoreria.html?token=${sessionStorage.getItem('session_token')}&user=${usuarioActual.usuario}&mode=${usuarioActual.modo}`;
-            });
-
-            dom.accessTokenInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') procesarValidacionAccessToken();
-            });
-            dom.githubTokenInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') procesarValidacionGithubToken();
-            });
-
-            const hoy = new Date();
-            document.getElementById('fechaGasto').value = hoy.toISOString().split('T')[0];
-
-            const tokenGuardado = localStorage.getItem('jac_access_token');
-
-            if (tokenGuardado) {
-                const validacion = validarTokenAcceso(tokenGuardado);
-
-                if (validacion.valido) {
-                    appState.accessTokenData = validacion.data;
-                    iniciarMonitorTokenAcceso(validacion.data.fechaExpiracion);
-                    dom.accessTokenModal.style.display = 'none';
-
-                    const githubToken = localStorage.getItem('github_token');
-                    if (githubToken) {
-                        const valido = await validarTokenGitHub(githubToken);
-                        if (valido) {
-                            await cargarDatosConGithubToken(githubToken);
-                            return;
+        const fechaGen=new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'long',year:'numeric'});
+        let html=`<div style="text-align:center;border-bottom:3px double #000;padding-bottom:10px;margin-bottom:10px;">
+            <div style="font-size:13px;color:#333;line-height:1.1;">Junta de Acción Comunal Barrio Bateas - Puerto Gaitán, Meta</div>
+            <div style="font-size:13px;color:#333;line-height:1.1;">Personería Jurídica No. 451 del 31 de Octubre de 2.025</div>
+            <h1 style="font-size:20px;margin:6px 0;color:#000;line-height:1.1;">${titulo}</h1>
+            <div style="font-size:13px;color:#333;line-height:1.1;">Período: ${periodo}</div>
+            <div style="font-size:13px;color:#333;line-height:1.1;">Fecha de generación: ${fechaGen}</div>
+        </div>`;
+        if(tipo==='mesames'){
+            let tablaMeses=`<table style="width:100%;border-collapse:collapse;font-size:11px;line-height:1.1;"><thead><tr style="background:#1a3a5c;color:white;"><th style="padding:5px;">Mes</th><th style="padding:5px;">Cuotas</th><th style="padding:5px;">Cert. Neto</th><th style="padding:5px;">Recaudo</th><th style="padding:5px;">Gastos</th><th style="padding:5px;">Saldo Mes</th></tr></thead><tbody>`;
+            let totalCuotasAno=0,totalCertAno=0,totalRecAno=0,totalGastosAno=0;
+            for(let m=0;m<12;m++){
+                const mesPagos=[];
+                state.pagos.forEach(reg=>{
+                    for(let y=2024;y<=new Date().getFullYear();y++){
+                        const campo=`fecha_pago_año_${y}`;
+                        if(reg[campo]){
+                            const pagos=extraerPagos(reg[campo],y);
+                            pagos.filter(p=>{
+                                const f=fechaStrADate(p.fechaPago);
+                                return f&&f.getFullYear()===ano&&f.getMonth()===m;
+                            }).forEach(p=>mesPagos.push(p));
                         }
                     }
-
-                    dom.githubTokenModal.style.display = 'flex';
-                    dom.githubTokenInput.focus();
-                    return;
-                } else {
-                    localStorage.removeItem('jac_access_token');
-                }
-            }
-
-            dom.accessTokenModal.style.display = 'flex';
-            dom.accessTokenInput.focus();
-        }
-
-        async function procesarValidacionGithubToken() {
-            const githubToken = dom.githubTokenInput.value.trim();
-            if (!githubToken) {
-                dom.githubTokenError.style.display = 'block';
-                dom.githubTokenError.textContent = '❌ Debes ingresar un token de GitHub';
-                return;
-            }
-
-            dom.validateGithubTokenBtn.disabled = true;
-            dom.validateGithubTokenBtn.innerHTML = '<span class="loading">⌛</span> Validando...';
-
-            const esValido = await validarTokenGitHub(githubToken);
-
-            if (esValido) {
-                if (dom.rememberGithubTokenCheckbox.checked) {
-                    localStorage.setItem('github_token', githubToken);
-                } else {
-                    localStorage.removeItem('github_token');
-                }
-                await cargarDatosConGithubToken(githubToken);
-            } else {
-                dom.githubTokenError.style.display = 'block';
-                dom.githubTokenError.textContent = '❌ Token de GitHub inválido. Intenta nuevamente.';
-                dom.validateGithubTokenBtn.disabled = false;
-                dom.validateGithubTokenBtn.innerHTML = 'Validar y continuar';
-            }
-        }
-
-        function cambiarToken() {
-            localStorage.removeItem('jac_access_token');
-            localStorage.removeItem('github_token');
-            sessionStorage.clear();
-            window.location.href = 'index.html';
-        }
-
-        function iniciarMonitorTokenAcceso(fechaExpiracion) {
-            // Función simplificada para este módulo
-        }
-
-        // ============================================================
-        // EVENTOS DEL PANEL
-        // ============================================================
-        function inicializarEventosPanel() {
-            dom.searchInput.addEventListener('input', (e) => {
-                appState.filtroActual = e.target.value;
-                renderizarTablaGastos();
-            });
-
-            dom.yearSelect.addEventListener('change', (e) => {
-                appState.selectedYear = parseInt(e.target.value);
-                dom.añoActualDisplay.textContent = appState.selectedYear;
-                renderizarTablaGastos();
-            });
-
-            document.getElementById('newExpenseBtn').addEventListener('click', () => {
-                actualizarResumenModal();
-                const hoy = new Date();
-                document.getElementById('fechaGasto').value = hoy.toISOString().split('T')[0];
-                dom.expenseModal.style.display = 'flex';
-            });
-
-            dom.closeExpenseModalBtn.addEventListener('click', () => {
-                dom.expenseModal.style.display = 'none';
-            });
-            dom.cancelExpenseBtn.addEventListener('click', () => {
-                dom.expenseModal.style.display = 'none';
-            });
-            dom.saveExpenseBtn.addEventListener('click', registrarGasto);
-
-            window.addEventListener('click', (e) => {
-                if (e.target === dom.expenseModal) dom.expenseModal.style.display = 'none';
-                if (e.target === dom.reportModal) dom.reportModal.style.display = 'none';
-            });
-
-            document.getElementById('expensesTodayBtn').addEventListener('click', () => {
-                const hoy = appState.fechaActual.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
-                generarReporte(`Gastos del día ${hoy}`, g => g.fecha === hoy);
-            });
-
-            document.getElementById('expensesMonthBtn').addEventListener('click', () => {
-                const mesActual = appState.fechaActual.getMonth();
-                const añoActual = appState.fechaActual.getFullYear();
-                const nombreMes = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'][mesActual];
-                generarReporte(`Gastos de ${nombreMes} ${añoActual}`, g => {
-                    const [dia, mes, año] = g.fecha.split('/').map(Number);
-                    return (mes - 1) === mesActual && año === añoActual;
                 });
-            });
-
-            document.getElementById('expensesYearBtn').addEventListener('click', () => {
-                generarReporte(`Gastos del año ${appState.fechaActual.getFullYear()}`, g => {
-                    const [dia, mes, año] = g.fecha.split('/').map(Number);
-                    return año === appState.fechaActual.getFullYear();
+                const cuotasMes=mesPagos.reduce((s,p)=>s+p.valor,0);
+                let certBrutoMes=0;
+                state.pagos.forEach(reg=>{
+                    if(reg.certificado){
+                        const certs=extraerCertificados(reg.certificado);
+                        certs.filter(c=>{
+                            const f=fechaStrADate(c.fechaPago);
+                            return f&&f.getFullYear()===ano&&f.getMonth()===m;
+                        }).forEach(c=>{certBrutoMes+=c.valor;});
+                    }
                 });
+                const certNetoMes=certBrutoMes-certBrutoMes*(CONFIG.COMISION_PORCENTAJE/100);
+                const recMes=cuotasMes+certNetoMes;
+                const gastosMes=state.gastos.filter(g=>{const[,mm,yy]=g.fecha.split('/').map(Number);return yy===ano&&mm-1===m;}).reduce((s,g)=>s+g.valor,0);
+                const saldoMes=recMes-gastosMes;
+                totalCuotasAno+=cuotasMes;totalCertAno+=certNetoMes;totalRecAno+=recMes;totalGastosAno+=gastosMes;
+                const colorSaldo=saldoMes>=0?'#2a7a2a':'#c04040';
+                tablaMeses+=`<tr style="border-bottom:1px solid #ddd;"><td style="padding:4px;font-weight:bold;">${meses[m]}</td><td style="padding:4px;text-align:right;">$${cuotasMes.toLocaleString()}</td><td style="padding:4px;text-align:right;">$${certNetoMes.toLocaleString()}</td><td style="padding:4px;text-align:right;color:#1a7a7a;font-weight:bold;">$${recMes.toLocaleString()}</td><td style="padding:4px;text-align:right;color:#c04040;">$${gastosMes.toLocaleString()}</td><td style="padding:4px;text-align:right;color:${colorSaldo};font-weight:bold;">$${saldoMes.toLocaleString()}</td></tr>`;
+            }
+            tablaMeses+=`<tr style="background:#e0e8f0;font-weight:bold;"><td style="padding:5px;">TOTAL</td><td style="padding:5px;text-align:right;">$${totalCuotasAno.toLocaleString()}</td><td style="padding:5px;text-align:right;">$${totalCertAno.toLocaleString()}</td><td style="padding:5px;text-align:right;color:#1a7a7a;">$${totalRecAno.toLocaleString()}</td><td style="padding:5px;text-align:right;color:#c04040;">$${totalGastosAno.toLocaleString()}</td><td style="padding:5px;text-align:right;color:${(totalRecAno-totalGastosAno)>=0?'#2a7a2a':'#c04040'};">$${(totalRecAno-totalGastosAno).toLocaleString()}</td></tr>`;
+            tablaMeses+=`</tbody></table>`;
+            html+=tablaMeses;
+            html+=`<div style="margin-top:10px;padding:8px;font-size:12px;line-height:1.4;"><p style="text-align:justify;">Señores directivos, se hace entrega del resumen mes a mes de recaudos y gastos generados durante el año ${ano}, para su revisión y conocimiento.</p></div>`;
+        }else if(tipo==='anos'){
+            const anosDisponibles=[];
+            state.pagos.forEach(reg=>{
+                for(let y=2024;y<=new Date().getFullYear();y++){
+                    const campo=`fecha_pago_año_${y}`;
+                    if(reg[campo]&&!anosDisponibles.includes(y))anosDisponibles.push(y);
+                }
             });
-
-            document.getElementById('expensesAllBtn').addEventListener('click', () => {
-                generarReporte('Todos los gastos');
+            state.gastos.forEach(g=>{const y=parseInt(g.fecha.split('/')[2]);if(!anosDisponibles.includes(y))anosDisponibles.push(y);});
+            anosDisponibles.sort((a,b)=>a-b);
+            let tablaAnos=`<table style="width:100%;border-collapse:collapse;font-size:11px;line-height:1.1;"><thead><tr style="background:#1a3a5c;color:white;"><th style="padding:5px;">Año</th><th style="padding:5px;">Cuotas</th><th style="padding:5px;">Cert. Neto</th><th style="padding:5px;">Recaudo</th><th style="padding:5px;">Gastos</th><th style="padding:5px;">Saldo</th></tr></thead><tbody>`;
+            let totalCuotasAll=0,totalCertAll=0,totalRecAll=0,totalGastosAll=0;
+            anosDisponibles.forEach(anoActual=>{
+                let cuotasAno=0,certBrutoAno=0;
+                state.pagos.forEach(reg=>{
+                    for(let y=2024;y<=new Date().getFullYear();y++){
+                        const campo=`fecha_pago_año_${y}`;
+                        if(reg[campo]){const pagos=extraerPagos(reg[campo],y);pagos.filter(p=>{const f=fechaStrADate(p.fechaPago);return f&&f.getFullYear()===anoActual;}).forEach(p=>{cuotasAno+=p.valor;});}
+                    }
+                    if(reg.certificado){const certs=extraerCertificados(reg.certificado);certs.filter(c=>{const f=fechaStrADate(c.fechaPago);return f&&f.getFullYear()===anoActual;}).forEach(c=>{certBrutoAno+=c.valor;});}
+                });
+                const certNetoAno=certBrutoAno-certBrutoAno*(CONFIG.COMISION_PORCENTAJE/100);
+                const recAno=cuotasAno+certNetoAno;
+                const gastosAno=state.gastos.filter(g=>parseInt(g.fecha.split('/')[2])===anoActual).reduce((s,g)=>s+g.valor,0);
+                const saldoAno=recAno-gastosAno;
+                totalCuotasAll+=cuotasAno;totalCertAll+=certNetoAno;totalRecAll+=recAno;totalGastosAll+=gastosAno;
+                const colorSaldo=saldoAno>=0?'#2a7a2a':'#c04040';
+                tablaAnos+=`<tr style="border-bottom:1px solid #ddd;"><td style="padding:4px;font-weight:bold;">${anoActual}</td><td style="padding:4px;text-align:right;">$${cuotasAno.toLocaleString()}</td><td style="padding:4px;text-align:right;">$${certNetoAno.toLocaleString()}</td><td style="padding:4px;text-align:right;color:#1a7a7a;font-weight:bold;">$${recAno.toLocaleString()}</td><td style="padding:4px;text-align:right;color:#c04040;">$${gastosAno.toLocaleString()}</td><td style="padding:4px;text-align:right;color:${colorSaldo};font-weight:bold;">$${saldoAno.toLocaleString()}</td></tr>`;
             });
-
-            dom.printReportBtn.addEventListener('click', () => {
-                const w = window.open('', '_blank');
-                w.document.write(`<html><head><title>${dom.reportTitle.textContent}</title>
-                    <style>body{font-family:'Inter',Arial;padding:40px;}table{border-collapse:collapse;width:100%;}
-                    th{background:#1a3a5c;color:white;padding:10px;}td{padding:8px;border:1px solid #ddd;}
-                    .badge-expense{background:#ffe0e0;color:#c04040;padding:4px 12px;border-radius:100px;}</style>
-                    </head><body><h1 style="color:#1a3a5c;">JAC Bateas - ${dom.reportTitle.textContent}</h1>
-                    <p>Fecha: ${new Date().toLocaleDateString('es-ES')}</p>${dom.reportContent.innerHTML}</body></html>`);
-                w.document.close();
-                setTimeout(() => w.print(), 300);
-            });
-
-            dom.closeReportModalBtn.addEventListener('click', () => {
-                dom.reportModal.style.display = 'none';
-            });
-
-            document.getElementById('logoutTempBtn').addEventListener('click', () => {
-                window.location.href = 'index.html';
-            });
-
-            document.getElementById('logoutFullBtn').addEventListener('click', () => {
-                sessionStorage.clear();
-                localStorage.removeItem('github_token');
-                localStorage.removeItem('jac_access_token');
-                window.location.href = 'index.html';
-            });
+            tablaAnos+=`<tr style="background:#e0e8f0;font-weight:bold;"><td style="padding:5px;">TOTAL</td><td style="padding:5px;text-align:right;">$${totalCuotasAll.toLocaleString()}</td><td style="padding:5px;text-align:right;">$${totalCertAll.toLocaleString()}</td><td style="padding:5px;text-align:right;color:#1a7a7a;">$${totalRecAll.toLocaleString()}</td><td style="padding:5px;text-align:right;color:#c04040;">$${totalGastosAll.toLocaleString()}</td><td style="padding:5px;text-align:right;color:${(totalRecAll-totalGastosAll)>=0?'#2a7a2a':'#c04040'};">$${(totalRecAll-totalGastosAll).toLocaleString()}</td></tr>`;
+            tablaAnos+=`</tbody></table>`;
+            html+=tablaAnos;
+            html+=`<div style="margin-top:10px;padding:8px;font-size:12px;line-height:1.4;"><p style="text-align:justify;">Señores directivos, se hace entrega del resumen por años de recaudos y gastos generados, para su revisión y conocimiento.</p></div>`;
+        }else{
+        const recaudo=obtenerRecaudoInforme();
+        const totalRec=recaudo.cuotas+recaudo.certNeto;
+        const saldoPeriodo=totalRec-total;
+        const saldoAnterior=calcularSaldoAnterior(tipo,ano,mes);
+        const saldoFinal=saldoAnterior+saldoPeriodo;
+        html+=`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;">
+            <div style="border:1px solid #ccc;padding:8px;text-align:center;"><div style="font-size:11px;font-weight:bold;color:#333;">TOTAL RECAUDADO</div><div style="font-size:15px;font-weight:bold;color:#1a7a7a;margin-top:3px;">$${totalRec.toLocaleString()}</div></div>
+            <div style="border:1px solid #ccc;padding:8px;text-align:center;"><div style="font-size:11px;font-weight:bold;color:#333;">TOTAL GASTOS</div><div style="font-size:15px;font-weight:bold;color:#c04040;margin-top:3px;">$${total.toLocaleString()}</div></div>
+            <div style="border:1px solid #ccc;padding:8px;text-align:center;"><div style="font-size:11px;font-weight:bold;color:#333;">N° GASTOS</div><div style="font-size:15px;font-weight:bold;margin-top:3px;">${gastos.length}</div></div>
+            <div style="border:1px solid #ccc;padding:8px;text-align:center;"><div style="font-size:11px;font-weight:bold;color:#333;">SALDO DISPONIBLE</div><div style="font-size:15px;font-weight:bold;color:${saldoPeriodo>=0?'#2a7a2a':'#c04040'};margin-top:3px;">$${saldoPeriodo.toLocaleString()}</div></div>
+        </div>`;
+        html+=`<h2 style="font-size:15px;border-bottom:2px solid #000;padding-bottom:3px;margin:8px 0 5px;line-height:1.1;">DETALLE DE GASTOS</h2>`;
+        html+=`<table style="width:100%;border-collapse:collapse;font-size:11px;line-height:1.1;"><thead><tr style="background:#1a3a5c;color:white;"><th style="padding:5px;width:5%;">N°</th><th style="padding:5px;width:14%;">Fecha</th><th style="padding:5px;width:28%;">Concepto</th><th style="padding:5px;width:18%;">Categoría</th><th style="padding:5px;width:18%;">Valor</th><th style="padding:5px;width:17%;">Responsable</th></tr></thead><tbody>`;
+        gastos.forEach((g,i)=>{html+=`<tr style="border-bottom:1px solid #ddd;"><td style="padding:4px;text-align:center;line-height:1.1;">${i+1}</td><td style="padding:4px;text-align:center;line-height:1.1;">${g.fecha}</td><td style="padding:4px;line-height:1.1;">${g.concepto}</td><td style="padding:4px;line-height:1.1;">${g.categoria}</td><td style="padding:4px;text-align:right;font-weight:bold;color:#c04040;line-height:1.1;">$${g.valor.toLocaleString()}</td><td style="padding:4px;line-height:1.1;">${g.responsable}</td></tr>`;});
+        html+=`<tr style="background:#e0e8f0;font-weight:bold;"><td colspan="4" style="padding:5px;text-align:right;">TOTAL:</td><td style="padding:5px;text-align:right;color:#c04040;">$${total.toLocaleString()}</td><td></td></tr></tbody></table>`;
+        html+=`<div style="margin-top:10px;padding:10px;">
+            <table style="width:100%;border-collapse:collapse;font-size:12px;">
+                <tr><td style="padding:5px;font-weight:bold;border-bottom:1px solid #ccc;text-align:left;">TOTAL RECAUDADO</td><td style="padding:5px;text-align:right;font-weight:bold;color:#1a7a7a;border-bottom:1px solid #ccc;width:40%;">$${totalRec.toLocaleString()}</td></tr>
+                <tr><td style="padding:5px;font-weight:bold;border-bottom:1px solid #ccc;text-align:left;">TOTAL GASTOS</td><td style="padding:5px;text-align:right;font-weight:bold;color:#c04040;border-bottom:1px solid #ccc;">$${total.toLocaleString()}</td></tr>
+                <tr><td style="padding:5px;font-weight:bold;border-bottom:1px solid #ccc;text-align:left;">N° GASTOS</td><td style="padding:5px;text-align:right;font-weight:bold;border-bottom:1px solid #ccc;">${gastos.length}</td></tr>
+                <tr><td style="padding:5px;font-weight:bold;text-align:left;">SALDO DISPONIBLE</td><td style="padding:5px;text-align:right;font-weight:bold;color:${saldoPeriodo>=0?'#2a7a2a':'#c04040'};">$${saldoPeriodo.toLocaleString()}</td></tr>
+            </table>
+        </div>`;
+        html+=`<div style="margin-top:10px;padding:8px;font-size:12px;line-height:1.4;">
+            <p style="text-align:justify;">Señores directivos, se hace entrega del informe del consolidado de recaudos y de gastos generados ${periodo}. Antes de este período en caja descontando los gastos había <strong>$${saldoAnterior.toLocaleString()}</strong>. Desde ${periodo} se recaudó <strong>$${totalRec.toLocaleString()}</strong> y los gastos fueron <strong>$${total.toLocaleString()}</strong> para un total en caja de <strong>$${saldoFinal.toLocaleString()}</strong>.</p>
+        </div>`;
         }
+        html+=`<div style="margin-top:60px;display:flex;justify-content:space-between;font-size:11px;">
+            <div style="text-align:center;flex:1;"><strong>____________________</strong><br><strong>YEISON BELTRAN URREA</strong><br>C.C. 1.121.896.567<br><strong>Tesorero</strong></div>
+            <div style="text-align:center;flex:1;"><strong>____________________</strong><br><strong>LEONEL BAUTISTA CARRANZA</strong><br>C.C. 6.650.213<br><strong>Presidente</strong></div>
+            <div style="text-align:center;flex:1;"><strong>____________________</strong><br><strong>JESUS ANTONIO GARCIA</strong><br>C.C. 80.732.535<br><strong>Fiscal</strong></div>
+        </div>`;
+        document.getElementById('informeContenido').innerHTML=html;
+        document.getElementById('informeModal').style.display='none';
+        document.getElementById('informePreviewModal').style.display='flex';
+        }catch(e){console.error(e);mostrarToast('❌ Error: '+e.message,'error');}
+    }
+    function imprimirInforme(){const w=window.open('','_blank');const contenido=document.getElementById('informeContenido').innerHTML;w.document.write(`<html><head><title>Informe JAC Bateas</title><style>*{color:#000 !important;margin:0;padding:0;box-sizing:border-box;}body{font-family:'Tahoma',sans-serif;font-size:13px;line-height:1.7;background:white;padding:2cm;}table{border-collapse:collapse;width:100%;}th,td{padding:8px;border-bottom:1px solid #ddd;}th{background:#1a3a5c !important;color:white !important;}h1{font-size:24px !important;margin:8px 0 !important;}h2{font-size:18px !important;}@media print{body{padding:0;margin:0.5cm 2cm;}}</style></head><body>${contenido}</body></html>`);w.document.close();setTimeout(()=>{w.print();},400);}
 
-        inicializar();
-        inicializarEventosPanel();
+    async function copiarInformeImagen(){try{const el=document.getElementById('informeContenido');mostrarToast('⏳ Generando imagen...','info');const canvas=await html2canvas(el,{scale:2,useCORS:true,backgroundColor:'#ffffff'});canvas.toBlob(async(blob)=>{try{await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);mostrarToast('✅ Imagen copiada al portapapeles','success');}catch(e){mostrarToast('❌ Error al copiar. Intenta descargar.','error');}},'image/png');}catch(e){mostrarToast('❌ Error: '+e.message,'error');}}
+    async function descargarInformePNG(){try{const el=document.getElementById('informeContenido');mostrarToast('⏳ Generando PNG...','info');const canvas=await html2canvas(el,{scale:2,useCORS:true,backgroundColor:'#ffffff'});const link=document.createElement('a');link.download='Informe_JAC_Bateas.png';link.href=canvas.toDataURL('image/png');link.click();mostrarToast('✅ PNG descargado','success');}catch(e){mostrarToast('❌ Error: '+e.message,'error');}}
+    function irATesoreria(){const u=JSON.parse(sessionStorage.getItem('usuario_actual')||'{}');window.location.href=`tesoreria.html?token=${sessionStorage.getItem('session_token')}&user=${u.usuario}&mode=${u.modo}`;}
+    function irAPanel(){const u=JSON.parse(sessionStorage.getItem('usuario_actual')||'{}');window.location.href=`panel.html?token=${sessionStorage.getItem('session_token')}&user=${u.usuario}&mode=${u.modo}`;}
+    function cambiarToken(){localStorage.removeItem('jac_access_token');localStorage.removeItem('github_token');sessionStorage.clear();window.location.href='index.html';}
+    function cerrarSesion(){sessionStorage.clear();localStorage.removeItem('github_token');localStorage.removeItem('jac_access_token');window.location.href='index.html';}
+
+    async function init(){
+        verificarSesion();
+        const yearSelect=document.getElementById('yearSelect');
+        for(let i=2024;i<=new Date().getFullYear();i++){const opt=document.createElement('option');opt.value=i;opt.textContent=i;yearSelect.appendChild(opt);}
+        yearSelect.value=state.selectedYear;
+        document.getElementById('currentDate').textContent=new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'});
+        document.getElementById('yearSelect').addEventListener('change',e=>{state.selectedYear=parseInt(e.target.value);renderizarTodo();});
+        document.getElementById('searchInput').addEventListener('input',e=>{state.busqueda=e.target.value;renderizarTabla();});
+        document.getElementById('validateTokenBtn').addEventListener('click',procesarTokenAcceso);
+        document.getElementById('validateGithubBtn').addEventListener('click',procesarTokenGitHub);
+        document.getElementById('accessTokenInput').addEventListener('keypress',e=>{if(e.key==='Enter')procesarTokenAcceso();});
+        document.getElementById('githubTokenInput').addEventListener('keypress',e=>{if(e.key==='Enter')procesarTokenGitHub();});
+        document.querySelectorAll('.modal-overlay').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)m.style.display='none';});});
+
+        const tokenGuardado=localStorage.getItem('jac_access_token');
+        if(tokenGuardado){const val=validarTokenAcceso(tokenGuardado);if(val.ok){const gh=localStorage.getItem('github_token');if(gh&&await validarTokenGitHub(gh)){await cargarDatos(gh);document.getElementById('loadingScreen').classList.add('hidden');return;}document.getElementById('loadingScreen').classList.add('hidden');document.getElementById('githubModal').style.display='flex';document.getElementById('githubTokenInput').focus();return;}else{localStorage.removeItem('jac_access_token');}}
+        document.getElementById('loadingScreen').classList.add('hidden');
+        document.getElementById('accessTokenModal').style.display='flex';
+        document.getElementById('accessTokenInput').focus();
+    }
+    init();
     </script>
 </body>
-
 </html>
