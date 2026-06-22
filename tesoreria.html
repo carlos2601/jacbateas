@@ -430,35 +430,35 @@
         .range-filter {
             display: flex;
             align-items: center;
-            gap: 4px;
-            flex-wrap: wrap;
-            margin-left: 4px;
+            gap: 2px;
+            flex-wrap: nowrap;
+            margin-left: 2px;
         }
         .range-select {
-            padding: 6px 8px;
+            padding: 4px 4px;
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             background: var(--bg-secondary);
             outline: none;
-            height: 34px;
+            height: 28px;
             color: var(--text-primary);
             font-weight: 600;
             cursor: pointer;
         }
         .range-input {
-            padding: 6px 8px;
+            padding: 4px 4px;
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             background: var(--bg-secondary);
             outline: none;
-            height: 34px;
+            height: 28px;
             color: var(--text-primary);
-            width: 130px;
+            width: 100px;
         }
         .range-input[type="number"] {
-            width: 100px;
+            width: 70px;
         }
         .range-input:focus {
             border-color: var(--accent-blue);
@@ -472,25 +472,26 @@
         /* ===== BARRA DE ACCIONES ===== */
         .action-bar {
             display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
+            flex-wrap: nowrap;
+            gap: 4px;
             margin-bottom: 2px;
             align-items: center;
             background: var(--bg-primary);
-            padding: 12px 16px;
+            padding: 6px 10px;
             border-radius: 20px;
             border: 1px solid var(--border-color);
+            overflow-x: auto;
         }
 
         .search-box {
             flex: 1;
-            min-width: 180px;
+            min-width: 120px;
             display: flex;
             align-items: center;
             background: var(--bg-secondary);
             border: 1.5px solid var(--border-color);
             border-radius: 10px;
-            padding: 0 10px;
+            padding: 0 6px;
             transition: all 0.15s;
         }
 
@@ -501,10 +502,10 @@
 
         .search-box input {
             flex: 1;
-            padding: 8px 6px;
+            padding: 5px 4px;
             border: none;
             background: transparent;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-primary);
         }
 
@@ -516,16 +517,17 @@
         .next-receipt-badge {
             background: var(--accent-yellow);
             color: #1a1a1a;
-            padding: 4px 12px;
+            padding: 3px 8px;
             border-radius: 100px;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             font-weight: 700;
             border: 1px solid var(--accent-gold);
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
             margin-left: auto;
-            height: 34px;
+            height: 28px;
+            white-space: nowrap;
         }
 
         .next-receipt-badge span {
@@ -1427,20 +1429,22 @@
         <div class="action-bar">
             <div class="search-box">
                 <span style="color: var(--text-muted);">🔍</span>
-                <input type="text" id="searchInput" placeholder="Buscar por cédula o número de recibo...">
+                <input type="text" id="searchInput" placeholder="Buscar cédula o recibo...">
+                <span id="clearSearchBtn" style="cursor:pointer;color:var(--accent-red);font-size:0.9rem;padding:0 4px;" title="Limpiar búsqueda">🧹</span>
             </div>
-            <button id="goToGastosBtn" class="btn btn-primary" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
-                💸 Ir a Gastos
+            <button id="goToGastosBtn" class="btn btn-primary" style="background: linear-gradient(135deg, #ef4444, #dc2626);padding:5px 8px;font-size:0.75rem;">
+                💸 Gastos
             </button>
-            <button id="informesBtn" class="btn btn-primary" style="background: linear-gradient(135deg, #7c3aed, #6d28d9);">
+            <button id="informesBtn" class="btn btn-primary" style="background: linear-gradient(135deg, #7c3aed, #6d28d9);padding:5px 8px;font-size:0.75rem;">
                 📊 Informes
             </button>
-            <button id="toggleTableBtn" class="btn btn-primary">
-                📋 Mostrar tabla
+            <button id="toggleTableBtn" class="btn btn-primary" style="padding:5px 8px;font-size:0.75rem;">
+                📋 Tabla
             </button>
-            <button id="toggleAllCardsBtn" class="btn" style="background: var(--bg-primary); color: var(--text-primary);"
+            <button id="clearLocalBtn" class="btn btn-danger" style="padding:5px 8px;font-size:0.75rem;" title="Borrar datos locales y recargar desde GitHub">🗑️ Limpiar</button>
+            <button id="toggleAllCardsBtn" class="btn" style="background: var(--bg-primary); color: var(--text-primary);padding:5px 8px;font-size:0.75rem;"
                 title="Mostrar/ocultar todas las tarjetas">
-                <span>👁️</span> Tarjetas
+                👁️ Tarjetas
             </button>
             <div class="range-filter">
                 <select id="rangeType" class="range-select">
@@ -1453,8 +1457,8 @@
                 <input type="number" id="rangeFromNum" class="range-input" style="display:none" placeholder="N° inicial" min="1">
                 <span class="range-sep" style="display:none">→</span>
                 <input type="number" id="rangeToNum" class="range-input" style="display:none" placeholder="N° final" min="1">
-                <button id="rangeSearchBtn" class="btn btn-primary">🔍 Buscar</button>
-                <button id="clearRangeBtn" class="btn" style="background:var(--text-muted);color:var(--text-primary);">✕</button>
+                <button id="rangeSearchBtn" class="btn btn-primary" style="padding:4px 6px;font-size:0.7rem;">🔍</button>
+                <button id="clearRangeBtn" class="btn" style="background:var(--text-muted);color:var(--text-primary);padding:4px 6px;font-size:0.7rem;">✕</button>
             </div>
             <div class="next-receipt-badge">
                 Sgte. Recibo <span id="nextReceiptNumber">00001</span>
@@ -2281,20 +2285,26 @@
 
         async function cargarPagos() {
             const local = await cargarPagosLocal();
-            if (local) return local;
             const url = `https://raw.githubusercontent.com/${CONFIG.DESTINATION.REPO_OWNER}/${CONFIG.DESTINATION.REPO_NAME}/refs/heads/${CONFIG.DESTINATION.BRANCH}/${CONFIG.DESTINATION.CUOTA_PATH}`;
             try {
-                const res = await fetch(url);
-                if (res.status === 404) return [];
-                const data = await res.json();
-                await guardarPagosLocal(data.pagos || []);
-                return data.pagos || [];
-            } catch {
-                return [];
-            }
+                const headers = appState.githubToken ? { 'Authorization': `token ${appState.githubToken}` } : {};
+                const res = await fetch(url, { headers });
+                if (res.ok) {
+                    const data = await res.json();
+                    const remote = data.pagos || [];
+                    await guardarPagosLocal(remote);
+                    return remote;
+                }
+            } catch (e) { }
+            return local || [];
         }
 
         async function guardarPagosEnGitHub() {
+            appState.pagos = appState.pagos.filter(p => {
+                const tienePagos = Object.keys(p).some(k => k.startsWith('fecha_pago_año_') && p[k]);
+                const tieneCert = p.certificado && p.certificado.trim().length > 0;
+                return tienePagos || tieneCert;
+            });
             await guardarPagosLocal(appState.pagos);
             if (!appState.githubToken) {
                 mostrarAlerta('⚠️ Sin token de GitHub. Datos solo guardados localmente.', 'info');
@@ -3133,12 +3143,16 @@
                     } else {
                         registro[campo] = filtered.join('; ');
                     }
+                    const tienePagos = Object.keys(registro).some(k => k.startsWith('fecha_pago_año_') && registro[k]);
+                    const tieneCert = registro.certificado && registro.certificado.trim().length > 0;
+                    if (!tienePagos && !tieneCert) {
+                        appState.pagos = appState.pagos.filter(p => p.cedula !== cedula);
+                    }
                     guardarPagosLocal(appState.pagos);
                     appState.pendingGitHubSync = true;
-                    actualizarBotonGuardarTodo();
                     calcularEstadisticas();
                     renderizarTabla();
-                    mostrarAlerta('✅ Pago eliminado. Usa "Guardar Todo" para sincronizar con GitHub.', 'success');
+                    mostrarAlerta('✅ Pago eliminado. Presiona "Guardar Todo" para sincronizar.', 'success');
                 }
                 return;
             }
@@ -3184,11 +3198,15 @@
 
             const mesesSeleccionados = [];
             document.querySelectorAll('.month-checkbox-item:checked').forEach(cb => {
-                mesesSeleccionados.push({
-                    año: parseInt(cb.dataset.año),
-                    mes: parseInt(cb.dataset.mes),
-                    nombreMes: cb.value.split('_')[0]
-                });
+                const año = parseInt(cb.dataset.año);
+                const mes = parseInt(cb.dataset.mes);
+                if (!mesEstaPagado(appState.pendingPayment.cedula, año, mes)) {
+                    mesesSeleccionados.push({
+                        año: año,
+                        mes: mes,
+                        nombreMes: cb.value.split('_')[0]
+                    });
+                }
             });
 
             const incluirCertificado = dom.includeCertificateCheckbox.checked;
@@ -3253,9 +3271,22 @@
 
                 for (const mesItem of mesesSeleccionados) {
                     const campo = `fecha_pago_año_${mesItem.año}`;
-                    // Usar FECHA REAL (seleccionada por usuario) y HORA DE REGISTRO (actual)
                     const pagoStr = `${mesesNombres[mesItem.mes]}_${mesItem.año}_${CONFIG.VALOR_CUOTA}_${fechaFormateada}_${horaRegistro}_${recibo}`;
                     registro[campo] = registro[campo] ? `${registro[campo]}; ${pagoStr}` : pagoStr;
+                }
+
+                // Ordenar pagos por número de mes dentro de cada año
+                for (const mesItem of mesesSeleccionados) {
+                    const campo = `fecha_pago_año_${mesItem.año}`;
+                    if (registro[campo]) {
+                        const entries = registro[campo].split('; ');
+                        entries.sort((a, b) => {
+                            const mesA = mesesNombres.indexOf(a.split('_')[0]);
+                            const mesB = mesesNombres.indexOf(b.split('_')[0]);
+                            return mesA - mesB;
+                        });
+                        registro[campo] = entries.join('; ');
+                    }
                 }
 
                 // Remove payments for unchecked months (only today's entries)
@@ -3294,14 +3325,16 @@
                     registro.certificado = registro.certificado ? `${registro.certificado}; ${certificadoStr}` : certificadoStr;
                 }
 
-                // Guardar método de pago
                 const metodoPago = document.getElementById('paymentMethod').value;
                 const banco = metodoPago === 'transferencia' ? document.getElementById('paymentBank').value : '';
-                registro[`metodo_pago_${recibo}`] = JSON.stringify({ metodo: metodoPago, banco: banco });
+
+                // Guardar método de pago SOLO si es transferencia (efectivo es el default)
+                if (metodoPago === 'transferencia' && (mesesSeleccionados.length > 0 || incluirCertificado)) {
+                    registro[`metodo_pago_${recibo}`] = JSON.stringify({ metodo: metodoPago, banco: banco });
+                }
 
                 await guardarPagosLocal(appState.pagos);
                 appState.pendingGitHubSync = true;
-                actualizarBotonGuardarTodo();
                 calcularEstadisticas();
                 actualizarSiguienteRecibo();
                 renderizarTabla();
@@ -4173,6 +4206,16 @@
                 if (appState.tablaVisible) renderizarTabla();
             });
 
+            const clearSearchBtn = document.getElementById('clearSearchBtn');
+            if (clearSearchBtn) {
+                clearSearchBtn.addEventListener('click', () => {
+                    dom.searchInput.value = '';
+                    appState.filtroActual = '';
+                    appState.currentPage = 1;
+                    if (appState.tablaVisible) renderizarTabla();
+                });
+            }
+
             const logoutTempBtn = document.getElementById('logoutTempBtn');
             const logoutTempConfirmModal = document.getElementById('logoutTempConfirmModal');
             const closeLogoutTempModalBtn = document.getElementById('closeLogoutTempModalBtn');
@@ -4294,6 +4337,18 @@
                         saveBtn.innerHTML = appState.pendingGitHubSync ? '💾 Guardar Todo (⚠️ pendiente)' : '💾 Guardar Todo';
                         saveBtn.disabled = false;
                     }
+                });
+            }
+
+            const clearLocalBtn = document.getElementById('clearLocalBtn');
+            if (clearLocalBtn) {
+                clearLocalBtn.addEventListener('click', async () => {
+                    if (!confirm('¿Borrar todos los datos locales y recargar desde GitHub?')) return;
+                    localStorage.removeItem('jac_pagos');
+                    localStorage.removeItem('jac_afiliados');
+                    appState.pagos = [];
+                    mostrarAlerta('🗑️ Local limpio. Recargando desde GitHub...', 'info');
+                    setTimeout(() => location.reload(), 1000);
                 });
             }
 
@@ -4436,7 +4491,14 @@
             }
         }
 
-        window.addEventListener('beforeunload', detenerSyncAutomatico);
+        window.addEventListener('beforeunload', function(e) {
+            detenerSyncAutomatico();
+            if (appState.pendingGitHubSync) {
+                e.preventDefault();
+                e.returnValue = 'Tienes cambios sin guardar. ¿Seguro que quieres salir?';
+                return 'Tienes cambios sin guardar. ¿Seguro que quieres salir?';
+            }
+        });
         inicializar();
         inicializarEventosPanel();
     </script>
