@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-06-22T05:14:00.460Z",
+  "ultima_actualizacion": "2026-06-22T05:18:53.256Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -789,26 +789,22 @@
     {
       "cedula": "4438681",
       "nombre": "CARLOS ALBERTO QUIÑONES MUÑOZ",
-      "fecha_pago_año_2026": "junio_2026_5000_22/06/2026_00:13:59_00146"
-    }
-  ],
-  "recibos": [
+      "certificado": "junio_2026_20000_21/06/2026_18:50:45_00145",
+      "metodo_pago_00145": "{\"metodo\":\"efectivo\",\"banco\":\"\"}",
+      "metodo_pago_00146": "{\"metodo\":\"efectivo\",\"banco\":\"\"}",
+      "metodo_pago_00147": "{\"metodo\":\"efectivo\",\"banco\":\"\"}",
+      "metodo_pago_00154": "{\"metodo\":\"efectivo\",\"banco\":\"\"}",
+      "metodo_pago_00156": "{\"metodo\":\"efectivo\",\"banco\":\"\"}",
+      "fecha_pago_año_2026": "junio_2026_5000_22/06/2026_23:42:08_00145; junio_2026_5000_22/06/2026_00:00:46_00146; junio_2026_5000_22/06/2026_00:13:59_00146"
+    },
     {
-      "rec": "00146",
-      "ced": "4438681",
-      "nm": "CARLOS ALBERTO QUIÑONES MUÑOZ",
-      "fec": "22/06/2026",
-      "hor": "00:13:59",
-      "meses": [
-        {
-          "y": 2026,
-          "m": 5,
-          "nm": "junio"
-        }
-      ],
-      "cert": false,
-      "tot": 5000
+      "cedula": "42775182",
+      "nombre": "LILIANA LONDOÑO GALLEGO",
+      "metodo_pago_00145": "{\"metodo\":\"efectivo\",\"banco\":\"\"}",
+      "metodo_pago_00148": "{\"metodo\":\"efectivo\",\"banco\":\"\"}",
+      "metodo_pago_00151": "{\"metodo\":\"efectivo\",\"banco\":\"\"}",
+      "fecha_pago_año_2026": "mayo_2026_5000_22/06/2026_00:18:46_00148",
+      "metodo_pago_00147": "{\"metodo\":\"efectivo\",\"banco\":\"\"}"
     }
-  ],
-  "ultimo_recibo": "00147"
+  ]
 }
