@@ -224,6 +224,16 @@
     </div>
 </div>
 
+<div class="mo" id="editPassModal">
+    <div class="ms" style="max-width:340px;text-align:center;">
+        <div class="mh"><h3>🔒 Acceso Edicion</h3><button class="mc" onclick="document.getElementById('editPassModal').classList.remove('show');">&times;</button></div>
+        <p style="color:var(--t2);margin-bottom:12px;font-size:.8rem;">Ingresa la clave para acceder a edicion de pagos.</p>
+        <input type="password" id="editPassInput" placeholder="Clave de edicion" style="width:100%;padding:10px 14px;border:2px solid var(--brd);border-radius:10px;font-size:.85rem;background:var(--bg);color:var(--t1);margin-bottom:10px;outline:none;">
+        <button id="editPassBtn" class="btn" style="margin-bottom:8px;">Validar</button>
+        <div id="editPassError" class="terr" style="display:none;text-align:center;">Clave incorrecta</div>
+    </div>
+</div>
+
 <div class="tmodal" id="tokenModal">
     <div class="tbox">
         <h2>Token de Acceso</h2>
@@ -509,13 +519,24 @@ const App = {
         $('cfgLogout').onclick = () => this.logoutFull();
         $('edSearchInput').oninput = () => this.edFilterEd();
         $('edSearchInput').onkeypress = e => { if(e.key==='Enter') this.edFilterEd(); };
+        $('editPassBtn').onclick = () => this.validateEditPass();
+        $('editPassInput').onkeypress = e => { if(e.key==='Enter') this.validateEditPass(); };
         document.querySelectorAll('.nav button').forEach(t => {
             t.onclick = () => {
+                if(t.dataset.s==='secEdicion') {
+                    document.querySelectorAll('.nav button').forEach(x => x.classList.remove('act'));
+                    t.classList.add('act');
+                    App.S.edUnlocked = false;
+                    document.getElementById('editPassInput').value='';
+                    document.getElementById('editPassError').style.display='none';
+                    document.getElementById('editPassModal').classList.add('show');
+                    document.getElementById('editPassInput').focus();
+                    return;
+                }
                 document.querySelectorAll('.nav button').forEach(x => x.classList.remove('act'));
                 document.querySelectorAll('.sec').forEach(x => x.classList.remove('act'));
                 t.classList.add('act');
                 $(t.dataset.s).classList.add('act');
-                if(t.dataset.s==='secEdicion') App.edRenderAll();
             };
         });
         document.querySelectorAll('.mo').forEach(m => {
@@ -1504,6 +1525,21 @@ const App = {
         if(confirm('Cerrar sesion?')){this.S.user=null;document.getElementById('loginContainer').style.display='';document.getElementById('username').value='';document.getElementById('password').value='';}
     },
 
+    validateEditPass() {
+        var v = document.getElementById('editPassInput').value.trim();
+        if(v === 'Linda0127') {
+            this.S.edUnlocked = true;
+            document.getElementById('editPassModal').classList.remove('show');
+            document.querySelectorAll('.sec').forEach(x => x.classList.remove('act'));
+            document.getElementById('secEdicion').classList.add('act');
+            this.edRenderAll();
+        } else {
+            document.getElementById('editPassError').style.display='block';
+            document.getElementById('editPassInput').value='';
+            document.getElementById('editPassInput').focus();
+        }
+    },
+
     edBuildReceipts() {
         var by = {}, af = this.S.afiliados, self = this;
         this.S.pagos.forEach(function(reg) {
@@ -1632,9 +1668,10 @@ const App = {
         if(entries.length===0) delete reg[field]; else reg[field]=entries.join('; ');
         this.edCleanPagos();
         this.save();
-        this.edShowRecibo(recibo);
         this.calcStats(); this.renderUsers(); this.renderReceipts();
         setTimeout(function(){ App.edSaveToGitHub(); }, 300);
+        alert('Pago eliminado. Sesion de edicion finalizada.');
+        this.edExitToMain();
     },
 
     edDeleteCert(ced, year, mesName, recibo) {
@@ -1646,9 +1683,10 @@ const App = {
         if(entries.length===0) delete reg.certificado; else reg.certificado=entries.join('; ');
         this.edCleanPagos();
         this.save();
-        this.edShowRecibo(recibo);
         this.calcStats(); this.renderUsers(); this.renderReceipts();
         setTimeout(function(){ App.edSaveToGitHub(); }, 300);
+        alert('Certificado eliminado. Sesion de edicion finalizada.');
+        this.edExitToMain();
     },
 
     edDeleteAllRecibo(recibo) {
@@ -1669,9 +1707,18 @@ const App = {
         });
         this.edCleanPagos();
         this.save();
-        this.edRenderAll();
         this.calcStats(); this.renderUsers(); this.renderReceipts();
         setTimeout(function(){ App.edSaveToGitHub(); }, 300);
+        alert('Recibo '+recibo+' eliminado. Sesion de edicion finalizada.');
+        this.edExitToMain();
+    },
+
+    edExitToMain() {
+        this.S.edUnlocked = false;
+        document.querySelectorAll('.nav button').forEach(x => x.classList.remove('act'));
+        document.querySelectorAll('.sec').forEach(x => x.classList.remove('act'));
+        document.querySelector('.nav button[data-s="secBuscar"]').classList.add('act');
+        document.getElementById('secBuscar').classList.add('act');
     },
 
     edCleanPagos() {
