@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-06-22T01:57:19.235Z",
+  "ultima_actualizacion": "2026-06-22T02:02:38.788Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -789,9 +789,10 @@
     {
       "cedula": "42775182",
       "nombre": "LILIANA LONDOÑO GALLEGO",
-      "fecha_pago_año_2026": "junio_2026_5000_22/06/2026_20:44:57_00145; junio_2026_5000_22/06/2026_20:57:18_00148",
+      "fecha_pago_año_2026": "junio_2026_5000_22/06/2026_20:44:57_00145; junio_2026_5000_22/06/2026_20:57:18_00148; mayo_2026_5000_22/06/2026_21:02:38_00151; junio_2026_5000_22/06/2026_21:02:38_00151",
       "metodo_pago_00145": "{\"metodo\":\"efectivo\",\"banco\":\"\"}",
-      "metodo_pago_00148": "{\"metodo\":\"efectivo\",\"banco\":\"\"}"
+      "metodo_pago_00148": "{\"metodo\":\"efectivo\",\"banco\":\"\"}",
+      "metodo_pago_00151": "{\"metodo\":\"efectivo\",\"banco\":\"\"}"
     }
   ],
   "recibos": [
@@ -810,7 +811,28 @@
       ],
       "cert": false,
       "tot": 5000
+    },
+    {
+      "rec": "00151",
+      "ced": "42775182",
+      "nm": "LILIANA LONDOÑO GALLEGO",
+      "fec": "22/06/2026",
+      "hor": "21:02:38",
+      "meses": [
+        {
+          "y": 2026,
+          "m": 4,
+          "nm": "mayo"
+        },
+        {
+          "y": 2026,
+          "m": 5,
+          "nm": "junio"
+        }
+      ],
+      "cert": false,
+      "tot": 10000
     }
   ],
-  "ultimo_recibo": "00149"
+  "ultimo_recibo": "00152"
 }
