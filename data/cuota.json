@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-06-22T02:13:26.262Z",
+  "ultima_actualizacion": "2026-06-22T02:30:01.116Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -24,7 +24,7 @@
     {
       "cedula": "4438681",
       "nombre": "CARLOS ALBERTO QUIÑONES MUÑOZ",
-      "fecha_pago_año_2026": "junio_2026_5000_22/06/2026_20:48:01_00145; junio_2026_5000_22/06/2026_21:13:04_00154; mayo_2026_5000_22/06/2026_21:13:25_00156; junio_2026_5000_22/06/2026_21:13:25_00156",
+      "fecha_pago_año_2026": "junio_2026_5000_22/06/2026_20:48:01_00145; junio_2026_5000_22/06/2026_21:13:04_00154; mayo_2026_5000_22/06/2026_21:13:25_00156; junio_2026_5000_22/06/2026_21:13:25_00156; abril_2026_5000_22/06/2026_21:30:00_00145; mayo_2026_5000_22/06/2026_21:30:00_00145; junio_2026_5000_22/06/2026_21:30:00_00145",
       "metodo_pago_00145": "{\"metodo\":\"efectivo\",\"banco\":\"\"}",
       "metodo_pago_00154": "{\"metodo\":\"efectivo\",\"banco\":\"\"}",
       "metodo_pago_00156": "{\"metodo\":\"efectivo\",\"banco\":\"\"}"
@@ -802,5 +802,108 @@
       "certificado": "febrero_2026_20000_21/02/2026_17:50:41_00018",
       "fecha_pago_año_2026": "febrero_2026_5000_21/02/2026_17:52:52_00021"
     }
-  ]
+  ],
+  "recibos": [
+    {
+      "rec": "00148",
+      "ced": "42775182",
+      "nm": "LILIANA LONDOÑO GALLEGO",
+      "fec": "22/06/2026",
+      "hor": "20:57:18",
+      "meses": [
+        {
+          "y": 2026,
+          "m": 5,
+          "nm": "junio"
+        }
+      ],
+      "cert": false,
+      "tot": 5000
+    },
+    {
+      "rec": "00151",
+      "ced": "42775182",
+      "nm": "LILIANA LONDOÑO GALLEGO",
+      "fec": "22/06/2026",
+      "hor": "21:02:38",
+      "meses": [
+        {
+          "y": 2026,
+          "m": 4,
+          "nm": "mayo"
+        },
+        {
+          "y": 2026,
+          "m": 5,
+          "nm": "junio"
+        }
+      ],
+      "cert": false,
+      "tot": 10000
+    },
+    {
+      "rec": "00154",
+      "ced": "4438681",
+      "nm": "CARLOS ALBERTO QUIÑONES MUÑOZ",
+      "fec": "22/06/2026",
+      "hor": "21:13:04",
+      "meses": [
+        {
+          "y": 2026,
+          "m": 5,
+          "nm": "junio"
+        }
+      ],
+      "cert": false,
+      "tot": 5000
+    },
+    {
+      "rec": "00156",
+      "ced": "4438681",
+      "nm": "CARLOS ALBERTO QUIÑONES MUÑOZ",
+      "fec": "22/06/2026",
+      "hor": "21:13:25",
+      "meses": [
+        {
+          "y": 2026,
+          "m": 4,
+          "nm": "mayo"
+        },
+        {
+          "y": 2026,
+          "m": 5,
+          "nm": "junio"
+        }
+      ],
+      "cert": false,
+      "tot": 10000
+    },
+    {
+      "rec": "00145",
+      "ced": "4438681",
+      "nm": "CARLOS ALBERTO QUIÑONES MUÑOZ",
+      "fec": "22/06/2026",
+      "hor": "21:30:00",
+      "meses": [
+        {
+          "y": 2026,
+          "m": 3,
+          "nm": "abril"
+        },
+        {
+          "y": 2026,
+          "m": 4,
+          "nm": "mayo"
+        },
+        {
+          "y": 2026,
+          "m": 5,
+          "nm": "junio"
+        }
+      ],
+      "cert": false,
+      "tot": 15000
+    }
+  ],
+  "ultimo_recibo": "00159"
 }
