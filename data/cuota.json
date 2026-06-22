@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-06-22T06:49:50.103Z",
+  "ultima_actualizacion": "2026-06-22T16:10:13.944Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -790,6 +790,11 @@
       "cedula": "4438681",
       "nombre": "CARLOS ALBERTO QUIÑONES MUÑOZ",
       "fecha_pago_año_2026": "mayo_2026_5000_22/06/2026_01:49:49_00146; junio_2026_5000_22/06/2026_01:41:15_00145"
+    },
+    {
+      "cedula": "42775182",
+      "nombre": "LILIANA LONDOÑO GALLEGO",
+      "fecha_pago_año_2026": "mayo_2026_5000_22/06/2026_11:10:13_00148"
     }
   ]
 }
