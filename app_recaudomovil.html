@@ -188,14 +188,14 @@
 <body>
 
 <div class="loading-screen" id="loadingScreen">
-    <div class="loading-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Escudo_Acci%C3%B3n_Comunal_Colombia.svg/500px-Escudo_Acci%C3%B3n_Comunal_Colombia.svg.png" alt="Logo"></div>
+    <div class="loading-logo"><img src="https://raw.githubusercontent.com/carlos2601/jacbateas/main/Escudo_Acci%C3%B3n_Comunal_Colombia.svg.png" alt="Logo"></div>
     <p class="loading-text">Cargando sistema...</p>
     <div class="loading-bar"></div>
 </div>
 
 <div id="loginContainer">
     <div class="login-card">
-        <div class="logo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Escudo_Acci%C3%B3n_Comunal_Colombia.svg/500px-Escudo_Acci%C3%B3n_Comunal_Colombia.svg.png" alt="Escudo"></div>
+        <div class="logo"><img src="https://raw.githubusercontent.com/carlos2601/jacbateas/main/Escudo_Acci%C3%B3n_Comunal_Colombia.svg.png" alt="Escudo"></div>
         <h1>SISTEMA DE RECAUDO</h1>
         <div class="subtitle">JAC Bateas<br>Barrio Bateas Sector 3 - Puerto Gaitan, Meta</div>
         <div id="loginAlert" class="alert"></div>
@@ -570,56 +570,20 @@ const App = {
     },
 
     async loadData() {
-        var localPagos = [], localRecibos = [];
-        try {
-            const s = localStorage.getItem('jac_m_data');
-            if (s) { const d = JSON.parse(s); this.S.afiliados = d.af||[]; this.S.pagos = d.pa||[]; this.S.recibos = d.rec||[]; localPagos = this.S.pagos.slice(); localRecibos = this.S.recibos.slice(); }
-        } catch(e) {}
         try { const r = await fetch(this.CFG.AFILIADOS); if(r.ok) this.S.afiliados = await r.json(); } catch(e) {}
         var syncOk = false;
         try {
             const u = 'https://raw.githubusercontent.com/'+this.CFG.REPO_OWNER+'/'+this.CFG.REPO_NAME+'/refs/heads/'+this.CFG.BRANCH+'/'+this.CFG.CUOTA;
             const r = await fetch(u);
-            if (r.ok) { const d = await r.json(); var rPagos = d.pagos||[]; var rRecibos = d.recibos||[]; var rUlt = d.ultimo_recibo||null;
-                var self = this;
-                var localMap = {};
-                localPagos.forEach(function(p){ localMap[p.cedula] = p; });
-                var remoteMap = {};
-                rPagos.forEach(function(rp){ remoteMap[rp.cedula] = rp; });
-                var merged = [];
-                rPagos.forEach(function(rp) {
-                    var local = localMap[rp.cedula];
-                    var base = JSON.parse(JSON.stringify(rp));
-                    if(local) {
-                        Object.keys(local).forEach(function(k){
-                            if(k==='cedula'||k==='nombre') return;
-                            if(!base[k]) base[k] = local[k];
-                            else if(local[k] && local[k]!==base[k]) {
-                                var bE=base[k].split(';').filter(function(x){return x.trim();});
-                                var lE=local[k].split(';').filter(function(x){return x.trim();});
-                                var all=bE.concat(lE);
-                                var seen={}; var uniq=[];
-                                all.forEach(function(e){var t=e.trim();if(t&&!seen[t]){seen[t]=1;uniq.push(t);}});
-                                base[k]=uniq.join('; ');
-                            }
-                        });
-                    }
-                    merged.push(base);
-                });
-                localPagos.forEach(function(lp) {
-                    if(!remoteMap[lp.cedula]) {
-                        merged.push(JSON.parse(JSON.stringify(lp)));
-                    }
-                });
-                self.S.pagos = merged;
-                rRecibos.forEach(function(rr) {
-                    if(!self.S.recibos.some(function(x){return x.rec===rr.rec;})) self.S.recibos.push(rr);
-                });
-                if(rUlt){ var rn=+rUlt; var ln=0; self.S.recibos.forEach(function(x){var n=+x.rec;if(!isNaN(n)&&n>ln)ln=n;}); if(self.S.ultimoRecibo){var un=+self.S.ultimoRecibo;if(un>ln)ln=un;} if(rn>ln) self.S.ultimoRecibo=rUlt; }
+            if (r.ok) { const d = await r.json();
+                this.S.pagos = d.pagos||[];
+                this.S.recibos = d.recibos||[];
+                if(d.ultimo_recibo) this.S.ultimoRecibo = d.ultimo_recibo;
                 syncOk = true;
             }
-        } catch(e) {
-            try { const s = localStorage.getItem('jac_m_pagos'); if(s) this.S.pagos = JSON.parse(s); } catch(e2) {}
+        } catch(e) {}
+        if(!syncOk) {
+            try { const s = localStorage.getItem('jac_m_data'); if(s) { const d = JSON.parse(s); this.S.afiliados = d.af||[]; this.S.pagos = d.pa||[]; this.S.recibos = d.rec||[]; } } catch(e2) {}
         }
         this.save();
         this.calcStats(); this.nextRec(); this.renderUsers(); this.renderReceipts();
@@ -694,20 +658,18 @@ const App = {
                 var f=reg[k];
                 if(f) f.split(';').filter(function(p){return p.trim();}).forEach(function(p){
                     var t=p.trim().split('_');
-                    if(t.length>=7){
-                        r.push({ced:reg.cedula,nm:nm,tipo:'cuota',mes:t[0],yr:+t[1],val:+t[2],bk:t[3],fec:t[4],hor:t[5]||'',rec:t[6]||'N/A'});
-                    } else {
-                        r.push({ced:reg.cedula,nm:nm,tipo:'cuota',mes:t[0],yr:+t[1],val:+t[2],bk:'',fec:t[3],hor:t[4]||'',rec:t[5]||'N/A'});
-                    }
+                    var rec=t[5]||'N/A';
+                    var bk='';
+                    if(reg['metodo_pago_'+rec]){try{var mp=JSON.parse(reg['metodo_pago_'+rec]);bk=mp.banco||'';}catch(e){}}
+                    r.push({ced:reg.cedula,nm:nm,tipo:'cuota',mes:t[0],yr:+t[1],val:+t[2],bk:bk,fec:t[3],hor:t[4]||'',rec:rec});
                 });
             });
             if(reg.certificado) reg.certificado.split(';').filter(function(c){return c.trim();}).forEach(function(c){
                 var t=c.trim().split('_');
-                if(t.length>=7){
-                    r.push({ced:reg.cedula,nm:nm,tipo:'cert',mes:t[0],yr:+t[1],val:+t[2],bk:t[3],fec:t[4],hor:t[5]||'',rec:t[6]||'N/A'});
-                } else {
-                    r.push({ced:reg.cedula,nm:nm,tipo:'cert',mes:t[0],yr:+t[1],val:+t[2],bk:'',fec:t[3],hor:t[4]||'',rec:t[5]||'N/A'});
-                }
+                var rec=t[5]||'N/A';
+                var bk='';
+                if(reg['metodo_pago_'+rec]){try{var mp=JSON.parse(reg['metodo_pago_'+rec]);bk=mp.banco||'';}catch(e){}}
+                r.push({ced:reg.cedula,nm:nm,tipo:'cert',mes:t[0],yr:+t[1],val:+t[2],bk:bk,fec:t[3],hor:t[4]||'',rec:rec});
             });
         });
         return r;
@@ -897,10 +859,7 @@ const App = {
         var f=ap[0], mn=this.MN(), mm={}; mn.forEach(function(m,i){mm[m.toLowerCase()]=i;});
         var rm=[], ce=false, self=this;
         ap.forEach(function(p){if(p.tipo==='cuota'){var mi=mm[p.mes.toLowerCase()];rm.push({m:mi!==undefined?mi:0,y:p.yr});}else ce=true;});
-        var reg=this.S.pagos.find(function(p){return p.cedula===f.ced;});
-        var mt='efectivo',bk='';
-        if(f.bk){bk=f.bk;mt='transferencia';}
-        if(reg&&reg['metodo_pago_'+num]){try{var x=JSON.parse(reg['metodo_pago_'+num]);mt=x.metodo||mt;bk=x.banco||bk;}catch(e){}}
+        var mt=f.bk?'transferencia':'efectivo', bk=f.bk||'';
         this.S.dayRec = {rec:num,nm:f.nm,ced:f.ced,fec:f.fec,hor:f.hor,meses:rm,cert:ce,mt:mt,bk:bk};
         this.genDayRec(this.S.dayRec);
         document.getElementById('dayReceiptPreview').classList.add('show');
@@ -909,36 +868,37 @@ const App = {
     genDayRec: function(d) {
         var mn=this.MN(), tc=d.meses.length*this.CFG.VALOR_CUOTA, tce=d.cert?this.CFG.VALOR_CERT:0, tt=tc+tce;
         var mh='';
-        d.meses.forEach(function(m){mh+='<div style="display:flex;justify-content:space-between;font-size:12px;padding:2px 0;"><span>'+mn[m.m]+' '+m.y+'</span><span>$'+App.CFG.VALOR_CUOTA.toLocaleString()+'</span></div>';});
-        if(d.cert) mh+='<div style="display:flex;justify-content:space-between;font-size:12px;padding:2px 0;border-top:1px dashed #000;margin-top:4px;padding-top:4px;"><span>Certificado</span><span>$'+this.CFG.VALOR_CERT.toLocaleString()+'</span></div>';
+        d.meses.forEach(function(m){mh+='<div style="display:flex;justify-content:space-between;font-size:14px;padding:2px 0;"><span>'+mn[m.m]+' '+m.y+'</span><span>$'+App.CFG.VALOR_CUOTA.toLocaleString()+'</span></div>';});
+        if(d.cert) mh+='<div style="display:flex;justify-content:space-between;font-size:14px;padding:2px 0;border-top:1px dashed #000;margin-top:4px;padding-top:4px;"><span>Certificado</span><span>$'+this.CFG.VALOR_CERT.toLocaleString()+'</span></div>';
         var logoUrl='https://raw.githubusercontent.com/carlos2601/jacbateas/main/Escudo_Acci%C3%B3n_Comunal_Colombia.svg.png';
-        var th='<div id="dayTirillaRecibo" style="width:260px;font-family:Courier New,monospace;background:white;color:#000;padding:12px;font-size:12px;line-height:1.3;position:relative;">';
-        th+='<div style="position:absolute;top:0;left:0;width:100%;height:100%;background:url('+logoUrl+') no-repeat center center;background-size:240px 310px;opacity:0.07;pointer-events:none;z-index:0;"></div>';
-        th+='<div style="position:relative;text-align:center;border-bottom:2px dashed #000;padding-bottom:5px;margin-bottom:5px;">';
-        th+='<div style="font-size:13px;font-weight:bold;">JUNTA DE ACCION COMUNAL</div>';
-        th+='<div style="font-size:11px;font-weight:bold;">BARRIO BATEAS - SECTOR 3</div>';
-        th+='<div style="font-size:10px;">Puerto Gaitan, Meta</div>';
-        th+='<div style="font-size:9px;margin-top:2px;">Personeria Juridica No. 451 del 31 de Octubre de 2.025</div></div>';
-        th+='<div style="position:relative;text-align:center;font-weight:bold;font-size:14px;margin:5px 0;border:2px solid #000;padding:3px;">RECIBO DE PAGO</div>';
-        th+='<div style="position:relative;border-bottom:1px dashed #000;padding-bottom:5px;margin-bottom:5px;">';
-        th+='<div style="display:flex;justify-content:space-between;font-size:11px;"><span>Recibo N:</span><span style="font-weight:bold;font-size:13px;">'+d.rec+'</span></div>';
-        th+='<div style="display:flex;justify-content:space-between;font-size:11px;"><span>Fecha:</span><span>'+d.fec+'</span></div>';
-        th+='<div style="display:flex;justify-content:space-between;font-size:11px;"><span>Hora:</span><span>'+d.hor+'</span></div></div>';
-        th+='<div style="position:relative;border-bottom:1px dashed #000;padding-bottom:5px;margin-bottom:5px;">';
-        th+='<div style="font-size:11px;font-weight:bold;margin-bottom:2px;">AFILIADO/A:</div>';
-        th+='<div style="font-size:12px;font-weight:bold;">'+d.nm+'</div>';
-        th+='<div style="font-size:11px;">C.C. '+d.ced+'</div></div>';
-        th+='<div style="position:relative;border-bottom:1px dashed #000;padding-bottom:5px;margin-bottom:5px;">';
-        th+='<div style="font-size:11px;font-weight:bold;margin-bottom:2px;">DETALLE:</div>'+mh+'</div>';
-        th+='<div style="position:relative;border-bottom:2px dashed #000;padding-bottom:5px;margin-bottom:5px;">';
-        th+='<div style="display:flex;justify-content:space-between;font-size:14px;font-weight:bold;"><span>TOTAL:</span><span>$'+tt.toLocaleString()+'</span></div></div>';
+        var th='<div id="dayTirillaRecibo" style="width:260px;font-family:Courier New,monospace;background:white;color:#000;padding:15px;font-size:14px;line-height:1.4;position:relative;overflow:hidden;">';
+        th+='<div style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.08;pointer-events:none;z-index:0;background-image:url(\''+logoUrl+'\');background-size:100% auto;background-repeat:no-repeat;background-position:center center;"></div>';
+        th+='<div style="position:relative;z-index:1;">';
+        th+='<div style="text-align:center;border-bottom:2px dashed #000;padding-bottom:6px;margin-bottom:6px;">';
+        th+='<div style="font-size:16px;font-weight:bold;">JUNTA DE ACCION COMUNAL</div>';
+        th+='<div style="font-size:14px;font-weight:bold;">BARRIO BATEAS - SECTOR 3</div>';
+        th+='<div style="font-size:12px;">Puerto Gaitan, Meta</div>';
+        th+='<div style="font-size:11px;margin-top:2px;">Personeria Juridica No. 451 del 31 de Octubre de 2.025</div></div>';
+        th+='<div style="text-align:center;font-weight:bold;font-size:17px;margin:6px 0;border:2px solid #000;padding:3px;">RECIBO DE PAGO</div>';
+        th+='<div style="border-bottom:1px dashed #000;padding-bottom:6px;margin-bottom:6px;">';
+        th+='<div style="display:flex;justify-content:space-between;font-size:14px;"><span>Recibo N°:</span><span style="font-weight:bold;font-size:16px;">'+d.rec+'</span></div>';
+        th+='<div style="display:flex;justify-content:space-between;font-size:14px;"><span>Fecha:</span><span>'+d.fec+'</span></div>';
+        th+='<div style="display:flex;justify-content:space-between;font-size:14px;"><span>Hora:</span><span>'+d.hor+'</span></div></div>';
+        th+='<div style="border-bottom:1px dashed #000;padding-bottom:6px;margin-bottom:6px;">';
+        th+='<div style="font-size:13px;font-weight:bold;margin-bottom:3px;">AFILIADO/A:</div>';
+        th+='<div style="font-size:14px;font-weight:bold;">'+d.nm+'</div>';
+        th+='<div style="font-size:13px;">C.C. '+d.ced+'</div></div>';
+        th+='<div style="border-bottom:1px dashed #000;padding-bottom:6px;margin-bottom:6px;">';
+        th+='<div style="font-size:13px;font-weight:bold;margin-bottom:3px;">DETALLE:</div>'+mh+'</div>';
+        th+='<div style="border-bottom:2px dashed #000;padding-bottom:6px;margin-bottom:6px;">';
+        th+='<div style="display:flex;justify-content:space-between;font-size:17px;font-weight:bold;"><span>TOTAL:</span><span>$'+tt.toLocaleString()+'</span></div></div>';
         if(d.mt){
-            th+='<div style="position:relative;border-bottom:1px dashed #000;padding-bottom:5px;margin-bottom:5px;">';
-            th+='<div style="display:flex;justify-content:space-between;font-size:11px;"><span style="font-weight:bold;">PAGO:</span><span>'+(d.mt==='efectivo'?'Efectivo':'Transferencia')+'</span></div>';
-            if(d.mt==='transferencia'&&d.bk) th+='<div style="display:flex;justify-content:space-between;font-size:11px;"><span style="font-weight:bold;">BANCO:</span><span>'+d.bk+'</span></div>';
+            th+='<div style="border-bottom:1px dashed #000;padding-bottom:6px;margin-bottom:6px;">';
+            th+='<div style="display:flex;justify-content:space-between;font-size:13px;"><span style="font-weight:bold;">FORMA DE PAGO:</span><span>'+(d.mt==='efectivo'?'Efectivo':'Transferencia')+'</span></div>';
+            if(d.mt==='transferencia'&&d.bk) th+='<div style="display:flex;justify-content:space-between;font-size:13px;"><span style="font-weight:bold;">BANCO:</span><span>'+d.bk+'</span></div>';
             th+='</div>';
         }
-        th+='<div style="position:relative;text-align:center;font-size:10px;margin-top:6px;"><div>Gracias por su pago</div><div style="margin-top:2px;">Junta de Accion Comunal</div><div>Barrio Bateas Sector 3</div></div></div>';
+        th+='<div style="text-align:center;font-size:12px;margin-top:8px;"><div>Gracias por su pago</div><div style="margin-top:3px;">Junta de Accion Comunal</div><div>Barrio Bateas Sector 3</div></div></div></div>';
         document.getElementById('dayTirillaContainer').innerHTML = th;
     },
 
@@ -1012,8 +972,8 @@ const App = {
             var mss=y===ay?this.pf(af.fecha).getMonth():0, me=y===cy?new Date().getMonth():11;
             for(var m=mss;m<=me;m++){
                 var pd=this.isPaid(ced,y,m), co=this.isCond(y,m);
-                if(co) continue;
-                ch+='<div class="mci"><input type="checkbox" class="pmi" value="'+mn[m]+'_'+y+'" data-y="'+y+'" data-m="'+m+'" '+(pd?'checked':'')+' '+(pd?'disabled':'')+'><span class="mn">'+mn[m]+' '+y+'</span><span class="mv">'+(pd?'Pagado':'$'+this.CFG.VALOR_CUOTA.toLocaleString())+'</span></div>';
+                if(co||pd) continue;
+                ch+='<div class="mci"><input type="checkbox" class="pmi" value="'+mn[m]+'_'+y+'" data-y="'+y+'" data-m="'+m+'"><span class="mn">'+mn[m]+' '+y+'</span><span class="mv">$'+this.CFG.VALOR_CUOTA.toLocaleString()+'</span></div>';
             }
         }
         document.getElementById('payMonths').innerHTML = ch;
@@ -1054,28 +1014,36 @@ const App = {
         });
         var ic = document.getElementById('payCert').checked;
         if(!sm.length&&!ic) return alert('Selecciona al menos un mes');
-        var mn = this.MN(), self = this;
+        var self = this;
+        sm = sm.filter(function(s){return !self.isPaid(self.S.pending.ced, s.y, s.m);});
+        if(!sm.length&&!ic) return alert('Todos los meses seleccionados ya estan pagados');
+        var mn = this.MN();
         var mt=document.getElementById('payMethod').value, bk=mt==='transferencia'?document.getElementById('payBank').value:'';
         var reg = this.S.pagos.find(function(p){return p.cedula===self.S.pending.ced;});
         if(!reg){reg={cedula:this.S.pending.ced,nombre:this.S.pending.nm};this.S.pagos.push(reg);}
         sm.forEach(function(s){
-            var f='fecha_pago_año_'+s.y;
-            var ps=mn[s.m]+'_'+s.y+'_'+self.CFG.VALOR_CUOTA;
-            if(bk) ps+='_'+bk;
-            ps+='_'+ff+'_'+tf+'_'+rec;
+            var f='fecha_pago_año_'+s.y, ps=mn[s.m]+'_'+s.y+'_'+self.CFG.VALOR_CUOTA+'_'+ff+'_'+tf+'_'+rec;
             reg[f]=reg[f]?reg[f]+'; '+ps:ps;
+        });
+        // Ordenar pagos por número de mes dentro de cada año
+        var mnArr=this.MN();
+        sm.forEach(function(s){
+            var f='fecha_pago_año_'+s.y;
+            if(reg[f]){
+                var entries=reg[f].split('; ');
+                entries.sort(function(a,b){return mnArr.indexOf(a.split('_')[0])-mnArr.indexOf(b.split('_')[0]);});
+                reg[f]=entries.join('; ');
+            }
         });
         if(ic){
             var ma=mn[new Date().getMonth()], ya=new Date().getFullYear();
-            var cs=ma+'_'+ya+'_'+this.CFG.VALOR_CERT;
-            if(bk) cs+='_'+bk;
-            cs+='_'+ff+'_'+tf+'_'+rec;
+            var cs=ma+'_'+ya+'_'+this.CFG.VALOR_CERT+'_'+ff+'_'+tf+'_'+rec;
             reg.certificado=reg.certificado?reg.certificado+'; '+cs:cs;
         }
         this.save(); this.calcStats(); this.nextRec(); this.renderReceipts();
         var pendingCed = this.S.pending.ced, pendingNm = this.S.pending.nm;
         this.closePay();
-        this.S.recibos.push({rec:rec,ced:pendingCed,nm:pendingNm,fec:ff,hor:tf,meses:sm,cert:ic,tot:sm.length*this.CFG.VALOR_CUOTA+(ic?this.CFG.VALOR_CERT:0),mt:mt,bk:bk});
+        this.S.recibos.push({rec:rec,ced:pendingCed,nm:pendingNm,fec:ff,hor:tf,meses:sm,cert:ic,tot:sm.length*this.CFG.VALOR_CUOTA+(ic?this.CFG.VALOR_CERT:0)});
         this.save(); this.renderReceipts();
         this.S.sFilt = pendingCed;
         document.getElementById('searchInput').value = pendingCed;
@@ -1120,36 +1088,37 @@ const App = {
     genRec: function(d) {
         var mn=this.MN(), tc=d.meses.length*this.CFG.VALOR_CUOTA, tce=d.cert?this.CFG.VALOR_CERT:0, tt=tc+tce;
         var mh='';
-        d.meses.forEach(function(m){mh+='<div style="display:flex;justify-content:space-between;font-size:12px;padding:2px 0;"><span>'+mn[m.m]+' '+m.y+'</span><span>$'+App.CFG.VALOR_CUOTA.toLocaleString()+'</span></div>';});
-        if(d.cert) mh+='<div style="display:flex;justify-content:space-between;font-size:12px;padding:2px 0;border-top:1px dashed #000;margin-top:4px;padding-top:4px;"><span>Certificado</span><span>$'+this.CFG.VALOR_CERT.toLocaleString()+'</span></div>';
+        d.meses.forEach(function(m){mh+='<div style="display:flex;justify-content:space-between;font-size:14px;padding:2px 0;"><span>'+mn[m.m]+' '+m.y+'</span><span>$'+App.CFG.VALOR_CUOTA.toLocaleString()+'</span></div>';});
+        if(d.cert) mh+='<div style="display:flex;justify-content:space-between;font-size:14px;padding:2px 0;border-top:1px dashed #000;margin-top:4px;padding-top:4px;"><span>Certificado</span><span>$'+this.CFG.VALOR_CERT.toLocaleString()+'</span></div>';
         var logoUrl='https://raw.githubusercontent.com/carlos2601/jacbateas/main/Escudo_Acci%C3%B3n_Comunal_Colombia.svg.png';
-        var th='<div id="tirillaRecibo" style="width:260px;font-family:Courier New,monospace;background:white;color:#000;padding:12px;font-size:12px;line-height:1.3;position:relative;">';
-        th+='<div style="position:absolute;top:0;left:0;width:100%;height:100%;background:url('+logoUrl+') no-repeat center center;background-size:240px 310px;opacity:0.07;pointer-events:none;z-index:0;"></div>';
-        th+='<div style="position:relative;text-align:center;border-bottom:2px dashed #000;padding-bottom:5px;margin-bottom:5px;">';
-        th+='<div style="font-size:13px;font-weight:bold;">JUNTA DE ACCION COMUNAL</div>';
-        th+='<div style="font-size:11px;font-weight:bold;">BARRIO BATEAS - SECTOR 3</div>';
-        th+='<div style="font-size:10px;">Puerto Gaitan, Meta</div>';
-        th+='<div style="font-size:9px;margin-top:2px;">Personeria Juridica No. 451 del 31 de Octubre de 2.025</div></div>';
-        th+='<div style="position:relative;text-align:center;font-weight:bold;font-size:14px;margin:5px 0;border:2px solid #000;padding:3px;">RECIBO DE PAGO</div>';
-        th+='<div style="position:relative;border-bottom:1px dashed #000;padding-bottom:5px;margin-bottom:5px;">';
-        th+='<div style="display:flex;justify-content:space-between;font-size:11px;"><span>Recibo N:</span><span style="font-weight:bold;font-size:13px;">'+d.rec+'</span></div>';
-        th+='<div style="display:flex;justify-content:space-between;font-size:11px;"><span>Fecha:</span><span>'+d.fec+'</span></div>';
-        th+='<div style="display:flex;justify-content:space-between;font-size:11px;"><span>Hora:</span><span>'+d.hor+'</span></div></div>';
-        th+='<div style="position:relative;border-bottom:1px dashed #000;padding-bottom:5px;margin-bottom:5px;">';
-        th+='<div style="font-size:11px;font-weight:bold;margin-bottom:2px;">AFILIADO/A:</div>';
-        th+='<div style="font-size:12px;font-weight:bold;">'+d.nm+'</div>';
-        th+='<div style="font-size:11px;">C.C. '+d.ced+'</div></div>';
-        th+='<div style="position:relative;border-bottom:1px dashed #000;padding-bottom:5px;margin-bottom:5px;">';
-        th+='<div style="font-size:11px;font-weight:bold;margin-bottom:2px;">DETALLE:</div>'+mh+'</div>';
-        th+='<div style="position:relative;border-bottom:2px dashed #000;padding-bottom:5px;margin-bottom:5px;">';
-        th+='<div style="display:flex;justify-content:space-between;font-size:14px;font-weight:bold;"><span>TOTAL:</span><span>$'+tt.toLocaleString()+'</span></div></div>';
+        var th='<div id="tirillaRecibo" style="width:260px;font-family:Courier New,monospace;background:white;color:#000;padding:15px;font-size:14px;line-height:1.4;position:relative;overflow:hidden;">';
+        th+='<div style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.08;pointer-events:none;z-index:0;background-image:url(\''+logoUrl+'\');background-size:100% auto;background-repeat:no-repeat;background-position:center center;"></div>';
+        th+='<div style="position:relative;z-index:1;">';
+        th+='<div style="text-align:center;border-bottom:2px dashed #000;padding-bottom:6px;margin-bottom:6px;">';
+        th+='<div style="font-size:16px;font-weight:bold;">JUNTA DE ACCION COMUNAL</div>';
+        th+='<div style="font-size:14px;font-weight:bold;">BARRIO BATEAS - SECTOR 3</div>';
+        th+='<div style="font-size:12px;">Puerto Gaitan, Meta</div>';
+        th+='<div style="font-size:11px;margin-top:2px;">Personeria Juridica No. 451 del 31 de Octubre de 2.025</div></div>';
+        th+='<div style="text-align:center;font-weight:bold;font-size:17px;margin:6px 0;border:2px solid #000;padding:3px;">RECIBO DE PAGO</div>';
+        th+='<div style="border-bottom:1px dashed #000;padding-bottom:6px;margin-bottom:6px;">';
+        th+='<div style="display:flex;justify-content:space-between;font-size:14px;"><span>Recibo N°:</span><span style="font-weight:bold;font-size:16px;">'+d.rec+'</span></div>';
+        th+='<div style="display:flex;justify-content:space-between;font-size:14px;"><span>Fecha:</span><span>'+d.fec+'</span></div>';
+        th+='<div style="display:flex;justify-content:space-between;font-size:14px;"><span>Hora:</span><span>'+d.hor+'</span></div></div>';
+        th+='<div style="border-bottom:1px dashed #000;padding-bottom:6px;margin-bottom:6px;">';
+        th+='<div style="font-size:13px;font-weight:bold;margin-bottom:3px;">AFILIADO/A:</div>';
+        th+='<div style="font-size:14px;font-weight:bold;">'+d.nm+'</div>';
+        th+='<div style="font-size:13px;">C.C. '+d.ced+'</div></div>';
+        th+='<div style="border-bottom:1px dashed #000;padding-bottom:6px;margin-bottom:6px;">';
+        th+='<div style="font-size:13px;font-weight:bold;margin-bottom:3px;">DETALLE:</div>'+mh+'</div>';
+        th+='<div style="border-bottom:2px dashed #000;padding-bottom:6px;margin-bottom:6px;">';
+        th+='<div style="display:flex;justify-content:space-between;font-size:17px;font-weight:bold;"><span>TOTAL:</span><span>$'+tt.toLocaleString()+'</span></div></div>';
         if(d.mt){
-            th+='<div style="position:relative;border-bottom:1px dashed #000;padding-bottom:5px;margin-bottom:5px;">';
-            th+='<div style="display:flex;justify-content:space-between;font-size:11px;"><span style="font-weight:bold;">PAGO:</span><span>'+(d.mt==='efectivo'?'Efectivo':'Transferencia')+'</span></div>';
-            if(d.mt==='transferencia'&&d.bk) th+='<div style="display:flex;justify-content:space-between;font-size:11px;"><span style="font-weight:bold;">BANCO:</span><span>'+d.bk+'</span></div>';
+            th+='<div style="border-bottom:1px dashed #000;padding-bottom:6px;margin-bottom:6px;">';
+            th+='<div style="display:flex;justify-content:space-between;font-size:13px;"><span style="font-weight:bold;">FORMA DE PAGO:</span><span>'+(d.mt==='efectivo'?'Efectivo':'Transferencia')+'</span></div>';
+            if(d.mt==='transferencia'&&d.bk) th+='<div style="display:flex;justify-content:space-between;font-size:13px;"><span style="font-weight:bold;">BANCO:</span><span>'+d.bk+'</span></div>';
             th+='</div>';
         }
-        th+='<div style="position:relative;text-align:center;font-size:10px;margin-top:6px;"><div>Gracias por su pago</div><div style="margin-top:2px;">Junta de Accion Comunal</div><div>Barrio Bateas Sector 3</div></div></div>';
+        th+='<div style="text-align:center;font-size:12px;margin-top:8px;"><div>Gracias por su pago</div><div style="margin-top:3px;">Junta de Accion Comunal</div><div>Barrio Bateas Sector 3</div></div></div></div>';
         document.getElementById('tirillaContainer').innerHTML = th;
         document.getElementById('receiptPreview').classList.add('show');
     },
@@ -1160,23 +1129,21 @@ const App = {
         var f=ap[0], mn=this.MN(), mm={}; mn.forEach(function(m,i){mm[m.toLowerCase()]=i;});
         var rm=[], ce=false, self=this;
         ap.forEach(function(p){if(p.tipo==='cuota'){var mi=mm[p.mes.toLowerCase()];rm.push({m:mi!==undefined?mi:0,y:p.yr});}else ce=true;});
-        var reg=this.S.pagos.find(function(p){return p.cedula===f.ced;});
-        var mt='efectivo',bk='';
-        if(f.bk){bk=f.bk;mt='transferencia';}
-        if(reg&&reg['metodo_pago_'+num]){try{var x=JSON.parse(reg['metodo_pago_'+num]);mt=x.metodo||mt;bk=x.banco||bk;}catch(e){}}
+        var mt=f.bk?'transferencia':'efectivo', bk=f.bk||'';
         this.genRec({rec:num,nm:f.nm,ced:f.ced,fec:f.fec,hor:f.hor,meses:rm,cert:ce,mt:mt,bk:bk});
     },
 
     doPrint: function() {
         try {
             var el = document.getElementById('tirillaRecibo');
-            html2canvas(el,{scale:3,useCORS:true,allowTaint:true,backgroundColor:'#FFFFFF'}).then(function(cv){
-                var iw=cv.width,ih=cv.height,pw=(iw*25.4)/96,ph=(ih*25.4)/96;
-                var pdf=new jspdf.jsPDF({orientation:pw>ph?'landscape':'portrait',unit:'mm',format:[pw,ph]});
-                pdf.addImage(cv.toDataURL('image/png'),'PNG',0,0,pw,ph);
-                pdf.autoPrint();
-                window.open(pdf.output('bloburl'));
-            });
+            var ancho = el.offsetWidth;
+            var alto = el.offsetHeight;
+            var anchoMm = (ancho * 25.4) / 96;
+            var altoMm = (alto * 25.4) / 96;
+            var printWindow = window.open('', '_blank');
+            printWindow.document.write('<html><head><title>Recibo</title><style>@page{size:'+anchoMm.toFixed(1)+'mm '+altoMm.toFixed(1)+'mm;margin:0;}body{margin:0;padding:0;width:'+anchoMm.toFixed(1)+'mm;}*{margin:0;padding:0;box-sizing:border-box;}</style></head><body>'+el.outerHTML+'</body></html>');
+            printWindow.document.close();
+            setTimeout(function(){printWindow.print();},400);
         } catch(e){alert('Error: '+e.message);}
     },
 
@@ -1250,7 +1217,7 @@ const App = {
         document.getElementById('cfgSyncStatus').className='sb pe';
         document.getElementById('headerSync').textContent='Sincronizando...';
         document.getElementById('headerSync').style.color='var(--yellow)';
-        var content = {ultima_actualizacion:new Date().toISOString(),valor_cuota:this.CFG.VALOR_CUOTA,pagos:this.S.pagos,recibos:this.S.recibos,ultimo_recibo:this.S.ultimoRecibo};
+        var content = {ultima_actualizacion:new Date().toISOString(),valor_cuota:this.CFG.VALOR_CUOTA,pagos:this.S.pagos};
         var url='https://api.github.com/repos/'+this.CFG.REPO_OWNER+'/'+this.CFG.REPO_NAME+'/contents/'+this.CFG.CUOTA;
         var self=this;
         fetch(url,{headers:{'Authorization':'token '+this.S.github}}).then(function(r){return r.ok?r.json():null;}).then(function(shaData){
