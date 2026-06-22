@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-06-22T03:27:37.819Z",
+  "ultima_actualizacion": "2026-06-22T03:35:26.470Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -789,19 +789,12 @@
     {
       "cedula": "4438681",
       "nombre": "CARLOS ALBERTO QUIÑONES MUÑOZ",
-      "metodo_pago_00145": "{\"metodo\":\"efectivo\",\"banco\":\"\"}",
-      "metodo_pago_00154": "{\"metodo\":\"efectivo\",\"banco\":\"\"}",
-      "metodo_pago_00156": "{\"metodo\":\"efectivo\",\"banco\":\"\"}",
-      "metodo_pago_00146": "{\"metodo\":\"efectivo\",\"banco\":\"\"}",
       "certificado": "junio_2026_20000_21/06/2026_18:50:45_00145",
-      "metodo_pago_00147": "{\"metodo\":\"efectivo\",\"banco\":\"\"}"
-    },
-    {
-      "cedula": "42775182",
-      "nombre": "LILIANA LONDOÑO GALLEGO",
       "metodo_pago_00145": "{\"metodo\":\"efectivo\",\"banco\":\"\"}",
-      "metodo_pago_00148": "{\"metodo\":\"efectivo\",\"banco\":\"\"}",
-      "metodo_pago_00151": "{\"metodo\":\"efectivo\",\"banco\":\"\"}"
+      "metodo_pago_00146": "{\"metodo\":\"efectivo\",\"banco\":\"\"}",
+      "metodo_pago_00147": "{\"metodo\":\"efectivo\",\"banco\":\"\"}",
+      "metodo_pago_00154": "{\"metodo\":\"efectivo\",\"banco\":\"\"}",
+      "metodo_pago_00156": "{\"metodo\":\"efectivo\",\"banco\":\"\"}"
     }
   ]
 }
