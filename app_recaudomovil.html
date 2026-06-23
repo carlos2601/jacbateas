@@ -253,7 +253,6 @@
         <h2>Token de Acceso</h2>
         <p>Ingresa el token de acceso. Se guardara por 15 dias.</p>
         <input type="password" id="tokenInput" placeholder="Token de acceso">
-        <div class="rrow"><input type="checkbox" id="rememberToken" checked><label for="rememberToken">Recordar token 15 dias</label></div>
         <button id="validateTokenBtn">Validar y continuar</button>
         <div id="tokenError" class="terr">Token invalido</div>
     </div>
@@ -340,13 +339,25 @@
         <div class="sec-fixed">
             <div style="background:var(--bg2);border:1px solid var(--brd);border-radius:12px;padding:14px;margin-bottom:10px;">
                 <h3 style="font-size:.85rem;margin-bottom:10px;font-weight:700;">Configuracion</h3>
-                <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--brd);">
-                    <span style="font-size:.75rem;color:var(--t2);">Token acceso</span>
-                    <span id="cfgToken" class="sb ok">Activo</span>
+                <div style="padding:8px 0;border-bottom:1px solid var(--brd);">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                        <span style="font-size:.75rem;color:var(--t2);">Token acceso</span>
+                        <span id="cfgToken" class="sb ok" onclick="App.showCfgTokenInput()" style="cursor:pointer;" title="Cambiar token">Activo</span>
+                    </div>
+                    <div id="cfgTokenWrap" style="display:flex;gap:4px;">
+                        <input type="password" id="cfgTokenInput" placeholder="Token de acceso" style="flex:1;padding:6px 8px;border:1px solid var(--brd);border-radius:6px;font-size:.72rem;background:var(--bgs);color:var(--t1);">
+                        <button onclick="App.saveTokenFromCfg()" style="padding:6px 10px;border:none;border-radius:6px;background:var(--green);color:#fff;font-size:.7rem;font-weight:700;cursor:pointer;">Guardar</button>
+                    </div>
                 </div>
-                <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--brd);">
-                    <span style="font-size:.75rem;color:var(--t2);">Token GitHub</span>
-                    <span id="cfgGit" class="sb pe">No config.</span>
+                <div style="padding:8px 0;border-bottom:1px solid var(--brd);">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                        <span style="font-size:.75rem;color:var(--t2);">Token GitHub</span>
+                        <span id="cfgGit" class="sb pe" onclick="App.showCfgGitInput()" style="cursor:pointer;" title="Cambiar token">No config.</span>
+                    </div>
+                    <div id="cfgGitWrap" style="display:flex;gap:4px;">
+                        <input type="password" id="cfgGitInput" placeholder="Token GitHub" style="flex:1;padding:6px 8px;border:1px solid var(--brd);border-radius:6px;font-size:.72rem;background:var(--bgs);color:var(--t1);">
+                        <button onclick="App.saveGithubFromCfg()" style="padding:6px 10px;border:none;border-radius:6px;background:var(--green);color:#fff;font-size:.7rem;font-weight:700;cursor:pointer;">Guardar</button>
+                    </div>
                 </div>
                 <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--brd);">
                     <span style="font-size:.75rem;color:var(--t2);">Sincronizacion</span>
@@ -362,7 +373,6 @@
                 </div>
             </div>
             <div style="display:flex;gap:6px;">
-                <button id="cfgChangeToken" class="btn" style="background:var(--yellow);color:#1a1a1a;flex:1;font-size:.7rem;padding:10px 4px;">Token</button>
                 <button id="cfgSyncBtn" class="btn" style="background:var(--green);flex:1;font-size:.7rem;padding:10px 4px;">Sync</button>
                 <button id="cfgClearLocal" class="btn" style="background:var(--bgc);color:var(--t1);border:1px solid var(--red);flex:1;font-size:.7rem;padding:10px 4px;" onclick="if(confirm('Borrar datos locales y recargar desde GitHub?')){localStorage.removeItem('jac_m_data');localStorage.removeItem('jac_m_pagos');window.location.reload();}">Limpiar</button>
                 <button id="cfgLogout" class="btn" style="background:var(--red);flex:1;font-size:.7rem;padding:10px 4px;">Salir</button>
@@ -558,7 +568,6 @@ const App = {
         $('searchInput').oninput = e => { this.S.sFilt = e.target.value; this.renderUsers(); };
         $('receiptSearch').oninput = e => { this.S.rFilt = e.target.value; this.renderReceipts(); };
         $('logoutBtn').onclick = () => this.logout();
-        $('cfgChangeToken').onclick = () => this.changeToken();
         $('cfgSyncBtn').onclick = () => this.syncCloud();
         $('cfgLogout').onclick = () => this.logoutFull();
         $('edSearchInput').oninput = () => this.edFilterEd();
@@ -601,6 +610,8 @@ const App = {
         if (!u || !p) return this.showAlert('Ingresa usuario y contrasena', 'error');
         if (u === '123456' && p === '123456') {
             this.S.user = { usuario: u, rol: 'admin' };
+            localStorage.setItem('jac_m_session', JSON.stringify({ lastActivity: new Date().toISOString() }));
+            this.trackActivity();
             document.getElementById('loginContainer').style.display = 'none';
             this.checkToken();
         } else {
@@ -610,13 +621,23 @@ const App = {
 
     checkSession() {
         const d = localStorage.getItem('jac_m_token');
-        if (d) {
+        const s = localStorage.getItem('jac_m_session');
+        if (d && s) {
             try {
-                const data = JSON.parse(d);
-                if (new Date(data.exp) > new Date()) {
-                    this.S.token = data.token;
+                const tdata = JSON.parse(d);
+                const sdata = JSON.parse(s);
+                if (new Date(tdata.exp) > new Date()) {
+                    var lastAct = new Date(sdata.lastActivity);
+                    var now = new Date();
+                    var diffMin = (now - lastAct) / 60000;
+                    if (diffMin > 60) {
+                        localStorage.removeItem('jac_m_session');
+                        return;
+                    }
+                    this.S.token = tdata.token;
                     this.S.user = { usuario: '123456', rol: 'admin' };
                     document.getElementById('loginContainer').style.display = 'none';
+                    this.trackActivity();
                     try {
                         const gd = localStorage.getItem('jac_m_github');
                         if (gd) {
@@ -632,8 +653,39 @@ const App = {
                     return;
                 }
                 localStorage.removeItem('jac_m_token');
+                localStorage.removeItem('jac_m_session');
             } catch(e) {}
         }
+    },
+
+    trackActivity() {
+        var self = this;
+        var updateAct = function() {
+            if (!self.S.user) return;
+            localStorage.setItem('jac_m_session', JSON.stringify({ lastActivity: new Date().toISOString() }));
+        };
+        ['click','mousemove','keydown','scroll','touchstart'].forEach(function(evt) {
+            document.addEventListener(evt, updateAct, { passive: true });
+        });
+        if(this._inactivityTimer) clearInterval(this._inactivityTimer);
+        this._inactivityTimer = setInterval(function() {
+            var s = localStorage.getItem('jac_m_session');
+            if (!s || !self.S.user) return;
+            try {
+                var last = new Date(JSON.parse(s).lastActivity);
+                var diff = (new Date() - last) / 60000;
+                if (diff > 60) {
+                    self.S.user = null;
+                    self.S.token = null;
+                    self.S.github = null;
+                    localStorage.removeItem('jac_m_session');
+                    document.getElementById('mainApp').classList.remove('show');
+                    document.getElementById('loginContainer').style.display = '';
+                    document.getElementById('username').value = '';
+                    document.getElementById('password').value = '';
+                }
+            } catch(e) {}
+        }, 300000);
     },
 
     checkToken() {
@@ -659,9 +711,7 @@ const App = {
         if (v === this.CFG.ADMIN_TOKEN) {
             const exp = new Date();
             exp.setDate(exp.getDate() + this.CFG.TOKEN_DIAS);
-            if (document.getElementById('rememberToken').checked) {
-                localStorage.setItem('jac_m_token', JSON.stringify({ token: v, exp: exp.toISOString() }));
-            }
+            localStorage.setItem('jac_m_token', JSON.stringify({ token: v, exp: exp.toISOString() }));
             this.S.token = v;
             document.getElementById('tokenModal').classList.remove('show');
             this.checkGithubToken();
@@ -721,6 +771,7 @@ const App = {
         this.save(true);
         this.calcStats(); this.nextRec(); this.renderUsers(); this.renderReceipts();
         document.getElementById('mainApp').classList.add('show');
+        this.hideCfgTokenInputs();
         if(syncOk) {
             document.getElementById('cfgSyncStatus').textContent = 'Sincronizado';
             document.getElementById('cfgSyncStatus').className = 'sb ok';
@@ -1642,6 +1693,50 @@ const App = {
         document.getElementById('tokenInput').focus();
     },
 
+    saveTokenFromCfg: function() {
+        var v = document.getElementById('cfgTokenInput').value.trim();
+        if(!v){alert('Ingresa un token');return;}
+        if(v !== this.CFG.ADMIN_TOKEN){alert('Token invalido');return;}
+        var exp = new Date();
+        exp.setDate(exp.getDate() + this.CFG.TOKEN_DIAS);
+        localStorage.setItem('jac_m_token', JSON.stringify({ token: v, exp: exp.toISOString() }));
+        this.S.token = v;
+        document.getElementById('cfgToken').textContent = 'Activo';
+        document.getElementById('cfgToken').className = 'sb ok';
+        document.getElementById('cfgTokenInput').value = '';
+        document.getElementById('cfgTokenWrap').style.display = 'none';
+    },
+
+    showCfgTokenInput: function() {
+        document.getElementById('cfgTokenWrap').style.display = 'flex';
+        document.getElementById('cfgTokenInput').value = '';
+        document.getElementById('cfgTokenInput').focus();
+    },
+
+    saveGithubFromCfg: function() {
+        var v = document.getElementById('cfgGitInput').value.trim();
+        if(!v){alert('Ingresa token GitHub');return;}
+        var exp = new Date();
+        exp.setDate(exp.getDate() + this.CFG.TOKEN_DIAS);
+        localStorage.setItem('jac_m_github', JSON.stringify({ token: v, exp: exp.toISOString() }));
+        this.S.github = v;
+        document.getElementById('cfgGit').textContent = 'Activo';
+        document.getElementById('cfgGit').className = 'sb ok';
+        document.getElementById('cfgGitInput').value = '';
+        document.getElementById('cfgGitWrap').style.display = 'none';
+    },
+
+    showCfgGitInput: function() {
+        document.getElementById('cfgGitWrap').style.display = 'flex';
+        document.getElementById('cfgGitInput').value = '';
+        document.getElementById('cfgGitInput').focus();
+    },
+
+    hideCfgTokenInputs: function() {
+        if(this.S.token) document.getElementById('cfgTokenWrap').style.display = 'none';
+        if(this.S.github) document.getElementById('cfgGitWrap').style.display = 'none';
+    },
+
     showGithubModal: function() {
         document.getElementById('githubInput').value='';
         document.getElementById('githubError').style.display='none';
@@ -1691,7 +1786,7 @@ const App = {
     },
 
     logout: function() {
-        if(confirm('Cerrar sesion?')){this.S.user=null;document.getElementById('mainApp').classList.remove('show');document.getElementById('loginContainer').style.display='';document.getElementById('username').value='';document.getElementById('password').value='';}
+        if(confirm('Cerrar sesion?')){this.S.user=null;if(this._inactivityTimer)clearInterval(this._inactivityTimer);localStorage.removeItem('jac_m_session');document.getElementById('mainApp').classList.remove('show');document.getElementById('loginContainer').style.display='';document.getElementById('username').value='';document.getElementById('password').value='';}
     },
 
     validateEditPass() {
@@ -1916,7 +2011,7 @@ const App = {
     },
 
     logoutFull: function() {
-        if(confirm('Cerrar sesion completa? Se eliminaran tokens.')){localStorage.removeItem('jac_m_token');localStorage.removeItem('jac_m_github');this.S.user=null;this.S.token=null;this.S.github=null;document.getElementById('mainApp').classList.remove('show');document.getElementById('loginContainer').style.display='';document.getElementById('username').value='';document.getElementById('password').value='';}
+        if(confirm('Cerrar sesion completa? Se eliminaran tokens.')){if(this._inactivityTimer)clearInterval(this._inactivityTimer);localStorage.removeItem('jac_m_token');localStorage.removeItem('jac_m_github');localStorage.removeItem('jac_m_session');this.S.user=null;this.S.token=null;this.S.github=null;document.getElementById('mainApp').classList.remove('show');document.getElementById('loginContainer').style.display='';document.getElementById('username').value='';document.getElementById('password').value='';}
     }
 };
 
