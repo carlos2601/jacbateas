@@ -414,6 +414,7 @@
             <button onclick="App.doDownload()" style="background:var(--green);color:#fff;">PNG</button>
             <button onclick="App.doCopy()" style="background:var(--blue);color:#fff;">Copiar</button>
             <button onclick="App.doShare()" style="background:#8b5cf6;color:#fff;">Compartir</button>
+            <button id="btnWhatsApp" onclick="App.sendWhatsApp()" style="background:#25d366;color:#fff;display:none;">WhatsApp</button>
         </div>
     </div>
 </div>
@@ -1437,6 +1438,11 @@ const App = {
 
     genRec: function(d) {
         var mn=this.MN(), tc=d.meses.length*this.CFG.VALOR_CUOTA, tce=d.cert?this.CFG.VALOR_CERT:0, tt=tc+tce;
+        this._recData = d;
+        var af = this.S.afiliados.find(function(a){return a.cedula===d.ced;});
+        this._recPhone = af ? (af.celular||af.telefono||'') : '';
+        var btnW = document.getElementById('btnWhatsApp');
+        if(this._recPhone) btnW.style.display=''; else btnW.style.display='none';
         var mh='';
         d.meses.forEach(function(m){mh+='<div style="display:flex;justify-content:space-between;font-size:14px;padding:2px 0;"><span>'+mn[m.m]+' '+m.y+'</span><span>$'+App.CFG.VALOR_CUOTA.toLocaleString()+'</span></div>';});
         if(d.cert) mh+='<div style="display:flex;justify-content:space-between;font-size:14px;padding:2px 0;border-top:1px dashed #000;margin-top:4px;padding-top:4px;"><span>Certificado</span><span>$'+this.CFG.VALOR_CERT.toLocaleString()+'</span></div>';
@@ -1471,6 +1477,23 @@ const App = {
         th+='<div style="text-align:center;font-size:12px;margin-top:8px;"><div>Gracias por su pago</div><div style="margin-top:3px;">Junta de Accion Comunal</div><div>Barrio Bateas Sector 3</div></div></div></div>';
         document.getElementById('tirillaContainer').innerHTML = th;
         document.getElementById('receiptPreview').classList.add('show');
+    },
+
+    sendWhatsApp: function() {
+        if(!this._recPhone) return;
+        var d = this._recData;
+        var meses = [];
+        d.meses.forEach(function(m){meses.push(m.nm);});
+        var txt = 'Recibo N° '+d.rec+'\n';
+        txt += 'Fecha: '+d.fec+' Hora: '+d.hor+'\n';
+        txt += 'Afiliado: '+d.nm+'\n';
+        txt += 'Concepto: '+meses.join(', ');
+        if(d.cert) txt += ', Certificado';
+        txt += '\nTotal: $'+d.tot.toLocaleString();
+        txt += '\n\nJAC Bateas - Barrio Bateas Sector 3\nPuerto Gaitan, Meta';
+        var phone = this._recPhone.replace(/[^0-9]/g,'');
+        if(phone.length===10) phone='57'+phone;
+        window.open('https://wa.me/'+phone+'?text='+encodeURIComponent(txt),'_blank');
     },
 
     printRec: function(num) {
