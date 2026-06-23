@@ -138,11 +138,9 @@
         .cal-hdr{background:var(--bgc);padding:4px 0;text-align:center;font-size:.6rem;font-weight:700;color:var(--t2);border-radius:4px}
         .cal-day{background:var(--bgs);border:1px solid var(--brd);border-radius:6px;width:100%;aspect-ratio:1;max-height:64px;text-align:center;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding:2px}
         .cal-day:hover{border-color:var(--green);background:rgba(16,185,129,.08)}
-        .cal-day.empty{background:transparent;border:none;cursor:default}
         .cal-day.today{border-color:var(--yellow);box-shadow:0 0 6px rgba(245,158,11,.3)}
         .cal-day .cd-num{font-size:.7rem;font-weight:700;color:var(--t1);line-height:1}
         .cal-day .cd-val{font-size:.48rem;color:var(--green);font-weight:600;margin-top:2px;line-height:1.1;word-break:break-all}
-        .cal-day.empty .cd-num,.cal-day.empty .cd-val{display:none}
         .cal-total{display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding:10px;background:rgba(16,185,129,.1);border-radius:8px;border:1px solid var(--brdg)}
         .cal-total span{font-size:.8rem;font-weight:700;color:var(--t1)}
         .cal-total strong{font-size:.85rem;color:var(--green)}
@@ -971,12 +969,12 @@ const App = {
         var today = new Date();
         var isCurrentMonth = today.getMonth()===m && today.getFullYear()===y;
         var h = '<div class="cal-hdr">Dom</div><div class="cal-hdr">Lun</div><div class="cal-hdr">Mar</div><div class="cal-hdr">Mie</div><div class="cal-hdr">Jue</div><div class="cal-hdr">Vie</div><div class="cal-hdr">Sab</div>';
-        for(var i=0; i<firstDay; i++) h += '<div class="cal-day empty"></div>';
         for(var d=1; d<=daysInMonth; d++) {
             var cls = 'cal-day';
             if(isCurrentMonth && d===today.getDate()) cls += ' today';
             var val = dayTotals[d] ? '$'+dayTotals[d].toLocaleString() : '';
-            h += '<div class="'+cls+'" onclick="App.calDayClick('+d+')" style="cursor:pointer;"><div class="cd-num">'+d+'</div><div class="cd-val">'+val+'</div></div>';
+            var style = d===1 ? ' grid-column-start:'+(firstDay+1)+';' : '';
+            h += '<div class="'+cls+'" onclick="App.calDayClick('+d+')" style="cursor:pointer;'+style+'"><div class="cd-num">'+d+'</div><div class="cd-val">'+val+'</div></div>';
         }
         document.getElementById('calGrid').innerHTML = h;
         var totalMes = apMonth.reduce(function(s,p){return s+p.val;},0);
