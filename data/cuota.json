@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-06-23T06:18:26.374Z",
+  "ultima_actualizacion": "2026-06-23T15:46:44.387Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -797,6 +797,11 @@
       "nombre": "YEISSON CAMILO GALVIS CUELLAR",
       "fecha_pago_año_2026": "mayo_2026_5000_22/06/2026_18:17:39_00150;   junio_2026_5000_22/06/2026_18:17:39_00150",
       "certificado": "junio_2026_20000_22/06/2026_18:17:39_00150"
+    },
+    {
+      "cedula": "1075292982",
+      "nombre": "JULIAN ALARCON PERDOMO",
+      "fecha_pago_año_2026": "marzo_2026_5000_23/06/2026_10:46:43_00145; abril_2026_5000_23/06/2026_10:46:43_00145; mayo_2026_5000_23/06/2026_10:46:43_00145; junio_2026_5000_23/06/2026_10:46:43_00145"
     }
   ]
 }
