@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-06-23T15:46:44.387Z",
+  "ultima_actualizacion": "2026-06-23T15:55:54.905Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -802,6 +802,11 @@
       "cedula": "1075292982",
       "nombre": "JULIAN ALARCON PERDOMO",
       "fecha_pago_año_2026": "marzo_2026_5000_23/06/2026_10:46:43_00145; abril_2026_5000_23/06/2026_10:46:43_00145; mayo_2026_5000_23/06/2026_10:46:43_00145; junio_2026_5000_23/06/2026_10:46:43_00145"
+    },
+    {
+      "cedula": "4438681",
+      "nombre": "CARLOS ALBERTO QUIÑONES MUÑOZ",
+      "fecha_pago_año_2026": "junio_2026_5000_23/06/2026_10:55:53_00151"
     }
   ]
 }
