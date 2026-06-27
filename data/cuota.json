@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-06-25T16:07:33.247Z",
+  "ultima_actualizacion": "2026-06-27T23:31:05.830Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -821,6 +821,12 @@
       "nombre": "ALDEMAR BAUTISTA CARRANZA",
       "fecha_pago_año_2026": "marzo_2026_5000_25/06/2026_11:07:32_00151; abril_2026_5000_25/06/2026_11:07:32_00151; mayo_2026_5000_25/06/2026_11:07:32_00151; junio_2026_5000_25/06/2026_11:07:32_00151",
       "certificado": "junio_2026_20000_25/06/2026_11:07:32_00151"
+    },
+    {
+      "cedula": "1098739994",
+      "nombre": "HUGO BOHORQUEZ BERNAL",
+      "fecha_pago_año_2026": "junio_2026_5000_27/06/2026_18:31:05_00152",
+      "certificado": "junio_2026_20000_27/06/2026_18:31:05_00152"
     }
   ]
 }
