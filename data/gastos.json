@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-06-20T23:44:06.783Z",
+  "ultima_actualizacion": "2026-07-01T03:37:02.971Z",
   "configuracion": {
     "comision": 50,
     "valor_cert": 20000,
@@ -95,6 +95,21 @@
       "fecha_registro": "2026-06-20T23:38:38.736Z",
       "balance_anterior": 2467500,
       "balance_posterior": 2267500
+    },
+    {
+      "id": "GMR1IY397d7gw",
+      "fecha": "24/06/2026",
+      "hora": "22:37:02",
+      "concepto": "PERIFONEO",
+      "categoria": "Eventos comunitarios",
+      "valor": 100000,
+      "responsable": "PRESIDENTE",
+      "comprobante": "N/A",
+      "metodo_pago": "Efectivo",
+      "observaciones": "",
+      "fecha_registro": "2026-07-01T03:37:02.971Z",
+      "balance_anterior": 2467500,
+      "balance_posterior": 2367500
     }
   ]
 }
