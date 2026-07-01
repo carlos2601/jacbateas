@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-07-01T02:15:40.603Z",
+  "ultima_actualizacion": "2026-07-01T02:16:04.898Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -827,11 +827,6 @@
       "nombre": "HUGO BOHORQUEZ BERNAL",
       "fecha_pago_año_2026": "junio_2026_5000_27/06/2026_18:31:05_00152",
       "certificado": "junio_2026_20000_27/06/2026_18:31:05_00152"
-    },
-    {
-      "cedula": "4438681",
-      "nombre": "CARLOS ALBERTO QUIÑONES MUÑOZ",
-      "fecha_pago_año_2026": "    marzo_2026_5000_30/06/2026_18:49:50_00153;     abril_2026_5000_30/06/2026_18:49:50_00153"
     }
   ]
 }
