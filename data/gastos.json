@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-07-01T03:37:02.971Z",
+  "ultima_actualizacion": "2026-07-16T00:43:14.951Z",
   "configuracion": {
     "comision": 50,
     "valor_cert": 20000,
@@ -110,6 +110,21 @@
       "fecha_registro": "2026-07-01T03:37:02.971Z",
       "balance_anterior": 2467500,
       "balance_posterior": 2367500
+    },
+    {
+      "id": "GMRMSCCY03n1l",
+      "fecha": "17/04/2026",
+      "hora": "19:43:14",
+      "concepto": "Almuerzos, capacitación del tribunal de garantias",
+      "categoria": "Refrigerios",
+      "valor": 76000,
+      "responsable": "PRESIDENTE",
+      "comprobante": "N/A",
+      "metodo_pago": "Efectivo",
+      "observaciones": "",
+      "fecha_registro": "2026-07-16T00:43:14.951Z",
+      "balance_anterior": 2367500,
+      "balance_posterior": 2291500
     }
   ]
 }
