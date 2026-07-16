@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-07-16T00:43:14.951Z",
+  "ultima_actualizacion": "2026-07-16T00:44:35.242Z",
   "configuracion": {
     "comision": 50,
     "valor_cert": 20000,
@@ -125,6 +125,21 @@
       "fecha_registro": "2026-07-16T00:43:14.951Z",
       "balance_anterior": 2367500,
       "balance_posterior": 2291500
+    },
+    {
+      "id": "GMRMSE2WArj9y",
+      "fecha": "28/04/2026",
+      "hora": "19:44:35",
+      "concepto": "Papeleria",
+      "categoria": "Papelería",
+      "valor": 60000,
+      "responsable": "SECRETARIA",
+      "comprobante": "N/A",
+      "metodo_pago": "Efectivo",
+      "observaciones": "",
+      "fecha_registro": "2026-07-16T00:44:35.242Z",
+      "balance_anterior": 2291500,
+      "balance_posterior": 2231500
     }
   ]
 }
