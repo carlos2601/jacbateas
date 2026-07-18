@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-07-18T03:19:41.210Z",
+  "ultima_actualizacion": "2026-07-18T23:03:30.049Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -827,6 +827,12 @@
       "nombre": "HUGO BOHORQUEZ BERNAL",
       "fecha_pago_año_2026": "junio_2026_5000_27/06/2026_18:31:05_00152",
       "certificado": "junio_2026_20000_27/06/2026_18:31:05_00152"
+    },
+    {
+      "cedula": "1120565375",
+      "nombre": "DAVID CARREÑO MARTINEZ",
+      "fecha_pago_año_2026": "mayo_2026_5000_18/07/2026_18:03:29_00153; junio_2026_5000_18/07/2026_18:03:29_00153; julio_2026_5000_18/07/2026_18:03:29_00153",
+      "certificado": "julio_2026_20000_18/07/2026_18:03:29_00153"
     }
   ]
 }
