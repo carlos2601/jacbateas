@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-07-19T00:21:43.879Z",
+  "ultima_actualizacion": "2026-07-19T00:23:39.014Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -852,6 +852,12 @@
       "nombre": "TIRSON SILVA HUERTAS",
       "fecha_pago_año_2026": "julio_2026_5000_19/07/2026_19:21:43_00156",
       "certificado": "julio_2026_20000_19/07/2026_19:21:43_00156"
+    },
+    {
+      "cedula": "1029987271",
+      "nombre": "ANDRES FELIPE PIRABAN REINA",
+      "fecha_pago_año_2026": "julio_2026_5000_19/07/2026_19:23:38_00157",
+      "certificado": "julio_2026_20000_19/07/2026_19:23:38_00157"
     }
   ]
 }
