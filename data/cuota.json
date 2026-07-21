@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-07-21T14:50:55.951Z",
+  "ultima_actualizacion": "2026-07-21T16:46:01.594Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -864,6 +864,12 @@
       "nombre": "JOSE MIGUEL SANCHEZ MEDINA",
       "fecha_pago_año_2026": "julio_2026_5000_20/07/2026_16:12:31_00158",
       "certificado": "julio_2026_20000_20/07/2026_16:12:31_00158"
+    },
+    {
+      "cedula": "1070956767",
+      "nombre": "JHON EDISON HERRERA FINO",
+      "fecha_pago_año_2026": "julio_2026_5000_21/07/2026_11:37:23_00159",
+      "certificado": "julio_2026_20000_21/07/2026_11:37:23_00159"
     }
   ]
 }
