@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-07-21T16:46:01.594Z",
+  "ultima_actualizacion": "2026-07-22T22:14:37.424Z",
   "valor_cuota": 5000,
   "pagos": [
     {
@@ -870,6 +870,12 @@
       "nombre": "JHON EDISON HERRERA FINO",
       "fecha_pago_año_2026": "julio_2026_5000_21/07/2026_11:37:23_00159",
       "certificado": "julio_2026_20000_21/07/2026_11:37:23_00159"
+    },
+    {
+      "cedula": "1118648502",
+      "nombre": "NURY INES MARTINEZ MAHECHA",
+      "fecha_pago_año_2026": "julio_2026_5000_22/07/2026_17:14:36_00160",
+      "certificado": "julio_2026_20000_22/07/2026_17:14:36_00160"
     }
   ]
 }
